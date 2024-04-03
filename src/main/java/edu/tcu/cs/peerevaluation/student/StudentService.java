@@ -2,9 +2,9 @@ package edu.tcu.cs.peerevaluation.student;
 
 import java.util.List;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import edu.tcu.cs.peerevaluation.student.utils.IdWorker;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -19,6 +19,38 @@ public class StudentService {
 
   public List<Student> findAll() {
     return this.studentRepository.findAll();
+  }
+
+  public List<Student> searchStudents(String firstName, String lastName, String section, String academicYear,
+      String teamName) {
+    Specification<Student> spec = Specification.where(null);
+
+    if (firstName != null && !firstName.isEmpty()) {
+      spec = spec.and(StudentSpecifications.hasFirstName(firstName));
+    }
+
+    if (lastName != null && !lastName.isEmpty()) {
+      spec = spec.and(StudentSpecifications.hasLastName(lastName));
+    }
+
+    if (section != null && !section.isEmpty()) {
+      spec = spec.and(StudentSpecifications.inSection(section));
+    }
+
+    if (academicYear != null && !academicYear.isEmpty()) {
+      spec = spec.and(StudentSpecifications.inAcademicYear(academicYear));
+    }
+
+    if (teamName != null && !teamName.isEmpty()) {
+      spec = spec.and(StudentSpecifications.onTeam(teamName));
+    }
+
+    return studentRepository.findAll(spec);
+  }
+
+  public Student findById(String studentId) {
+    return this.studentRepository.findById(studentId)
+            .orElseThrow(() -> new StudentNotFoundException(studentId)); 
   }
 
 }
