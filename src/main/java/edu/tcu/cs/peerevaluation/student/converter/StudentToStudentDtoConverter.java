@@ -13,8 +13,10 @@ public class StudentToStudentDtoConverter implements Converter<Student, StudentD
   public StudentDto convert(Student source) {
     StudentDto studentDto = new StudentDto(source.getId(),
                                            source.getFirstName(),
+                                           source.getMiddleInitial(),
                                            source.getLastName(),
-                                           source.getEmail());
+                                           source.getEmail(),
+                                           source.getPassword());
     return studentDto;
     
   }

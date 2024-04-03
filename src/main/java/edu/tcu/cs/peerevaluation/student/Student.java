@@ -13,9 +13,13 @@ public class Student implements Serializable {
 
   private String firstName;
 
+  private String middleInitial;
+
   private String lastName;
 
   private String email;
+
+  private String password;
 
   //@OnetoMany
   //private designTeam team; 
@@ -57,6 +61,23 @@ public class Student implements Serializable {
   public void setEmail(String email) {
     this.email = email;
   }
+
+  public String getPassword() {
+    return this.password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public String getMiddleInitial() {
+    return this.middleInitial;
+  }
+
+  public void setMiddleInitial(String middleInitial) {
+    this.middleInitial = middleInitial;
+  }
+
 
 
 
