@@ -1,5 +1,6 @@
 package edu.tcu.cs.peerevaluation.student.dto;
 
+import edu.tcu.cs.peerevaluation.team.Team;
 import jakarta.validation.constraints.NotEmpty;
 
 public record StudentDto(String id,
@@ -12,6 +13,7 @@ public record StudentDto(String id,
                          @NotEmpty(message = "email is required.")
                          String email,
                          @NotEmpty(message = "password is required.")
-                         String password ){
+                         String password,
+                         Team team ){
 
 }

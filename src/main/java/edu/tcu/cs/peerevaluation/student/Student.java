@@ -2,8 +2,10 @@ package edu.tcu.cs.peerevaluation.student;
 
 import java.io.Serializable;
 
+import edu.tcu.cs.peerevaluation.team.Team;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Student implements Serializable {
@@ -21,11 +23,9 @@ public class Student implements Serializable {
 
   private String password;
 
-  //@OnetoMany
-  //private designTeam team; 
+  @ManyToOne
+  private Team team; 
 
-  //@OnetoMany
-  //private designSection section; 
 
   public Student() {
   }
@@ -78,10 +78,11 @@ public class Student implements Serializable {
     this.middleInitial = middleInitial;
   }
 
+  public Team getTeam() {
+    return this.team;
+  }
 
-
-
-
-  
-
+  public void setTeam(Team team) {
+    this.team = team;
+  }
 }
