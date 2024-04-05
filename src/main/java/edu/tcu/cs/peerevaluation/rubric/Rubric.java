@@ -8,9 +8,9 @@ import jakarta.persistence.Id;
 public class Rubric {
 
     @Id
-    private List<Criterion> criterionList;
-    
     private String rubricName;
+    
+    private List<Criterion> criterionList;
 
     public List<Criterion> getCriterionList() {
         return this.criterionList;
