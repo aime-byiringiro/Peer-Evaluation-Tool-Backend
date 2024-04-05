@@ -2,18 +2,29 @@ package edu.tcu.cs.peerevaluation.peerEvaluation.evaluation;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 import edu.tcu.cs.peerevaluation.student.Student;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Evaluation implements Serializable{
 
-  @Id
-  Student evaluated;
 
-  List<Integer> scores;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  @ManyToOne
+  private Student evaluated;
+
+  private List<Integer> scores;
   /*TODO the only possible issue with this way is the 
     scores being out of order as there is no check, at 
     least as a list. it may be better to use a map or 
@@ -24,9 +35,23 @@ public class Evaluation implements Serializable{
     really a way for the scores to get out of order than this 
     isn't an issue 
   */
-  String privateComments;
+  private String privateComments;
 
-  String publicComments;
+  private String publicComments;
+
+  private String test;
+
+  public void setTest(){
+    test = evaluated.getFirstName();
+  }
+
+  public String getId(){
+    return this.id.toString();
+  }
+
+  public void setId(String id){
+    //this.id = id;
+  }
 
   public Student getEvaluated() {
     return this.evaluated;

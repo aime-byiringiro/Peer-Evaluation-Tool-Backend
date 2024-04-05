@@ -7,6 +7,7 @@ import edu.tcu.cs.peerevaluation.peerEvaluation.evaluation.Evaluation;
 import edu.tcu.cs.peerevaluation.student.Student;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 @Entity
@@ -15,6 +16,7 @@ public class PeerEvaluation implements Serializable{
   @Id
   private String id;
 
+  @ManyToOne
   private Student evaluator; 
 
   @OneToMany
