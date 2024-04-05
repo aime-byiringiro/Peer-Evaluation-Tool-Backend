@@ -1,7 +1,9 @@
 package edu.tcu.cs.peerevaluation.rubric.criterion;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
+@Entity
 public class Criterion {
 
     @Id

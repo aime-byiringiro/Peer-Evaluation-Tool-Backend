@@ -3,13 +3,17 @@ package edu.tcu.cs.peerevaluation.rubric;
 import java.util.List;
 
 import edu.tcu.cs.peerevaluation.rubric.criterion.Criterion;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
+@Entity
 public class Rubric {
 
     @Id
     private String rubricName;
     
+    @OneToMany
     private List<Criterion> criterionList;
 
     public List<Criterion> getCriterionList() {
