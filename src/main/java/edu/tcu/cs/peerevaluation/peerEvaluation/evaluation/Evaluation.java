@@ -39,11 +39,6 @@ public class Evaluation implements Serializable{
 
   private String publicComments;
 
-  private String test;
-
-  public void setTest(){
-    test = evaluated.getFirstName();
-  }
 
   public String getId(){
     return this.id.toString();
