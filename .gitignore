@@ -1,2 +1,10 @@
+target/
+
+##Intellij IDEA ##
 .idea
-.vscode
+
+## VS Code ##
+.vscode/
+
+
+
