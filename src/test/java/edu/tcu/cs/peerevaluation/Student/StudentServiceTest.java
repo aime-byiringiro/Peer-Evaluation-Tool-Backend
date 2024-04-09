@@ -1,5 +1,6 @@
 package edu.tcu.cs.peerevaluation.Student;
 
+import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,10 +11,12 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.jpa.domain.Specification;
 
+import edu.tcu.cs.peerevaluation.section.Section;
 import edu.tcu.cs.peerevaluation.student.Student;
 import edu.tcu.cs.peerevaluation.student.StudentRepository;
 import edu.tcu.cs.peerevaluation.student.StudentService;
 import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
+import edu.tcu.cs.peerevaluation.team.Team;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -40,6 +43,36 @@ public class StudentServiceTest {
 
   @BeforeEach
   void setUp(){
+
+    List<Team> team1List = new ArrayList<Team>();
+    List<Team> team2List = new ArrayList<Team>();
+
+    Team team1 = new Team();
+      team1.setTeamName("team1");
+      team1List.add(team1);
+
+    Team team2 = new Team();
+      team2.setTeamName("team1");
+      team2List.add(team2);
+
+    Section sec1 = new Section();
+      sec1.setSectionName("section 1");
+      sec1.setAcademicYear("2024");
+      sec1.setTeams(team1List);
+      
+    
+    Section sec2 = new Section();
+      sec2.setSectionName("section 2");
+      sec2.setAcademicYear("2025");
+      sec2.setTeams(team2List);
+
+      team1.setSection(sec1);
+      team2.setSection(sec2);
+    
+
+
+
+
     Student s1 = new Student();
     s1.setId(1);
     s1.setFirstName("John");
@@ -54,6 +87,18 @@ public class StudentServiceTest {
     s3.setId(3);
     s3.setFirstName("John");
     s3.setLastName("Smith");
+
+    s1.assignTeam(team1);
+    s2.assignTeam(team1);
+    s3.assignTeam(team2);
+
+
+
+
+
+
+
+
 
     students.add(s1);
     students.add(s2);
@@ -121,6 +166,26 @@ public class StudentServiceTest {
       assertThat(result.get(0).getFirstName()).isEqualTo(students.get(0).getFirstName());
       assertThat(result.get(0).getLastName()).isEqualTo(students.get(0).getLastName());
       verify(studentRepository, times(1)).findAll((Specification<Student>) any());
+  }
 
+  @SuppressWarnings("unchecked")
+  @Test
+  void testFindStudentBySectionSuccess(){
+      // Given
+
+      List<Student> expectedStudents = students.stream()
+                          .filter(s -> "section 1".equals(s.getTeam().getSection().getSectionName()))
+                          .collect(Collectors.toList());
+  
+      given(studentRepository.findAll((Specification<Student>) any())).willReturn(expectedStudents);
+
+      // When
+      List<Student> result = studentService.searchStudents(null, null, "section 1", null, null);
+
+      // Then
+      assertThat(result).hasSize(expectedStudents.size());
+      assertThat(result.get(0).getFirstName()).isEqualTo(students.get(0).getFirstName());
+      assertThat(result.get(0).getLastName()).isEqualTo(students.get(0).getLastName());
+      verify(studentRepository, times(1)).findAll((Specification<Student>) any());
   }
 }

@@ -2,6 +2,7 @@ package edu.tcu.cs.peerevaluation.section;
 
 import edu.tcu.cs.peerevaluation.rubric.Rubric;
 import edu.tcu.cs.peerevaluation.team.Team;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,6 +12,8 @@ import jakarta.persistence.OneToMany;
 
 import java.io.Serializable;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 public class Section implements Serializable {
@@ -30,7 +33,8 @@ public class Section implements Serializable {
     @ManyToOne
     private Rubric rubric;
 
-    @OneToMany(mappedBy = "section")
+    @JsonIgnoreProperties("section")
+    @OneToMany(mappedBy = "section", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Team> teams;
 
     public Section() {
@@ -91,6 +95,4 @@ public class Section implements Serializable {
     public void setRubric(Rubric rubric) {
         this.rubric = rubric;
     }
-
-
 }

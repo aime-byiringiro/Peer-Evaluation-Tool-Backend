@@ -5,7 +5,10 @@ import edu.tcu.cs.peerevaluation.student.Student;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 public class Team implements Serializable {
@@ -19,6 +22,7 @@ public class Team implements Serializable {
     @ManyToOne
      private Section section;
 
+    @JsonIgnoreProperties("team")
     @OneToMany(mappedBy = "team")
     private List<Student> students;
 
@@ -55,6 +59,13 @@ public class Team implements Serializable {
 
     public void setTeamName(String teamName) {
         this.teamName = teamName;
+    }
+
+    public void addStudentToTeam(Student student) {
+        if (students == null) {
+        students = new ArrayList<Student>();
+        } 
+        students.add(student);
     }
 
 }

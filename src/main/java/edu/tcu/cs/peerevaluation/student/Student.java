@@ -88,4 +88,9 @@ public class Student implements Serializable {
   public void setTeam(Team team) {
     this.team = team;
   }
+
+  public void assignTeam(Team team) {
+    this.team = team;
+    team.addStudentToTeam(this);
+  }
 }

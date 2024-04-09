@@ -16,7 +16,6 @@ public record SectionDto(Integer id,
                          @NotEmpty(message = "Last Day is required")
                          String lastDay,
                          @NotEmpty(message = "Rubric is required")
-                         RubricDto rubricDto,
-                         @NotEmpty(message = "Team is required")
-                         List<Team> teams) {
+                         RubricDto rubricDto)
+                         {
 }
