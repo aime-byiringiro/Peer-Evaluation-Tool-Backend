@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 public class Criterion {
@@ -19,7 +20,7 @@ public class Criterion {
     @NotEmpty(message = "name is required")
     private String criterionName;
 
-    @NotEmpty(message = "max score is required")
+    @Positive(message = "max score is must positive")
     private int maxScore;
 
     public String getDescription() {

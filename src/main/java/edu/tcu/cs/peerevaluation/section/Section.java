@@ -1,8 +1,10 @@
 package edu.tcu.cs.peerevaluation.section;
 
+import edu.tcu.cs.peerevaluation.rubric.Rubric;
 import edu.tcu.cs.peerevaluation.team.Team;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 import java.io.Serializable;
@@ -14,7 +16,16 @@ public class Section implements Serializable {
     @Id
     private String id;
 
+    private String sectionName;
+
     private String academicYear;
+
+    private String firstDay;
+
+    private String lastDay;
+
+    @ManyToOne
+    private Rubric rubric;
 
     @OneToMany
     private List<Team> teams;
@@ -45,4 +56,38 @@ public class Section implements Serializable {
     public void setTeams(List<Team> teams) {
         this.teams = teams;
     }
+
+    public String getSectionName() {
+        return this.sectionName;
+    }
+
+    public void setSectionName(String sectionName) {
+        this.sectionName = sectionName;
+    }
+
+    public String getFirstDay() {
+        return this.firstDay;
+    }
+
+    public void setFirstDay(String firstDay) {
+        this.firstDay = firstDay;
+    }
+
+    public String getLastDay() {
+        return this.lastDay;
+    }
+
+    public void setLastDay(String lastDay) {
+        this.lastDay = lastDay;
+    }
+
+    public Rubric getRubric() {
+        return this.rubric;
+    }
+
+    public void setRubric(Rubric rubric) {
+        this.rubric = rubric;
+    }
+
+
 }

@@ -13,6 +13,8 @@ public class Team implements Serializable {
     @Id
     private String id;
 
+    private String teamName;
+
     @OneToOne
      private Section section;
 
@@ -45,4 +47,13 @@ public class Team implements Serializable {
     public void setStudents(List<Student> students) {
         this.students = students;
     }
+
+    public String getTeamName() {
+        return this.teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
+
 }

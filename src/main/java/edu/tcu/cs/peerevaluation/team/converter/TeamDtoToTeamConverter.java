@@ -19,6 +19,7 @@ public class TeamDtoToTeamConverter implements Converter<TeamDto, Team> {
     public Team convert(TeamDto source) {
         Team team = new Team();
         team.setId(source.id());
+        team.setTeamName(source.teamName());
         team.setSection(this.sectionDtoToSectionConverter.convert(source.section()));
         team.setStudents(source.students());
         return team;

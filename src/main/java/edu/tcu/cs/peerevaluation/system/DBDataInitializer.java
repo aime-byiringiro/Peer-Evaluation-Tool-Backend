@@ -8,14 +8,22 @@ import java.util.Random;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import edu.tcu.cs.peerevaluation.instructor.InstructorRepository;
 import edu.tcu.cs.peerevaluation.peerEvaluation.PeerEvaluation;
 import edu.tcu.cs.peerevaluation.peerEvaluation.PeerEvaluationRepostitory;
 import edu.tcu.cs.peerevaluation.peerEvaluation.evaluation.Evaluation;
 import edu.tcu.cs.peerevaluation.peerEvaluation.evaluation.EvaluationRepository;
 import edu.tcu.cs.peerevaluation.rubric.Rubric;
+import edu.tcu.cs.peerevaluation.rubric.RubricRepository;
 import edu.tcu.cs.peerevaluation.rubric.criterion.Criterion;
+import edu.tcu.cs.peerevaluation.rubric.criterion.CriterionRepository;
+import edu.tcu.cs.peerevaluation.section.Section;
+import edu.tcu.cs.peerevaluation.section.SectionRepository;
 import edu.tcu.cs.peerevaluation.student.Student;
 import edu.tcu.cs.peerevaluation.student.StudentRepository;
+import edu.tcu.cs.peerevaluation.team.Team;
+import edu.tcu.cs.peerevaluation.team.TeamRepository;
+
 
 @Component
 public class DBDataInitializer implements CommandLineRunner{
@@ -23,12 +31,26 @@ public class DBDataInitializer implements CommandLineRunner{
   private final StudentRepository studentRepository;
   private final PeerEvaluationRepostitory peerEvalRepository;
   private final EvaluationRepository evalRepository;
+  private final InstructorRepository instructorRepository;
+  private final RubricRepository rubricRepository;
+  private final CriterionRepository criterionRepository;
+  private final SectionRepository sectionRepository;
+  private final TeamRepository teamRepository;
 
-  public DBDataInitializer(StudentRepository studentRepository, PeerEvaluationRepostitory peerEvalRepository, EvaluationRepository evalRepository) {
+
+  public DBDataInitializer(StudentRepository studentRepository, PeerEvaluationRepostitory peerEvalRepository, EvaluationRepository evalRepository, InstructorRepository instructorRepository, RubricRepository rubricRepository, CriterionRepository criterionRepository, SectionRepository sectionRepository, TeamRepository teamRepository) {
     this.studentRepository = studentRepository;
     this.peerEvalRepository = peerEvalRepository;
     this.evalRepository = evalRepository;
+    this.instructorRepository = instructorRepository;
+    this.rubricRepository = rubricRepository;
+    this.criterionRepository = criterionRepository;
+    this.sectionRepository = sectionRepository;
+    this.teamRepository = teamRepository;
   }
+
+  
+  
 
   @Override
   public void run(String... args) throws Exception {
@@ -115,8 +137,9 @@ public class DBDataInitializer implements CommandLineRunner{
       c6.setCriterionName("Engagement in meetings");
       c6.setDescription("How is this teammate's performance during meetings? (1-10)");
       c6.setMaxScore(10);
-    criterionList.addAll(Arrays.asList(c1, c2, c3, c4, c5, c6));
 
+    criterionList.addAll(Arrays.asList(c1, c2, c3, c4, c5, c6));
+    criterionRepository.saveAll(criterionList);
 
     //------------------//
     // Test Rubric Data //
@@ -125,14 +148,30 @@ public class DBDataInitializer implements CommandLineRunner{
     Rubric r1 = new Rubric();
       r1.setRubricName("2024 Rubric");
       r1.setCriterionList(criterionList);
+    rubricRepository.save(r1);
+
+    //----------------//
+    // Test Team Data //
+    //----------------//
+
+    Team team1 = new Team();
+    
+
 
     //-------------------//
     // Test Section Data //
     //-------------------//
 
-    //----------------//
-    // Test Team Data //
-    //----------------//
+    Section sec1 = new Section();
+      sec1.setId("4");
+      sec1.setSectionName("Berry");
+      sec1.setAcademicYear("2024");
+    sectionRepository.save(sec1);
+    Section sec2 = new Section();
+      sec2.setId("5");
+      sec2.setSectionName("Roanoke Island");
+      sec2.setAcademicYear("2025");
+    sectionRepository.save(sec2);
 
     //----------------------//
     // Test Instructor Data //

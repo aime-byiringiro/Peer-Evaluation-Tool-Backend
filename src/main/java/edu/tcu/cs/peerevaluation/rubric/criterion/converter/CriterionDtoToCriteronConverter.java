@@ -1,11 +1,12 @@
 package edu.tcu.cs.peerevaluation.rubric.criterion.converter;
 
 import org.springframework.stereotype.Component;
+import org.springframework.core.convert.converter.Converter;
 
 import edu.tcu.cs.peerevaluation.rubric.criterion.Criterion;
 import edu.tcu.cs.peerevaluation.rubric.criterion.dto.CriterionDto;
 
-import org.springframework.core.convert.converter.Converter;
+
 
 @Component
 public class CriterionDtoToCriteronConverter implements Converter<CriterionDto,Criterion> {
