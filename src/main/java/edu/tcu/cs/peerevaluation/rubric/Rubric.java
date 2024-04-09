@@ -18,7 +18,14 @@ public class Rubric {
 
     private String rubricName;
     
-    @OneToMany
+    /* TODO
+     * so in this case we have OneToMany, but he put ManyToMany,
+     * im not sure why, but to map them together and remove the extra
+     * table, assuming we leave it OneToMany, then we need to add an
+     * attribute to Criterion that will correspond to the rubric it is
+     * a part of, we could just use the rubric id
+     */
+    @OneToMany(mappedBy = "rubricId")
     private List<Criterion> criterionList;
 
     public List<Criterion> getCriterionList() {

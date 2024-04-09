@@ -5,8 +5,10 @@ import java.util.List;
 import edu.tcu.cs.peerevaluation.student.dto.StudentDto;
 import jakarta.validation.constraints.NotEmpty;
 
-public record EvaluationDto(@NotEmpty(message = "evaluated is required.")
+public record EvaluationDto(Integer id,
+                            @NotEmpty(message = "evaluated is required.")
                             StudentDto evaluated,
+                            Integer peerEvalId,
                             @NotEmpty(message = "scores is required.")
                             List<Integer> scores,
                             String privateComments,

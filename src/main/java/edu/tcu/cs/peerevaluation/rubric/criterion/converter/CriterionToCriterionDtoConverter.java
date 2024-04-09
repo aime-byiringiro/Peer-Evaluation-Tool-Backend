@@ -16,7 +16,8 @@ public class CriterionToCriterionDtoConverter implements Converter<Criterion, Cr
     CriterionDto criterionDto = new CriterionDto(source.getId(), 
                                                  source.getDescription(), 
                                                  source.getCriterionName(), 
-                                                 source.getMaxScore());
+                                                 source.getMaxScore(),
+                                                 source.getRubricId());
     return criterionDto;
   }
 

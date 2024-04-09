@@ -30,7 +30,7 @@ public class Section implements Serializable {
     @ManyToOne
     private Rubric rubric;
 
-    @OneToMany
+    @OneToMany(mappedBy = "section")
     private List<Team> teams;
 
     public Section() {

@@ -8,5 +8,6 @@ public record CriterionDto(Integer id,
                            @NotEmpty(message = "description is required")
                            String criterionName,
                            @NotEmpty(message = "description is required")
-                           Integer maxScore) {
+                           Integer maxScore,
+                           Integer rubricId) {
 }

@@ -18,6 +18,7 @@ public class CriterionDtoToCriteronConverter implements Converter<CriterionDto,C
     criterion.setDescription(source.description());
     criterion.setId(source.id());
     criterion.setMaxScore(source.maxScore());
+    criterion.setRubricId(source.rubricId());
     return criterion;
   }
 

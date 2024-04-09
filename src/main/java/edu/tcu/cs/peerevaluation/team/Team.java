@@ -19,7 +19,7 @@ public class Team implements Serializable {
     @ManyToOne
      private Section section;
 
-    @OneToMany
+    @OneToMany(mappedBy = "team")
     private List<Student> students;
 
     public Team() {

@@ -19,9 +19,11 @@ public class EvaluationToEvalutionDtoConverter implements Converter<Evaluation, 
 
   @Override
   public EvaluationDto convert(Evaluation source) {
-    EvaluationDto evalDto = new EvaluationDto(source.getEvaluated() != null
+    EvaluationDto evalDto = new EvaluationDto(source.getId(),
+                                              source.getEvaluated() != null
                                                       ? this.studentToStudentDtoConverter.convert(source.getEvaluated())
                                                       : null,
+                                              source.getPeerEvalId(),
                                               source.getScores(),
                                               source.getPrivateComments(),
                                               source.getPublicComments());

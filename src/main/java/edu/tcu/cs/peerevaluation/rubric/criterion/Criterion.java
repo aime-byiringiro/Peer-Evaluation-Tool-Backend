@@ -21,7 +21,9 @@ public class Criterion {
     private String criterionName;
 
     @Positive(message = "max score is must positive")
-    private int maxScore;
+    private Integer maxScore;
+
+    private Integer rubricId;
 
     public String getDescription() {
         return this.description;
@@ -39,11 +41,11 @@ public class Criterion {
         this.criterionName = criterionName;
     }
 
-    public int getMaxScore() {
+    public Integer getMaxScore() {
         return this.maxScore;
     }
 
-    public void setMaxScore(int maxScore) {
+    public void setMaxScore(Integer maxScore) {
         this.maxScore = maxScore;
     }
 
@@ -55,5 +57,12 @@ public class Criterion {
         this.id = id;
     }
 
+    public Integer getRubricId() {
+        return this.rubricId;
+    }
+
+    public void setRubricId(Integer rubricId) {
+        this.rubricId = rubricId;
+    }
     
 }
