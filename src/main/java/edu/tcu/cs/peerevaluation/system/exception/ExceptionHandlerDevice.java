@@ -12,18 +12,19 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import edu.tcu.cs.peerevaluation.student.StudentNotFoundException;
 import edu.tcu.cs.peerevaluation.system.Result;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
 
 @RestControllerAdvice
 public class ExceptionHandlerDevice {
 
-  @ExceptionHandler(StudentNotFoundException.class)
+  @ExceptionHandler(ObjectNotFoundException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
-  Result handleArtifactNotFoundException(StudentNotFoundException ex) {
+  Result handleObjectNotFoundException(ObjectNotFoundException ex) {
     return new Result(false, StatusCode.NOT_FOUND, ex.getMessage());
   }
+
+
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
