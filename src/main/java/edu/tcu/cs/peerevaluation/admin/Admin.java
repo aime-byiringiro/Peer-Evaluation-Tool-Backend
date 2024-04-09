@@ -6,7 +6,7 @@ import jakarta.persistence.Id;
 import java.io.Serializable;
 
 @Entity
-public class Admin implements Serializable {c
+public class Admin implements Serializable {
 
     @Id
     private String id;
