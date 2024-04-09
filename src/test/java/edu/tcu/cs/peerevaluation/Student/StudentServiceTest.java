@@ -23,7 +23,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -103,6 +102,7 @@ public class StudentServiceTest {
     verify(this.studentRepository, times(1)).findById("1");
   }
 
+  @SuppressWarnings("unchecked")
   @Test
   void testFindStudentByFirstNameSuccess(){
       // Given
@@ -123,10 +123,4 @@ public class StudentServiceTest {
       verify(studentRepository, times(1)).findAll((Specification<Student>) any());
 
   }
-
-  /* TODO what is the best way to test this search method, 
-   * 1. 1 test, with all 5 parameters
-   * 2. 5 test, 1 parameter each
-   */
-
 }

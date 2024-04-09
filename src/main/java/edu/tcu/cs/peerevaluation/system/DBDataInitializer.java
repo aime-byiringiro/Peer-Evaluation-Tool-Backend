@@ -83,7 +83,7 @@ public class DBDataInitializer implements CommandLineRunner{
     //---------------------//
     // Test Criterion Data //
     //---------------------//
-    List<Criterion> criterionList = new ArrayList();
+    List<Criterion> criterionList = new ArrayList<>();
 
   
     Criterion c1 = new Criterion();
@@ -192,7 +192,6 @@ public class DBDataInitializer implements CommandLineRunner{
     List<Evaluation> evals = new ArrayList<>();
     String[] comments = {"Good Job!", "Needs Improvement", "Keep It Up", "Amazing!", "You may wanna change majors"};
     Random rand = new Random();
-    int id = 1;
     for (int i=0; i<4; i++){
       
       List<Integer> scores = new ArrayList<>();
@@ -203,14 +202,12 @@ public class DBDataInitializer implements CommandLineRunner{
       }
 
       Evaluation eval = new Evaluation();
-      //eval.setId(id + "");
       eval.setEvaluated(students.get(i));
       eval.setScores(scores);
       eval.setPrivateComments(comments[rand.nextInt(5)]);
       eval.setPublicComments(comments[rand.nextInt(5)]);
       evalRepository.save(eval);
       evals.add(eval);
-      id++;
       }
     return evals;
   }
