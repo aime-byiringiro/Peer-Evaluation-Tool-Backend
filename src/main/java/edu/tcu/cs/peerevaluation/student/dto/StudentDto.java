@@ -12,8 +12,6 @@ public record StudentDto(String id,
                          String lastName,
                          @NotEmpty(message = "email is required.")
                          String email,
-                         @NotEmpty(message = "password is required.")
-                         String password,
                          Team team ){
 
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -50,7 +51,7 @@ public class StudentService {
 
   public Student findById(String studentId) {
     return this.studentRepository.findById(studentId)
-            .orElseThrow(() -> new StudentNotFoundException(studentId)); 
+            .orElseThrow(() -> new ObjectNotFoundException("student",studentId)); 
   }
 
 }

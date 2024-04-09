@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
@@ -21,9 +22,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tcu.cs.peerevaluation.student.Student;
-import edu.tcu.cs.peerevaluation.student.StudentNotFoundException;
 import edu.tcu.cs.peerevaluation.student.StudentService;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
+import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -61,6 +62,12 @@ public class StudentControllerTest {
     s3.setFirstName("Bob");
     s3.setLastName("Jones");
     this.students.add(s3);
+
+    Student s4 = new Student();
+    s4.setId("1324");
+    s4.setFirstName("John");
+    s4.setLastName("Smith");
+    this.students.add(s4);
   }
 
   @AfterEach
@@ -86,7 +93,7 @@ public class StudentControllerTest {
   @Test
   void testFindStudentByIdNotFound() throws Exception {
     //Given
-    given(this.studentService.findById("132")).willThrow(new StudentNotFoundException("132"));
+    given(this.studentService.findById("132")).willThrow(new ObjectNotFoundException("student","132"));
 
     //When and Then
     this.mockMvc.perform(get("/students/132").accept(MediaType.APPLICATION_JSON))
@@ -95,5 +102,18 @@ public class StudentControllerTest {
             .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
             .andExpect(jsonPath("$.message").value("Could not find student with Id 132 :("))
             .andExpect(jsonPath("$.data").isEmpty());
+  } 
+
+  @Test
+  void testFindStudentByFirstName() throws Exception {
+    //Given
+    given(this.studentService.searchStudents("John",null,null,null,null))
+          .willReturn(Arrays.asList(this.students.get(0)));
+    
+    //When and Then
+    this.mockMvc.perform(get("/students/search?firstName=John").accept(MediaType.APPLICATION_JSON))
+              .andExpect(jsonPath("$.flag").value(true))
+              .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+              .andExpect(jsonPath("$.message").value("Search Success"));
   } 
 }

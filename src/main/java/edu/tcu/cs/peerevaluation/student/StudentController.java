@@ -35,8 +35,10 @@ public class StudentController {
     this.studentDtoToStudentConverter = studentDtoToStudentConverter;
   }
 
+  // TODO the students return with all data fields, inclduing password
+
   @GetMapping
-  public Result findAllArtifacts() {
+  public Result findAllStudents() {
     List<Student> foundStudents = this.studentService.findAll();
     List<StudentDto> studentDtos = foundStudents.stream()
             .map(foundStudent ->
@@ -61,7 +63,7 @@ public class StudentController {
     .map(foundStudent ->
             this.studentToStudentDtoConverter.convert(foundStudent))
     .collect(Collectors.toList());
-
+    System.out.println(studentDtos);
     return new Result(true, StatusCode.SUCCESS, "Search Success", studentDtos);
   }
   
@@ -69,6 +71,7 @@ public class StudentController {
   public Result findStudentById(@PathVariable String studentId) {
     Student foundStudent = this.studentService.findById(studentId);
     StudentDto studentDto = this.studentToStudentDtoConverter.convert(foundStudent);
+    System.out.println(studentDto);
     return new Result(true, StatusCode.SUCCESS, "Find One Success", studentDto);
   }
 }
