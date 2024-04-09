@@ -3,13 +3,16 @@ package edu.tcu.cs.peerevaluation.instructor;
 import java.io.Serializable;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
 public class Instructor implements Serializable {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     private String firstName;
 
@@ -21,14 +24,16 @@ public class Instructor implements Serializable {
 
     private String password;
 
+    // TODO assign istructor to section or team
+
     public Instructor() {
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

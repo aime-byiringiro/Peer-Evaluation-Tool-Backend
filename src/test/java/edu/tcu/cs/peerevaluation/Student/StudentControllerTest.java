@@ -46,25 +46,25 @@ public class StudentControllerTest {
     this.students = new ArrayList<>();
 
     Student s1 = new Student();
-    s1.setId("132");
+    s1.setId(132);
     s1.setFirstName("John");
     s1.setLastName("Doe");
     this.students.add(s1);
 
     Student s2 = new Student();
-    s2.setId("465");
+    s2.setId(465);
     s2.setFirstName("Jane");
     s2.setLastName("Doe");
     this.students.add(s2);
 
     Student s3 = new Student();
-    s3.setId("798");
+    s3.setId(798);
     s3.setFirstName("Bob");
     s3.setLastName("Jones");
     this.students.add(s3);
 
     Student s4 = new Student();
-    s4.setId("1324");
+    s4.setId(1324);
     s4.setFirstName("John");
     s4.setLastName("Smith");
     this.students.add(s4);
@@ -78,7 +78,7 @@ public class StudentControllerTest {
  @Test
   void testFindStudentByIdSuccess() throws Exception{
     //Given
-    given(this.studentService.findById("132")).willReturn(this.students.get(0));
+    given(this.studentService.findById(132)).willReturn(this.students.get(0));
     System.out.print(this.students.get(0));
 
     //when and then
@@ -93,7 +93,7 @@ public class StudentControllerTest {
   @Test
   void testFindStudentByIdNotFound() throws Exception {
     //Given
-    given(this.studentService.findById("132")).willThrow(new ObjectNotFoundException("student","132"));
+    given(this.studentService.findById(132)).willThrow(new ObjectNotFoundException("student","132"));
 
     //When and Then
     this.mockMvc.perform(get("/students/132").accept(MediaType.APPLICATION_JSON))

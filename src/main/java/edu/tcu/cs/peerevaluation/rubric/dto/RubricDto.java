@@ -5,6 +5,7 @@ import java.util.List;
 import edu.tcu.cs.peerevaluation.rubric.criterion.Criterion;
 
 
-public record RubricDto(String rubricName,
+public record RubricDto(Integer id,
+                        String rubricName,
                         List<Criterion> criterion) {
 }

@@ -68,7 +68,7 @@ public class StudentController {
   }
   
   @GetMapping("/{studentId}")
-  public Result findStudentById(@PathVariable String studentId) {
+  public Result findStudentById(@PathVariable Integer studentId) {
     Student foundStudent = this.studentService.findById(studentId);
     StudentDto studentDto = this.studentToStudentDtoConverter.convert(foundStudent);
     System.out.println(studentDto);

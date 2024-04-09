@@ -49,7 +49,7 @@ public class StudentService {
     return studentRepository.findAll(spec);
   }
 
-  public Student findById(String studentId) {
+  public Student findById(Integer studentId) {
     return this.studentRepository.findById(studentId)
             .orElseThrow(() -> new ObjectNotFoundException("student",studentId)); 
   }

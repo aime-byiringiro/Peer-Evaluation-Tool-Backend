@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
 
-public record TeamDto(String id,
+public record TeamDto(Integer id,
                       @NotEmpty(message = "Team Name is required.")
                       String teamName,
                       @NotEmpty(message = "Section is required.")

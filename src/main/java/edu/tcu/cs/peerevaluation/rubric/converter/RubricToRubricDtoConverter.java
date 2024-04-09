@@ -12,7 +12,8 @@ public class RubricToRubricDtoConverter implements Converter<Rubric, RubricDto> 
 
   @Override
   public RubricDto convert(Rubric source) {
-    RubricDto rubricDto = new RubricDto(source.getRubricName(),
+    RubricDto rubricDto = new RubricDto(source.getId(),
+                                        source.getRubricName(),
                                         source.getCriterionList());
     return rubricDto;
   }

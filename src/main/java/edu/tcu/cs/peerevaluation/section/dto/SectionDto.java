@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
 
-public record SectionDto(String id,
+public record SectionDto(Integer id,
                         @NotEmpty(message = "Section Name is required")
                          String sectionName,
                          @NotEmpty(message = "Academic Year is required")

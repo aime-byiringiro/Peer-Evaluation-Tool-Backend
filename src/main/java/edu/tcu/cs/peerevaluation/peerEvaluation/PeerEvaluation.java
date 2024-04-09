@@ -6,6 +6,8 @@ import java.util.List;
 import edu.tcu.cs.peerevaluation.peerEvaluation.evaluation.Evaluation;
 import edu.tcu.cs.peerevaluation.student.Student;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -14,7 +16,8 @@ import jakarta.persistence.OneToMany;
 public class PeerEvaluation implements Serializable{
 
   @Id
-  private String id;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
   @ManyToOne
   private Student evaluator; 
@@ -27,11 +30,11 @@ public class PeerEvaluation implements Serializable{
   public PeerEvaluation() {
   }
 
-  public String getId() {
+  public Integer getId() {
     return this.id;
   }
 
-  public void setId(String id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 

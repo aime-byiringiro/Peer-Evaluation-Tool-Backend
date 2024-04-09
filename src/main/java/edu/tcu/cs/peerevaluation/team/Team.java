@@ -11,11 +11,12 @@ import java.util.List;
 public class Team implements Serializable {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     private String teamName;
 
-    @OneToOne
+    @ManyToOne
      private Section section;
 
     @OneToMany
@@ -24,11 +25,11 @@ public class Team implements Serializable {
     public Team() {
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

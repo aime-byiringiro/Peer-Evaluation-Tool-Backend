@@ -8,6 +8,7 @@ import java.util.Random;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import edu.tcu.cs.peerevaluation.instructor.Instructor;
 import edu.tcu.cs.peerevaluation.instructor.InstructorRepository;
 import edu.tcu.cs.peerevaluation.peerEvaluation.PeerEvaluation;
 import edu.tcu.cs.peerevaluation.peerEvaluation.PeerEvaluationRepostitory;
@@ -60,7 +61,6 @@ public class DBDataInitializer implements CommandLineRunner{
     //-------------------//
 
     Student s1 = new Student();
-      s1.setId("S1");
       s1.setFirstName("Aliya");
       s1.setMiddleInitial("S");
       s1.setLastName("Suri");
@@ -68,7 +68,6 @@ public class DBDataInitializer implements CommandLineRunner{
       s1.setPassword("summer2024!");
 
     Student s2 = new Student();
-      s2.setId("S2");
       s2.setFirstName("James");
       s2.setMiddleInitial("R");
       s2.setLastName("Edmonson");
@@ -76,7 +75,6 @@ public class DBDataInitializer implements CommandLineRunner{
       s2.setPassword("pizzaLover!2");
 
     Student s3 = new Student();
-      s3.setId("S3");
       s3.setFirstName("John");
       s3.setMiddleInitial("P");
       s3.setLastName("Smith");
@@ -84,7 +82,6 @@ public class DBDataInitializer implements CommandLineRunner{
       s3.setPassword("helloSunshine!");
 
     Student s4 = new Student();
-      s4.setId("S4");
       s4.setFirstName("John");
       s4.setMiddleInitial("B");
       s4.setLastName("Doe");
@@ -92,7 +89,6 @@ public class DBDataInitializer implements CommandLineRunner{
       s4.setPassword("coffee4Me:)");
 
     Student s5 = new Student();
-      s5.setId("S5");
       s5.setFirstName("Aaron");
       s5.setMiddleInitial("D");
       s5.setLastName("Smith");
@@ -155,6 +151,14 @@ public class DBDataInitializer implements CommandLineRunner{
     //----------------//
 
     Team team1 = new Team();
+      team1.setTeamName("Peer Evaluation");
+    teamRepository.save(team1);
+    Team team2 = new Team();
+      team2.setTeamName("Superfrog Scheduler");
+    teamRepository.save(team2);
+    Team team3 = new Team();
+      team3.setTeamName("Moning Meteorite");
+    teamRepository.save(team3);
     
 
 
@@ -163,19 +167,28 @@ public class DBDataInitializer implements CommandLineRunner{
     //-------------------//
 
     Section sec1 = new Section();
-      sec1.setId("4");
-      sec1.setSectionName("Berry");
-      sec1.setAcademicYear("2024");
+      sec1.setSectionName("Section 2023-2024");
+      sec1.setAcademicYear("2023-2024");
+      sec1.setFirstDay("08/21/2023");
+      sec1.setLastDay("05/01/2024");
+      sec1.setRubric(r1);
     sectionRepository.save(sec1);
     Section sec2 = new Section();
-      sec2.setId("5");
-      sec2.setSectionName("Roanoke Island");
-      sec2.setAcademicYear("2025");
+      sec2.setSectionName("Section 2024-2025");
+      sec2.setAcademicYear("2024-2025");
+      sec2.setFirstDay("08/21/2024");
+      sec2.setLastDay("05/01/2025");
+      sec2.setRubric(r1);
     sectionRepository.save(sec2);
 
     //----------------------//
     // Test Instructor Data //
     //----------------------//
+    Instructor i1 = new Instructor();
+      i1.setFirstName("Liran");
+      i1.setLastName("Ma");
+      i1.setEmail("l.ma@tcu.edu");
+    instructorRepository.save(i1);
 
     //-----------------//
     // Test Admin Data //
@@ -186,39 +199,58 @@ public class DBDataInitializer implements CommandLineRunner{
     //---------------------------//
     
     PeerEvaluation peerEval1 = new PeerEvaluation();
-      peerEval1.setId("1001");
       peerEval1.setEvaluator(s1);
       peerEval1.setEvaluations(generateEvals(s2,s3,s4,s5));
       peerEval1.setWeek("week 4");
       peerEvalRepository.save(peerEval1);
  
     PeerEvaluation peerEval2 = new PeerEvaluation();
-      peerEval2.setId("1002");
       peerEval2.setEvaluator(s2);
       peerEval2.setEvaluations(generateEvals(s1,s3,s4,s5));
       peerEval2.setWeek("week 4");
       peerEvalRepository.save(peerEval2);
 
     PeerEvaluation peerEval3 = new PeerEvaluation();
-      peerEval3.setId("1003");
       peerEval3.setEvaluator(s3);
       peerEval3.setEvaluations(generateEvals(s2,s1,s4,s5));
       peerEval3.setWeek("week 4");
       peerEvalRepository.save(peerEval3);
 
     PeerEvaluation peerEval4 = new PeerEvaluation();
-      peerEval4.setId("1004");
       peerEval4.setEvaluator(s4);
       peerEval4.setEvaluations(generateEvals(s2,s3,s1,s5));
       peerEval4.setWeek("week 4");
       peerEvalRepository.save(peerEval4);
 
     PeerEvaluation peerEval5 = new PeerEvaluation();
-      peerEval5.setId("1005");
       peerEval5.setEvaluator(s5);
       peerEval5.setEvaluations(generateEvals(s2,s3,s4,s1));
       peerEval5.setWeek("week 4");
       peerEvalRepository.save(peerEval5);
+
+
+    //------------------------//
+    // Foreign Key Assignment //
+    //------------------------//
+
+    s1.setTeam(team1);
+    s2.setTeam(team1);
+    s3.setTeam(team2);
+    s4.setTeam(team2);
+    s5.setTeam(team3);
+    team1.setSection(sec1);
+    team2.setSection(sec1);
+    team3.setSection(sec2);
+    team1.setStudents(Arrays.asList(s1,s2));
+    team2.setStudents(Arrays.asList(s3,s4));
+    team3.setStudents(Arrays.asList(s5));
+    sec1.setTeams(Arrays.asList(team1,team2));
+    sec2.setTeams(Arrays.asList(team3));
+
+    studentRepository.saveAll(Arrays.asList(s1, s2, s3, s4, s5));
+    teamRepository.saveAll(Arrays.asList(team1,team2,team3));
+    sectionRepository.saveAll(Arrays.asList(sec1,sec2));
+
   }
 
   private List<Evaluation> generateEvals(Student s1,Student s2,Student s3,Student s4) {

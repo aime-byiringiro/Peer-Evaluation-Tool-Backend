@@ -41,17 +41,17 @@ public class StudentServiceTest {
   @BeforeEach
   void setUp(){
     Student s1 = new Student();
-    s1.setId("1");
+    s1.setId(1);
     s1.setFirstName("John");
     s1.setLastName("Doe");
 
     Student s2 = new Student();
-    s2.setId("2");
+    s2.setId(2);
     s2.setFirstName("Jane");
     s2.setLastName("Doe");
 
     Student s3 = new Student();
-    s3.setId("3");
+    s3.setId(3);
     s3.setFirstName("John");
     s3.setLastName("Smith");
 
@@ -70,36 +70,36 @@ public class StudentServiceTest {
   void testFindStudentByIdSuccess() {
   // Given. Arragne inputs and targets. Define the behavior of Mock object artifactRepository.
   Student s = new Student();
-  s.setId("132");
+  s.setId(132);
   s.setFirstName("John");
   s.setLastName("Doe");
 
-  given(studentRepository.findById("132")).willReturn(Optional.of(s)); //Deines the behavior of mock object
+  given(studentRepository.findById(132)).willReturn(Optional.of(s)); //Deines the behavior of mock object
   // When. Act on the target behavior. When steps should cover the method to be tested.
-  Student returnedStudent = studentService.findById("132");
+  Student returnedStudent = studentService.findById(132);
   
   // Then. Assert expected outcomes.
   assertThat(returnedStudent.getId()).isEqualTo(s.getId());
   assertThat(returnedStudent.getFirstName()).isEqualTo(s.getFirstName());
   assertThat(returnedStudent.getLastName()).isEqualTo(s.getLastName());
-  verify(studentRepository, times(1)).findById("132");
+  verify(studentRepository, times(1)).findById(132);
 
 
   }
 
   @Test
   void testFindStudentByIdNotFound() {
-    given(studentRepository.findById(Mockito.any(String.class))).willReturn(Optional.empty());
+    given(studentRepository.findById(Mockito.any(Integer.class))).willReturn(Optional.empty());
 
     Throwable thrown = catchThrowable(() ->{
       @SuppressWarnings("unused")
-      Student returnedStudent = studentService.findById("1");
+      Student returnedStudent = studentService.findById(1);
     });
 
     assertThat(thrown)
               .isInstanceOf(ObjectNotFoundException.class)
               .hasMessage("Could not find student with Id 1 :(");
-    verify(this.studentRepository, times(1)).findById("1");
+    verify(this.studentRepository, times(1)).findById(1);
   }
 
   @SuppressWarnings("unchecked")

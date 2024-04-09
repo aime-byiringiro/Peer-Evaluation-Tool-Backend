@@ -4,6 +4,8 @@ import java.util.List;
 
 import edu.tcu.cs.peerevaluation.rubric.criterion.Criterion;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
@@ -11,6 +13,9 @@ import jakarta.persistence.OneToMany;
 public class Rubric {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
     private String rubricName;
     
     @OneToMany
@@ -31,5 +36,14 @@ public class Rubric {
     public void setRubricName(String rubricName) {
         this.rubricName = rubricName;
     }
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
 
 }
