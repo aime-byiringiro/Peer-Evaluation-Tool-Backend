@@ -2,8 +2,6 @@ package edu.tcu.cs.peerevaluation.peerEvaluation.evaluation;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Random;
-import java.util.UUID;
 
 import edu.tcu.cs.peerevaluation.student.Student;
 import jakarta.persistence.Entity;
@@ -11,7 +9,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 
 @Entity
 public class Evaluation implements Serializable{
