@@ -11,7 +11,7 @@ public class Criterion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Integer id;
 
     @NotEmpty(message = "description is required")
     private String description;
@@ -46,11 +46,11 @@ public class Criterion {
         this.maxScore = maxScore;
     }
 
-    public String getId() {
+    public Integer getId() {
         return this.id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

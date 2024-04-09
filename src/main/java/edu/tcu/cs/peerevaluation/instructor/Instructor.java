@@ -11,7 +11,6 @@ import jakarta.persistence.Id;
 public class Instructor implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     private String firstName;
