@@ -1,6 +1,5 @@
 package edu.tcu.cs.peerevaluation.Student;
 
-import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

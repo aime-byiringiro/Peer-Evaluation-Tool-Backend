@@ -1,10 +1,7 @@
 package edu.tcu.cs.peerevaluation.section.dto;
 
 import edu.tcu.cs.peerevaluation.rubric.dto.RubricDto;
-import edu.tcu.cs.peerevaluation.team.Team;
 import jakarta.validation.constraints.NotEmpty;
-
-import java.util.List;
 
 public record SectionDto(Integer id,
                         @NotEmpty(message = "Section Name is required")

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import edu.tcu.cs.peerevaluation.section.Section;
 import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
-import edu.tcu.cs.peerevaluation.team.Team;
 import jakarta.transaction.Transactional;
 
 @Service
