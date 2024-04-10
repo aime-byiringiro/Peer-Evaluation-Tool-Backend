@@ -21,10 +21,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.tcu.cs.peerevaluation.section.Section;
 import edu.tcu.cs.peerevaluation.student.Student;
 import edu.tcu.cs.peerevaluation.student.StudentService;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
 import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
+import edu.tcu.cs.peerevaluation.team.Team;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -44,30 +46,60 @@ public class StudentControllerTest {
   @BeforeEach
   void setUp(){
     this.students = new ArrayList<>();
+    
+    List<Team> team1List = new ArrayList<Team>();
+    List<Team> team2List = new ArrayList<Team>();
 
-    Student s1 = new Student();
-    s1.setId(132);
-    s1.setFirstName("John");
-    s1.setLastName("Doe");
-    this.students.add(s1);
+    Team team1 = new Team();
+      team1.setTeamName("team1");
+      team1List.add(team1);
 
-    Student s2 = new Student();
-    s2.setId(465);
-    s2.setFirstName("Jane");
-    s2.setLastName("Doe");
-    this.students.add(s2);
+    Team team2 = new Team();
+      team2.setTeamName("team2");
+      team2List.add(team2);
 
-    Student s3 = new Student();
-    s3.setId(798);
-    s3.setFirstName("Bob");
-    s3.setLastName("Jones");
-    this.students.add(s3);
+    Section sec1 = new Section();
+      sec1.setSectionName("section 1");
+      sec1.setAcademicYear("2024");
+      sec1.setTeams(team1List);
+      
+    
+    Section sec2 = new Section();
+      sec2.setSectionName("section 2");
+      sec2.setAcademicYear("2025");
+      sec2.setTeams(team2List);
 
-    Student s4 = new Student();
-    s4.setId(1324);
-    s4.setFirstName("John");
-    s4.setLastName("Smith");
-    this.students.add(s4);
+      team1.setSection(sec1);
+      team2.setSection(sec2);
+
+      Student s1 = new Student();
+        s1.setId(132);
+        s1.setFirstName("John");
+        s1.setLastName("Doe");
+      Student s2 = new Student();
+        s2.setId(465);
+        s2.setFirstName("Jane");
+        s2.setLastName("Doe");
+      Student s3 = new Student();
+        s3.setId(798);
+        s3.setFirstName("Bob");
+        s3.setLastName("Jones");
+      Student s4 = new Student();
+        s4.setId(1324);
+        s4.setFirstName("John");
+        s4.setLastName("Smith");
+  
+      s1.assignTeam(team1);
+      s2.assignTeam(team1);
+      s3.assignTeam(team2);
+      s4.assignTeam(team2);
+  
+      students.add(s1);
+      students.add(s2);
+      students.add(s3);
+      students.add(s4);
+
+    
   }
 
   @AfterEach

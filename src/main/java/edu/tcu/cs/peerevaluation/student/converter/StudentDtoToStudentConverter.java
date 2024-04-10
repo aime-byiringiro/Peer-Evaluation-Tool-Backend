@@ -16,6 +16,8 @@ public class StudentDtoToStudentConverter implements Converter<StudentDto, Stude
     student.setFirstName(source.firstName());
     student.setLastName(source.lastName());
     student.setEmail(source.email());
+    //TODO the DTO has a teamName field, which is unique, so we can just find the team by that name
+    //student.assignTeam(null);
     return student;
   }
 }
