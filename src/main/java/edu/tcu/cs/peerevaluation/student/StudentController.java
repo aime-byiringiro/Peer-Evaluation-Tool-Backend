@@ -8,6 +8,8 @@ import edu.tcu.cs.peerevaluation.student.dto.StudentDto;
 import edu.tcu.cs.peerevaluation.system.Result;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,8 +37,6 @@ public class StudentController {
     this.studentDtoToStudentConverter = studentDtoToStudentConverter;
   }
 
-  // TODO the students return with all data fields, inclduing password
-
   @GetMapping
   public Result findAllStudents() {
     List<Student> foundStudents = this.studentService.findAll();
@@ -58,12 +58,19 @@ public class StudentController {
                   @RequestParam(value = "teamName", required = false) String teamName) {
 
     List<Student> foundStudents = this.studentService.searchStudents(firstName, lastName, section, academicYear, teamName);
-    System.out.println(foundStudents);
+    if(foundStudents.size() > 1) {
+      Comparator<Student> sortByAcademicYear = Comparator.comparing(Student::getAcademicYear, Comparator.reverseOrder());
+      Comparator<Student> sortByLastName = Comparator.comparing(Student::getLastName);
+
+      Comparator<Student> sortByBoth = sortByAcademicYear.thenComparing(sortByLastName);
+
+      foundStudents.sort(sortByBoth);
+    }
     List<StudentDto> studentDtos = foundStudents.stream()
     .map(foundStudent ->
             this.studentToStudentDtoConverter.convert(foundStudent))
     .collect(Collectors.toList());
-    System.out.println(studentDtos);
+
     return new Result(true, StatusCode.SUCCESS, "Search Success", studentDtos);
   }
   

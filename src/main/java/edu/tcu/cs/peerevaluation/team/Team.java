@@ -15,6 +15,7 @@ public class Team implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Team_ID", unique = true)
     private Integer id;
 
     private String teamName;
