@@ -30,11 +30,23 @@ public class StudentSpecifications {
   }
 
   public static Specification<Student> inAcademicYear(String academicYear) {
-    return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("academicYear"), academicYear);
+    return (root, query, criteriaBuilder) -> {
+      // Join `Student` with `Team`
+      Join<Student, Team> studentTeamJoin = root.join("team");
+      // Further join `Team` with `Section`
+      Join<Team, Section> teamSectionJoin = studentTeamJoin.join("section");
+      // Compare the `sectionName` in `Section` with the passed parameter
+      return criteriaBuilder.equal(teamSectionJoin.get("academicYear"), academicYear);
+    };
   }
 
   public static Specification<Student> onTeam(String teamName) {
-    return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.join("team").get("name"), teamName);
+    return (root, query, criteriaBuilder) -> {
+      // Join `Student` with `Team`
+      Join<Student, Team> studentTeamJoin = root.join("team");
+      // Compare the `sectionName` in `Section` with the passed parameter
+      return criteriaBuilder.equal(studentTeamJoin.get("teamName"), teamName);
+    };
   }
 
 }

@@ -52,7 +52,7 @@ public class StudentServiceTest {
       team1List.add(team1);
 
     Team team2 = new Team();
-      team2.setTeamName("team1");
+      team2.setTeamName("team2");
       team2List.add(team2);
 
     Section sec1 = new Section();
@@ -188,4 +188,47 @@ public class StudentServiceTest {
       assertThat(result.get(0).getLastName()).isEqualTo(students.get(0).getLastName());
       verify(studentRepository, times(1)).findAll((Specification<Student>) any());
   }
+
+  @SuppressWarnings("unchecked")
+  @Test
+  void testFindStudentByAcademicYearSuccess(){
+      // Given
+
+      List<Student> expectedStudents = students.stream()
+                          .filter(s -> "2024".equals(s.getTeam().getSection().getAcademicYear()))
+                          .collect(Collectors.toList());
+  
+      given(studentRepository.findAll((Specification<Student>) any())).willReturn(expectedStudents);
+
+      // When
+      List<Student> result = studentService.searchStudents(null, null, null, "2024", null);
+
+      // Then
+      assertThat(result).hasSize(expectedStudents.size());
+      assertThat(result.get(0).getFirstName()).isEqualTo(students.get(0).getFirstName());
+      assertThat(result.get(0).getLastName()).isEqualTo(students.get(0).getLastName());
+      verify(studentRepository, times(1)).findAll((Specification<Student>) any());
+  }
+
+  @SuppressWarnings("unchecked")
+  @Test
+  void testFindStudentByTeamNameSuccess(){
+      // Given
+
+      List<Student> expectedStudents = students.stream()
+                          .filter(s -> "team1".equals(s.getTeam().getTeamName()))
+                          .collect(Collectors.toList());
+  
+      given(studentRepository.findAll((Specification<Student>) any())).willReturn(expectedStudents);
+
+      // When
+      List<Student> result = studentService.searchStudents(null, null, null, null, "team1");
+
+      // Then
+      assertThat(result).hasSize(expectedStudents.size());
+      assertThat(result.get(0).getFirstName()).isEqualTo(students.get(0).getFirstName());
+      assertThat(result.get(0).getLastName()).isEqualTo(students.get(0).getLastName());
+      verify(studentRepository, times(1)).findAll((Specification<Student>) any());
+  }
 }
+
