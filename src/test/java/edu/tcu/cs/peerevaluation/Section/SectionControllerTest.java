@@ -1,2 +1,4 @@
-package edu.tcu.cs.peerevaluation.Section;public class SectionControllerTest {
+package edu.tcu.cs.peerevaluation.Section;
+
+public class SectionControllerTest {
 }
