@@ -20,21 +20,14 @@ public class SectionService {
                 .findById(sectionId)
                 .orElseThrow( () -> new SectionNotFoundException(sectionId));
     }
-
     public Section adminViewSeniorDesignSectionsById(String Id){
         return null;
     }
 
 
-    public Section adminCreatesSeniorDesignSections(){
-        return null;
+    public void adminCreatesSeniorDesignSections(){
+
     }
 
-
-    public Section adminEditsSeniorDesignSectionsById(){
-        return null;
-    }
-
-
-
+    public void adminEditsSeniorDesignSectionsById(){}
 }
