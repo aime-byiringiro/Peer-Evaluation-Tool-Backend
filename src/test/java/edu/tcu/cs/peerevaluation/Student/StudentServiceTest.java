@@ -19,10 +19,12 @@ import edu.tcu.cs.peerevaluation.team.Team;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,10 +70,6 @@ public class StudentServiceTest {
       team1.setSection(sec1);
       team2.setSection(sec2);
     
-
-
-
-
     Student s1 = new Student();
     s1.setId(1);
     s1.setFirstName("John");
@@ -90,14 +88,6 @@ public class StudentServiceTest {
     s1.assignTeam(team1);
     s2.assignTeam(team1);
     s3.assignTeam(team2);
-
-
-
-
-
-
-
-
 
     students.add(s1);
     students.add(s2);
@@ -127,7 +117,6 @@ public class StudentServiceTest {
   assertThat(returnedStudent.getFirstName()).isEqualTo(s.getFirstName());
   assertThat(returnedStudent.getLastName()).isEqualTo(s.getLastName());
   verify(studentRepository, times(1)).findById(132);
-
 
   }
 
@@ -228,6 +217,110 @@ public class StudentServiceTest {
       assertThat(result.get(0).getFirstName()).isEqualTo(students.get(0).getFirstName());
       assertThat(result.get(0).getLastName()).isEqualTo(students.get(0).getLastName());
       verify(studentRepository, times(1)).findAll((Specification<Student>) any());
+  }
+
+  @Test
+  void testSaveSuccess() {
+    // Given
+    Student newStudent = new Student();
+    newStudent.setFirstName("Joe");
+    newStudent.setLastName("Shmoe");
+    newStudent.setMiddleInitial("N");
+    newStudent.setId(123456);
+
+    given(this.studentRepository.save(newStudent)).willReturn(newStudent);
+
+    // When
+    Student savedStudent = this.studentService.save(newStudent);
+
+    // Then
+    assertThat(savedStudent.getId()).isEqualTo(123456);
+    assertThat(savedStudent.getFirstName()).isEqualTo(newStudent.getFirstName());
+    assertThat(savedStudent.getLastName()).isEqualTo(newStudent.getLastName());
+    assertThat(savedStudent.getMiddleInitial()).isEqualTo(newStudent.getMiddleInitial());
+    verify(this.studentRepository, times(1)).save(newStudent);
+
+  }
+
+  @Test
+  void testUpdateSuccess() {
+    Student oldStudent = new Student();
+    oldStudent.setFirstName("Joe");
+    oldStudent.setLastName("Shmoe");
+    oldStudent.setMiddleInitial("N");
+    oldStudent.setId(123456);
+
+    Student update = new Student();
+    update.setFirstName("Mike");
+    update.setLastName("Shmoe");
+    update.setMiddleInitial("N");
+    update.setId(123456);
+
+    given(this.studentRepository.findById(123456)).willReturn(Optional.of(oldStudent));
+    given(this.studentRepository.save(oldStudent)).willReturn(oldStudent);
+    
+    //when 
+    Student updatedStudent = this.studentService.update(123456, update);
+
+    //then
+    assertThat(updatedStudent.getId()).isEqualTo(123456);
+    assertThat(updatedStudent.getFirstName()).isEqualTo(update.getFirstName());
+    verify(this.studentRepository, times(1)).findById(123456);
+    verify(this.studentRepository, times(1)).save(oldStudent);
+  }
+
+  @Test
+  void testUpdateNotFound() {
+    //Given
+    Student update = new Student();
+    update.setFirstName("Mike");
+    update.setLastName("Shmoe");
+    update.setMiddleInitial("N");
+
+    given(this.studentRepository.findById(123456)).willReturn(Optional.empty());
+
+    //When
+    assertThrows(ObjectNotFoundException.class, () -> {
+      this.studentService.update(123456,update);
+    });
+
+    //Then
+    verify(this.studentRepository, times(1)).findById(123456);
+  }
+
+  @Test
+  void testDeleteSuccess() {
+    //Given
+    Student student = new Student();
+      student.setFirstName("Joe");
+      student.setLastName("Shmoe");
+      student.setMiddleInitial("N");
+      student.setId(123456);
+    
+      given(this.studentRepository.findById(123456)).willReturn(Optional.of(student));
+      doNothing().when(this.studentRepository).deleteById(123456);
+
+      //when
+      this.studentService.delete(123456);
+
+      //then
+      verify(this.studentRepository, times(1)).deleteById(123456);
+
+  }
+
+  @Test
+  void testDeleteNotFound() {
+    //Given
+    given(this.studentRepository.findById(123456)).willReturn(Optional.empty());
+
+    //When
+    assertThrows(ObjectNotFoundException.class, () -> {
+      this.studentService.delete(123456);
+    });
+
+    //then
+    verify(this.studentRepository, times(1)).findById(123456);
+
   }
 }
 
