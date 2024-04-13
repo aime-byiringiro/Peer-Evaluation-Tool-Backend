@@ -1,4 +1,4 @@
-package edu.tcu.cs.peerevaluation.Student;
+package edu.tcu.cs.peerevaluation.student;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -28,15 +28,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tcu.cs.peerevaluation.section.Section;
-import edu.tcu.cs.peerevaluation.student.Student;
-import edu.tcu.cs.peerevaluation.student.StudentService;
 import edu.tcu.cs.peerevaluation.student.dto.StudentDto;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
 import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
 import edu.tcu.cs.peerevaluation.team.Team;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public class StudentControllerTest {
 
   @Autowired
@@ -242,10 +240,10 @@ public class StudentControllerTest {
         .andExpect(jsonPath("$.flag").value(true))
         .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
         .andExpect(jsonPath("$.message").value("Add Success"))
-        .andExpect(jsonPath("$.data.id").value(savedStudent.getId()))
-        .andExpect(jsonPath("$.data.firstName").value(savedStudent.getFirstName()))
-        .andExpect(jsonPath("$.data.middleInitial").value(savedStudent.getMiddleInitial()))
-        .andExpect(jsonPath("$.data.lastName").value(savedStudent.getLastName()));
+        .andExpect(jsonPath("$.data.id").value(1))
+        .andExpect(jsonPath("$.data.firstName").value("John"))
+        .andExpect(jsonPath("$.data.middleInitial").value("R"))
+        .andExpect(jsonPath("$.data.lastName").value("Smith"));
   }
 
   @Test

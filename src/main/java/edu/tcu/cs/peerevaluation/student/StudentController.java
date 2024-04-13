@@ -83,7 +83,6 @@ public class StudentController {
   public Result findStudentById(@PathVariable Integer studentId) {
     Student foundStudent = this.studentService.findById(studentId);
     StudentDto studentDto = this.studentToStudentDtoConverter.convert(foundStudent);
-    System.out.println(studentDto);
     return new Result(true, StatusCode.SUCCESS, "Find One Success", studentDto);
   }
 
