@@ -76,7 +76,6 @@ public class SectionServiceTest {
 
     @Test
     void testAdminFindsSeniorDesignSectionsByIdSuccess() {
-
         // Given, Example of json result
 
         /*
@@ -84,17 +83,14 @@ public class SectionServiceTest {
         "academicYear": "2024"
         "teams": {"team1", "team2", "team3", "team4"}
          */
-
         Section section1 = new Section();
         section1.setId("123456789");
         section1.setAcademicYear("2024");
         section1.setTeams(team);
         given(this.sectionRepository.findById("123456789")).willReturn(Optional.of(section1));
-
         // when
         Section returnedSection = this.sectionService.adminFindsSeniorDesignSectionsById("123456789");
         //Then
-
         assertThat(returnedSection.getId()).isEqualTo(section1.getId());
         assertThat(returnedSection.getAcademicYear()).isEqualTo(section1.getAcademicYear());
         assertThat(returnedSection.getTeams()).isEqualTo(section1.getTeams());
