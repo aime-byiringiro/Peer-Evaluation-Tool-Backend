@@ -44,7 +44,7 @@ public class StudentServiceTest {
 
   @BeforeEach
   void setUp(){
-<<<<<<< HEAD
+
 //    Student s1 = new Student();
 //    s1.setId("1");
 //    s1.setFirstName("John");
@@ -63,7 +63,6 @@ public class StudentServiceTest {
 //    students.add(s1);
 //    students.add(s2);
 //    students.add(s3);
-=======
 
     List<Team> team1List = new ArrayList<Team>();
     List<Team> team2List = new ArrayList<Team>();
@@ -112,7 +111,7 @@ public class StudentServiceTest {
     students.add(s1);
     students.add(s2);
     students.add(s3);
->>>>>>> main
+
   }
 
   @AfterEach
