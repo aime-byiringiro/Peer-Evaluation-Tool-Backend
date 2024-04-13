@@ -2,7 +2,7 @@ package edu.tcu.cs.peerevaluation.instructor.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 
-public record InstructorDto(String id,
+public record InstructorDto(Integer id,
                             @NotEmpty(message = "first name is required.")
                             String firstName,
                             String middleInitial,

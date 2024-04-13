@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 public class Criterion {
@@ -19,8 +20,10 @@ public class Criterion {
     @NotEmpty(message = "name is required")
     private String criterionName;
 
-    @NotEmpty(message = "max score is required")
-    private int maxScore;
+    @Positive(message = "max score is must positive")
+    private Integer maxScore;
+
+    private Integer rubricId;
 
     public String getDescription() {
         return this.description;
@@ -38,11 +41,11 @@ public class Criterion {
         this.criterionName = criterionName;
     }
 
-    public int getMaxScore() {
+    public Integer getMaxScore() {
         return this.maxScore;
     }
 
-    public void setMaxScore(int maxScore) {
+    public void setMaxScore(Integer maxScore) {
         this.maxScore = maxScore;
     }
 
@@ -54,5 +57,12 @@ public class Criterion {
         this.id = id;
     }
 
+    public Integer getRubricId() {
+        return this.rubricId;
+    }
+
+    public void setRubricId(Integer rubricId) {
+        this.rubricId = rubricId;
+    }
     
 }

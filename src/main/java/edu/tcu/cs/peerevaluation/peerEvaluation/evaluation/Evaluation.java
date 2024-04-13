@@ -2,7 +2,6 @@ package edu.tcu.cs.peerevaluation.peerEvaluation.evaluation;
 
 import java.io.Serializable;
 import java.util.List;
-
 import edu.tcu.cs.peerevaluation.student.Student;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,13 +12,15 @@ import jakarta.persistence.ManyToOne;
 @Entity
 public class Evaluation implements Serializable{
 
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Integer id;
 
   @ManyToOne
   private Student evaluated;
+
+  
+  private Integer peerEvalId;
 
   private List<Integer> scores;
   /*TODO the only possible issue with this way is the 
@@ -36,13 +37,12 @@ public class Evaluation implements Serializable{
 
   private String publicComments;
 
-
-  public String getId(){
-    return this.id.toString();
+  public Integer getId(){
+    return this.id;
   }
 
-  public void setId(String id){
-    //this.id = id;
+  public void setId(Integer id){
+    this.id = id;
   }
 
   public Student getEvaluated() {
@@ -77,7 +77,12 @@ public class Evaluation implements Serializable{
     this.publicComments = publicComments;
   }
 
+  public Integer getPeerEvalId() {
+    return this.peerEvalId;
+  }
 
-
+  public void setPeerEvalId(Integer peerEvalId) {
+    this.peerEvalId = peerEvalId;
+  }
 
 }

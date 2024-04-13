@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface EvaluationRepository extends JpaRepository<Evaluation, Long> {
+public interface EvaluationRepository extends JpaRepository<Evaluation, Integer> {
 
 }

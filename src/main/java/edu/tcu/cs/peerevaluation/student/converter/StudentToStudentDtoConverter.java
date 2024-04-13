@@ -16,7 +16,9 @@ public class StudentToStudentDtoConverter implements Converter<Student, StudentD
                                            source.getMiddleInitial(),
                                            source.getLastName(),
                                            source.getEmail(),
-                                           source.getTeam());
+                                           source.getTeam() != null
+                                                    ? source.getTeam().getTeamName()
+                                                    : null );
     return studentDto;
     
   }

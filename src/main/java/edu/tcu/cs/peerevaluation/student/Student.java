@@ -3,15 +3,20 @@ package edu.tcu.cs.peerevaluation.student;
 import java.io.Serializable;
 
 import edu.tcu.cs.peerevaluation.team.Team;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Student implements Serializable {
+public class Student implements Serializable{
 
   @Id
-  private String id;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "Student_ID")
+  private Integer id;
 
   private String firstName;
 
@@ -30,11 +35,11 @@ public class Student implements Serializable {
   public Student() {
   }
 
-  public String getId() {
+  public Integer getId() {
     return this.id;
   }
 
-  public void setId(String id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 
@@ -84,5 +89,14 @@ public class Student implements Serializable {
 
   public void setTeam(Team team) {
     this.team = team;
+  }
+
+  public void assignTeam(Team team) {
+    this.team = team;
+    team.addStudentToTeam(this);
+  }
+
+  public String getAcademicYear() {
+    return this.team.getSection().getAcademicYear();
   }
 }

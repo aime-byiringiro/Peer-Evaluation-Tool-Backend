@@ -6,6 +6,8 @@ import java.util.List;
 import edu.tcu.cs.peerevaluation.peerEvaluation.evaluation.Evaluation;
 import edu.tcu.cs.peerevaluation.student.Student;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -14,12 +16,26 @@ import jakarta.persistence.OneToMany;
 public class PeerEvaluation implements Serializable{
 
   @Id
-  private String id;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
   @ManyToOne
   private Student evaluator; 
-
-  @OneToMany
+  /* TODO
+   * add mappedBy
+   * may need to creat a field on the evaluation object to 
+   * point back to the peer eval it belongs to. 
+   * 1. create the PeerEval object
+   * 2. it automatically gets an id
+   * 3. when you make the Eval object, there will be a field left blank
+   *    when changing from json, but that will quickly be filled with the id 
+   *    of the peer eval 
+   * 
+   * maybe use the evaluator field to link them together 
+   * 
+   * 
+   */
+  @OneToMany(mappedBy = "peerEvalId")
   private List<Evaluation> evaluations;
 
   private String week;
@@ -27,11 +43,11 @@ public class PeerEvaluation implements Serializable{
   public PeerEvaluation() {
   }
 
-  public String getId() {
+  public Integer getId() {
     return this.id;
   }
 
-  public void setId(String id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 

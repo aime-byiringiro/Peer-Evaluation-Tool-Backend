@@ -4,6 +4,8 @@ import java.util.List;
 
 import edu.tcu.cs.peerevaluation.rubric.criterion.Criterion;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
@@ -11,9 +13,19 @@ import jakarta.persistence.OneToMany;
 public class Rubric {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
     private String rubricName;
     
-    @OneToMany
+    /* TODO
+     * so in this case we have OneToMany, but he put ManyToMany,
+     * im not sure why, but to map them together and remove the extra
+     * table, assuming we leave it OneToMany, then we need to add an
+     * attribute to Criterion that will correspond to the rubric it is
+     * a part of, we could just use the rubric id
+     */
+    @OneToMany(mappedBy = "rubricId")
     private List<Criterion> criterionList;
 
     public List<Criterion> getCriterionList() {
@@ -31,5 +43,14 @@ public class Rubric {
     public void setRubricName(String rubricName) {
         this.rubricName = rubricName;
     }
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
 
 }

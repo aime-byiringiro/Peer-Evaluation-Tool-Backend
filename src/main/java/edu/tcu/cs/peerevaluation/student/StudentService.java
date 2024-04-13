@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 
@@ -49,9 +48,31 @@ public class StudentService {
     return studentRepository.findAll(spec);
   }
 
-  public Student findById(String studentId) {
+  public Student findById(Integer studentId) {
     return this.studentRepository.findById(studentId)
             .orElseThrow(() -> new ObjectNotFoundException("student",studentId)); 
+  }
+
+  public Student save(Student newStudent) {
+    return this.studentRepository.save(newStudent);
+  }
+
+  public Student update(Integer studentId, Student update) {
+    return this.studentRepository.findById(studentId)
+              .map(oldStudent -> {
+                oldStudent.setFirstName(update.getFirstName());
+                oldStudent.setLastName(update.getLastName());
+                oldStudent.setMiddleInitial(update.getMiddleInitial());
+                oldStudent.setEmail(update.getEmail());
+                return this.studentRepository.save(oldStudent);
+              })
+              .orElseThrow(() -> new ObjectNotFoundException("student", studentId));
+  }
+
+  public void delete(Integer studentId) {
+    this.studentRepository.findById(studentId)
+              .orElseThrow(() -> new ObjectNotFoundException("student", studentId));
+    this.studentRepository.deleteById(studentId);
   }
 
 }
