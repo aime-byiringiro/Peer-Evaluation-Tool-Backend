@@ -1,6 +1,5 @@
 package edu.tcu.cs.peerevaluation.peerEvalUser;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,7 +29,6 @@ public class PeerEvalUser implements Serializable {
   @NotEmpty(message = "roles are required.")
   private String roles; // Space separated string
 
-  //@Column(length = 512)
   @OneToOne
   private Student student;
 

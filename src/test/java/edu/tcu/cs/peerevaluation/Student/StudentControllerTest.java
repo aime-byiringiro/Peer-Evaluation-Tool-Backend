@@ -27,6 +27,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
+import edu.tcu.cs.peerevaluation.peerEvalUser.UserService;
 import edu.tcu.cs.peerevaluation.peerEvalUser.dto.UserDto;
 import edu.tcu.cs.peerevaluation.section.Section;
 import edu.tcu.cs.peerevaluation.student.dto.StudentDto;
@@ -43,6 +45,9 @@ public class StudentControllerTest {
 
   @MockBean
   StudentService studentService;
+
+  @MockBean
+  UserService userService;
 
   @Autowired
   ObjectMapper objectMapper;
@@ -218,14 +223,14 @@ public class StudentControllerTest {
   @Test
   void testAddStudentSuccess() throws Exception {
     // Given
-    StudentDto studentDto = new StudentDto(1,
+    StudentDto studentDto = new StudentDto(7,
         "John",
         "R",
         "Smith",
         null,
         null);
 
-    UserDto userDto = new UserDto(1, 
+    UserDto userDto = new UserDto(7, 
         "Jsmith", 
         "password", 
         true, 
@@ -235,12 +240,20 @@ public class StudentControllerTest {
     String json = this.objectMapper.writeValueAsString(studentUserCombined);
 
     Student savedStudent = new Student();
-    savedStudent.setId(1);
-    savedStudent.setFirstName("John");
-    savedStudent.setMiddleInitial("R");
-    savedStudent.setLastName("Smith");
+      savedStudent.setId(7);
+      savedStudent.setFirstName("John");
+      savedStudent.setMiddleInitial("R");
+      savedStudent.setLastName("Smith");
+
+    PeerEvalUser savedUser = new PeerEvalUser();
+      savedUser.setUsername("Jsmith");
+      savedUser.setPassword("password");
+      savedUser.setEnabled(true);
+      savedUser.setRoles("student");
+    
 
     given(this.studentService.save(Mockito.any(Student.class))).willReturn(savedStudent);
+    given(this.userService.save(Mockito.any(PeerEvalUser.class))).willReturn(savedUser);
 
     // When and Then
     this.mockMvc
@@ -249,7 +262,7 @@ public class StudentControllerTest {
         .andExpect(jsonPath("$.flag").value(true))
         .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
         .andExpect(jsonPath("$.message").value("Add Success"))
-        .andExpect(jsonPath("$.data.id").value(1))
+        .andExpect(jsonPath("$.data.id").value(7))
         .andExpect(jsonPath("$.data.firstName").value("John"))
         .andExpect(jsonPath("$.data.middleInitial").value("R"))
         .andExpect(jsonPath("$.data.lastName").value("Smith"));
