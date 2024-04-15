@@ -58,10 +58,10 @@ public class SecurityConfiguration {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http
         .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-            .requestMatchers(HttpMethod.POST, "/users/login").permitAll()
-            .requestMatchers(HttpMethod.GET, "/users/**").hasAuthority("ROLE_admin")
+            //.requestMatchers(HttpMethod.POST, "/users/login").permitAll()
+            //.requestMatchers(HttpMethod.GET, "/users/**").hasAuthority("ROLE_admin")
             .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-            //.anyRequest().permitAll() // always put this last
+            .anyRequest().permitAll() // always put this last
         )
         .headers(headers -> headers.frameOptions(Customizer.withDefaults()).disable())
         .csrf(csrf -> csrf.disable())

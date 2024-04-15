@@ -1,12 +1,16 @@
 package edu.tcu.cs.peerevaluation.peerEvalUser;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotEmpty;
 
 import java.io.Serializable;
+
+import edu.tcu.cs.peerevaluation.student.Student;
 
 @Entity
 public class PeerEvalUser implements Serializable {
@@ -25,6 +29,10 @@ public class PeerEvalUser implements Serializable {
 
   @NotEmpty(message = "roles are required.")
   private String roles; // Space separated string
+
+  //@Column(length = 512)
+  @OneToOne
+  private Student student;
 
   public PeerEvalUser() {
 
@@ -69,5 +77,17 @@ public String getRoles() {
 public void setRoles(String roles) {
     this.roles = roles;
 }
+
+public boolean getEnabled() {
+    return this.enabled;
+}
+
+public Student getStudent() {
+    return this.student;
+}
+
+public void setStudent(Student student) {
+    this.student = student;
+    }
 
 }

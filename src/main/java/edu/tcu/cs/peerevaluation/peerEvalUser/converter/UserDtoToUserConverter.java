@@ -12,6 +12,7 @@ public class UserDtoToUserConverter implements Converter<UserDto, PeerEvalUser> 
     public PeerEvalUser convert(UserDto source) {
       PeerEvalUser peerEvalUser = new PeerEvalUser();
       peerEvalUser.setUsername(source.username());
+      peerEvalUser.setPassword(source.password());
       peerEvalUser.setEnabled(source.enabled());
       peerEvalUser.setRoles(source.roles());
       return peerEvalUser;

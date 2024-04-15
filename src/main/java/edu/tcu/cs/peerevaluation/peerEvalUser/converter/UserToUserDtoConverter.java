@@ -15,6 +15,7 @@ public class UserToUserDtoConverter implements Converter<PeerEvalUser, UserDto> 
         // We are not setting password in DTO.
         final UserDto userDto = new UserDto(source.getId(),
                                             source.getUsername(),
+                                            source.getPassword(),
                                             source.isEnabled(),
                                             source.getRoles());
         return userDto;
