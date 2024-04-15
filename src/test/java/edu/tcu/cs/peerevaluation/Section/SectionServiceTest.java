@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.tcu.cs.peerevaluation.rubric.Rubric;
 import edu.tcu.cs.peerevaluation.rubric.criterion.Criterion;
 import edu.tcu.cs.peerevaluation.section.Section;
+import edu.tcu.cs.peerevaluation.section.utils.IdWorker;
 import edu.tcu.cs.peerevaluation.section.SectionController;
 import edu.tcu.cs.peerevaluation.section.SectionRepository;
 import edu.tcu.cs.peerevaluation.section.SectionService;
@@ -53,10 +54,14 @@ public class SectionServiceTest {
     @Mock
     SectionRepository sectionRepository;
 
+    @Mock
+    IdWorker idWorker;
+
     @InjectMocks
     SectionService sectionService;
 
     List<Section> sections;
+
 
     @BeforeEach
     void setUp() {
@@ -134,7 +139,57 @@ public class SectionServiceTest {
         verify(this.sectionRepository, times(1)).findById(1);
 
 
+    }
 
+    @Test
+    void testSaveSuccess(){
+        //Given
+        Section newSection = new Section();
+        newSection.setSectionName("Section2025-2026");
+        newSection.setAcademicYear("2025");
+        newSection.setFirstDay("06/06/2025");
+        newSection.setLastDay("06/06/2026");
+
+
+        List<Criterion> criterionList = new ArrayList<>();
+        Criterion c4 = new Criterion();
+        c4.setCriterionName("Manners");
+        c4.setDescription("Does this teammate treat others with respect? (1-10)");
+        c4.setMaxScore(10);
+
+        Criterion c5 = new Criterion();
+        c5.setCriterionName("Humbleness");
+        c5.setDescription("How well does this teammate handle criticism of their work? (1-10)");
+        c5.setMaxScore(10);
+
+        Criterion c6 = new Criterion();
+        c6.setCriterionName("Engagement in meetings");
+        c6.setDescription("How is this teammate's performance during meetings? (1-10)");
+        c6.setMaxScore(10);
+        criterionList.addAll(Arrays.asList( c4, c5, c6));
+
+
+
+        Rubric r1 = new Rubric();
+        r1.setRubricName("2025 Rubric");
+        r1.setCriterionList(criterionList);
+
+        newSection.setRubric(r1);
+
+        given(this.idWorker.nextId()).willReturn(123456L);
+        given(this.sectionRepository.save(newSection)).willReturn(newSection);
+
+
+        //when
+
+        Section savedSection = this.sectionService.save(newSection);
+
+        //Then
+        assertThat(savedSection.getId()).isEqualTo(123456);
+        assertThat(savedSection.getSectionName()).isEqualTo(newSection.getSectionName());
+        assertThat(savedSection.getLastDay()).isEqualTo(newSection.getLastDay());
+        assertThat(savedSection.getFirstDay()).isEqualTo(newSection.getFirstDay());
+        assertThat(savedSection.getRubric()).isEqualTo(newSection.getRubric());
 
     }
 

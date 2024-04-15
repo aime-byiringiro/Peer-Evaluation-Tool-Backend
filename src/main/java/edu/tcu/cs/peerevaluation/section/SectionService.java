@@ -29,7 +29,7 @@ public class SectionService {
     }
 
     public Section save(Section newSection){
-        newSection.setId(idWorker.nextId());
+        newSection.setId((int)idWorker.nextId());
         return this.sectionRepository.save(newSection);
     }
 

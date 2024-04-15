@@ -38,7 +38,7 @@ public class SectionController {
 
 
     @PostMapping
-    public Result createNewSection(@Valid @RequestBody SectionDto sectionDto) {
+    public Result createNewSection(@RequestBody SectionDto sectionDto) {
 
         Section newSection = this.sectionDtoToSectionConverter.convert(sectionDto);
         Section savedSection = this.sectionService.save(newSection);

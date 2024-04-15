@@ -3,7 +3,10 @@ package edu.tcu.cs.peerevaluation.Section;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.tcu.cs.peerevaluation.rubric.Rubric;
+import edu.tcu.cs.peerevaluation.rubric.converter.RubricToRubricDtoConverter;
 import edu.tcu.cs.peerevaluation.rubric.criterion.Criterion;
+import edu.tcu.cs.peerevaluation.rubric.criterion.converter.CriterionToCriterionDtoConverter;
+import edu.tcu.cs.peerevaluation.rubric.dto.RubricDto;
 import edu.tcu.cs.peerevaluation.section.Section;
 import edu.tcu.cs.peerevaluation.section.SectionService;
 
@@ -27,17 +30,22 @@ import edu.tcu.cs.peerevaluation.system.StatusCode;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javax.print.attribute.standard.Media;
+
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
+@ActiveProfiles(value = "dev")
 public class SectionControllerTest {
 
     @Autowired
@@ -46,10 +54,18 @@ public class SectionControllerTest {
     @MockBean
     SectionService sectionService;
 
+    @Mock
+    RubricToRubricDtoConverter  rubricToRubricDtoConverter;
+
+
+
     @Autowired
     ObjectMapper objectMapper;
     Section section1 = new Section();
     Rubric r1 = new Rubric();
+    RubricDto rubricDto;
+
+
 
     @BeforeEach
     void setUp(){
@@ -77,9 +93,14 @@ public class SectionControllerTest {
        /*
        Creating fake Rubric
        */
-        Rubric r1 = new Rubric();
+
+        r1.setId(1);
         r1.setRubricName("2024 Rubric");
         r1.setCriterionList(criterionList);
+
+
+
+
 
         /*
         Creating fake section data // Actual
@@ -99,14 +120,15 @@ public class SectionControllerTest {
 
     @Test
     void testFindSectionBySectionName() throws Exception {
-        //Given
 
+        rubricDto = this.rubricToRubricDtoConverter.convert(r1);
+        //Given
         SectionDto sectionDto = new SectionDto(1,
                 "Section2023-2024",
                 "2023",
                 "08/21/2023",
                 "05/01/2024",
-                null);
+                rubricDto);
 
         String json = this.objectMapper.writeValueAsString(sectionDto);
 
@@ -116,7 +138,7 @@ public class SectionControllerTest {
         foundSection.setAcademicYear("2023");
         foundSection.setFirstDay("08/21/2023");
         foundSection.setLastDay("05/01/2024");
-        foundSection.setRubric(null);
+        foundSection.setRubric(r1);
 
         given(this.sectionService.adminFindsSeniorDesignSectionsBySectionName(1)).willReturn(this.section1);
         System.out.print(this.section1);
@@ -132,6 +154,55 @@ public class SectionControllerTest {
                 .andExpect(jsonPath("$.data.academicYear").value(foundSection.getAcademicYear()));
         // when and then
     }
+
+    @Test
+    void testCreateNewSection() throws Exception {
+
+        //Given
+
+        rubricDto = this.rubricToRubricDtoConverter.convert(r1);
+
+        SectionDto sectionDto = new SectionDto(
+                null,
+                "Section2025-2026",
+                "2025",
+                "06/06/2025",
+                "06/06/2026",
+                rubricDto);
+
+        String json = this.objectMapper.writeValueAsString(sectionDto);
+
+        Section savedSection = new Section();
+
+        savedSection.setId(5);
+        savedSection.setSectionName("Section2025-2026");
+        savedSection.setAcademicYear("2025");
+        savedSection.setFirstDay("06/06/2025");
+        savedSection.setLastDay("06/06/2026");
+        savedSection.setRubric(r1);
+        given(this.sectionService.save(Mockito.any(Section.class))).willReturn(savedSection);
+
+        // when and then
+        this.mockMvc.perform(post("/section").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Add Success"))
+                .andExpect(jsonPath("$.data.id").isNotEmpty())
+                .andExpect(jsonPath("$.data.sectionName").value(savedSection.getSectionName()))
+                .andExpect(jsonPath("$.data.academicYear").value(savedSection.getAcademicYear()))
+                .andExpect(jsonPath("$.data.firstDay").value(savedSection.getFirstDay()))
+                .andExpect(jsonPath("$.data.lastDay").value(savedSection.getLastDay()))
+                .andExpect(jsonPath("$.data.rubricDto").value(savedSection.getRubric()));
+
+
+
+
+
+
+    }
+
+
+
 
 
 
