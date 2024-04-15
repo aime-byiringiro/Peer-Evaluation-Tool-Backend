@@ -79,17 +79,23 @@ public class SectionServiceTest {
         // Given, Example of json result
 
         /*
-        "id": "123456789"
-        "academicYear": "2024"
-        "teams": {"team1", "team2", "team3", "team4"}
+         sec1.setSectionName("Section2023-2024");
+          sec1.setAcademicYear("2023");
+          sec1.setFirstDay("08/21/2023");
+          sec1.setLastDay("05/01/2024");
+          sec1.setRubric(r1);
+
          */
         Section section1 = new Section();
-        section1.setId(123456789);
-        section1.setAcademicYear("2024");
-        section1.setTeams(team);
+        section1.setSectionName("Section2023-2024");
+        section1.setAcademicYear("08/21/2023");
+        section1.setFirstDay("05/01/2024");
+
+
+
         given(this.sectionRepository.findById(123456789)).willReturn(Optional.of(section1));
         // when
-        Section returnedSection = this.sectionService.adminFindsSeniorDesignSectionsById(123456789);
+        Section returnedSection = this.sectionService.adminFindsSeniorDesignSectionsById("Section2023-2024");
         //Then
         assertThat(returnedSection.getId()).isEqualTo(section1.getId());
         assertThat(returnedSection.getAcademicYear()).isEqualTo(section1.getAcademicYear());

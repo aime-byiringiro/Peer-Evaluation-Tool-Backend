@@ -15,10 +15,10 @@ public class SectionService {
         this.sectionRepository = sectionRepository;
     }
 
-    public Section adminFindsSeniorDesignSectionsById(Integer sectionId){
+    public Section adminFindsSeniorDesignSectionsById(String sectionName){
         return this.sectionRepository
-                .findById(sectionId)
-                .orElseThrow( () -> new SectionNotFoundException(sectionId));
+                .findById(Integer.valueOf(sectionName))
+                .orElseThrow( () -> new SectionNotFoundException(sectionName));
     }
     public Section adminViewSeniorDesignSectionsById(String Id){
         return null;

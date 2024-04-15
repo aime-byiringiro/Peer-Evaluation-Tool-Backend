@@ -29,10 +29,9 @@ public class SectionController {
         this.sectionToSectionDtoConverter = sectionToSectionDtoConverter;
     }
 
-
-    @GetMapping("/{sectionId") 
-    public Result findSectionById(@PathVariable int sectionId) {
-        Section foundSection = this.sectionService.adminFindsSeniorDesignSectionsById(sectionId);
+    @GetMapping("/{sectionName}")
+    public Result findSectionById(@PathVariable String sectionName) {
+        Section foundSection = this.sectionService.adminFindsSeniorDesignSectionsById(sectionName);
         SectionDto sectionDto = this.sectionToSectionDtoConverter.convert(foundSection); // convert the json section into section object
         return new Result(true, StatusCode.SUCCESS, "find One Success", sectionDto);
 

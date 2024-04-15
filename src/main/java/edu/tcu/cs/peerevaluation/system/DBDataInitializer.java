@@ -166,12 +166,16 @@ public class DBDataInitializer implements CommandLineRunner{
     // Test Section Data //
     //-------------------//
 
+
+
     Section sec1 = new Section();
       sec1.setSectionName("Section2023-2024");
       sec1.setAcademicYear("2023");
       sec1.setFirstDay("08/21/2023");
       sec1.setLastDay("05/01/2024");
       sec1.setRubric(r1);
+
+
     sectionRepository.save(sec1);
     Section sec2 = new Section();
       sec2.setSectionName("Section2024-2025");
@@ -179,7 +183,12 @@ public class DBDataInitializer implements CommandLineRunner{
       sec2.setFirstDay("08/21/2024");
       sec2.setLastDay("05/01/2025");
       sec2.setRubric(r1);
+
     sectionRepository.save(sec2);
+
+
+
+
 
     //----------------------//
     // Test Instructor Data //
