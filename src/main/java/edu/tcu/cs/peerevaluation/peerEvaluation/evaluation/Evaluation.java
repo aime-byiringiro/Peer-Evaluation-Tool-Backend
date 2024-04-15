@@ -19,20 +19,10 @@ public class Evaluation implements Serializable{
   @ManyToOne
   private Student evaluated;
 
-  
   private Integer peerEvalId;
 
   private List<Integer> scores;
-  /*TODO the only possible issue with this way is the 
-    scores being out of order as there is no check, at 
-    least as a list. it may be better to use a map or 
-    something to pair the score to criterion. for example
-    the criterion object could have an id, and since there
-    would never be that many, just do: 1,2,3..., and then use
-    that id to map to the score value. however if there isn't 
-    really a way for the scores to get out of order than this 
-    isn't an issue 
-  */
+
   private String privateComments;
 
   private String publicComments;

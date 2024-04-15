@@ -314,15 +314,6 @@ public class StudentControllerIntegrationTest {
         .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
         .andExpect(jsonPath("$.message").value("Could not find user with Id 6 :("))
         .andExpect(jsonPath("$.data").isEmpty());
-
-    /*TODO
-     * There is an issue, to be expected, as if 
-     * student, "john" is referenced by anything, 
-     * then that needs to be handled properly.
-     * I think i have the issue handled in the case of team
-     * currently i think the next issue is evaluation
-     */
-
   }
 
   @Test

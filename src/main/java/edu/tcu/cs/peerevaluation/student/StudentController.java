@@ -5,8 +5,6 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
 import edu.tcu.cs.peerevaluation.peerEvalUser.UserService;
 import edu.tcu.cs.peerevaluation.peerEvalUser.converter.UserDtoToUserConverter;
-import edu.tcu.cs.peerevaluation.peerEvalUser.converter.UserToUserDtoConverter;
-import edu.tcu.cs.peerevaluation.peerEvalUser.dto.UserDto;
 import edu.tcu.cs.peerevaluation.student.converter.StudentDtoToStudentConverter;
 import edu.tcu.cs.peerevaluation.student.converter.StudentToStudentDtoConverter;
 import edu.tcu.cs.peerevaluation.student.dto.StudentDto;
@@ -41,17 +39,14 @@ public class StudentController {
 
   private final UserDtoToUserConverter userDtoToUserConverter;
 
-  private final UserToUserDtoConverter userToUserDtoConverter;
-
   public StudentController(StudentService studentService, StudentToStudentDtoConverter studentToStudentDtoConverter,
       StudentDtoToStudentConverter studentDtoToStudentConverter, UserService userService,
-      UserToUserDtoConverter userToUserDtoConverter, UserDtoToUserConverter userDtoToUserConverter) {
+      UserDtoToUserConverter userDtoToUserConverter) {
     this.studentService = studentService;
     this.studentToStudentDtoConverter = studentToStudentDtoConverter;
     this.studentDtoToStudentConverter = studentDtoToStudentConverter;
     this.userService = userService;
     this.userDtoToUserConverter = userDtoToUserConverter;
-    this.userToUserDtoConverter = userToUserDtoConverter;
   }
 
   @GetMapping

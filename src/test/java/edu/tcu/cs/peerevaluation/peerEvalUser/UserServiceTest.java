@@ -118,6 +118,7 @@ class UserServiceTest {
 
         // When
         Throwable thrown = catchThrowable(() -> {
+            @SuppressWarnings("unused")
             PeerEvalUser returnedUser = this.userService.findById(1);
         });
 
