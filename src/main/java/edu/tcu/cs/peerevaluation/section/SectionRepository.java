@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SectionRepository extends JpaRepository<Section, Integer>, JpaSpecificationExecutor<Section>{
+public interface SectionRepository extends JpaRepository<Section, String>, JpaSpecificationExecutor<Section>{
 
 
 }
