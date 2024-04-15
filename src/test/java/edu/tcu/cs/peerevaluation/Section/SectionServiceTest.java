@@ -82,14 +82,6 @@ public class SectionServiceTest {
     void testAdminFindsSeniorDesignSectionsByIdSuccess() {
         // Given, Example of json result
 
-        /*
-         sec1.setSectionName("Section2023-2024");
-          sec1.setAcademicYear("2023");
-          sec1.setFirstDay("08/21/2023");
-          sec1.setLastDay("05/01/2024");
-          sec1.setRubric(r1);
-         */
-
 
         /*
         creating fake creterionList
@@ -124,13 +116,14 @@ public class SectionServiceTest {
         */
         Section section1 = new Section();
         section1.setSectionName("Section2023-2024");
-        section1.setAcademicYear("08/21/2023");
-        section1.setFirstDay("05/01/2024");
+        section1.setAcademicYear("2023");
+        section1.setFirstDay("08/21/2023");
+        section1.setLastDay("05/01/2024");
         section1.setRubric(r1);
 
-        given(this.sectionRepository.findById("Section2023-2024")).willReturn(Optional.of(section1));
+        given(this.sectionRepository.findById(1)).willReturn(Optional.of(section1));
         // when
-        Section returnedSection = this.sectionService.adminFindsSeniorDesignSectionsById("Section2023-2024");
+        Section returnedSection = this.sectionService.adminFindsSeniorDesignSectionsBySectionName(1);
         //Then
 
         assertThat(returnedSection.getSectionName()).isEqualTo(section1.getSectionName());
@@ -138,7 +131,7 @@ public class SectionServiceTest {
         assertThat(returnedSection.getFirstDay()).isEqualTo(section1.getFirstDay());
         assertThat(returnedSection.getLastDay()).isEqualTo(section1.getLastDay());
         assertThat(returnedSection.getRubric()).isEqualTo(section1.getRubric());
-        verify(this.sectionRepository, times(1)).findById("Section2023-2024");
+        verify(this.sectionRepository, times(1)).findById(1);
 
 
 
