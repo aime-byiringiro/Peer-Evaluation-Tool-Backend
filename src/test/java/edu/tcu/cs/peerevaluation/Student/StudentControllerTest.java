@@ -230,27 +230,26 @@ public class StudentControllerTest {
         null,
         null);
 
-    UserDto userDto = new UserDto(7, 
-        "Jsmith", 
-        "password", 
-        true, 
+    UserDto userDto = new UserDto(7,
+        "Jsmith",
+        "password",
+        true,
         "student");
 
-    StudentUserCombined studentUserCombined = new StudentUserCombined(studentDto,userDto);
+    StudentUserCombined studentUserCombined = new StudentUserCombined(studentDto, userDto);
     String json = this.objectMapper.writeValueAsString(studentUserCombined);
 
     Student savedStudent = new Student();
-      savedStudent.setId(7);
-      savedStudent.setFirstName("John");
-      savedStudent.setMiddleInitial("R");
-      savedStudent.setLastName("Smith");
+    savedStudent.setId(7);
+    savedStudent.setFirstName("John");
+    savedStudent.setMiddleInitial("R");
+    savedStudent.setLastName("Smith");
 
     PeerEvalUser savedUser = new PeerEvalUser();
-      savedUser.setUsername("Jsmith");
-      savedUser.setPassword("password");
-      savedUser.setEnabled(true);
-      savedUser.setRoles("student");
-    
+    savedUser.setUsername("Jsmith");
+    savedUser.setPassword("password");
+    savedUser.setEnabled(true);
+    savedUser.setRoles("student");
 
     given(this.studentService.save(Mockito.any(Student.class))).willReturn(savedStudent);
     given(this.userService.save(Mockito.any(PeerEvalUser.class))).willReturn(savedUser);
@@ -270,7 +269,7 @@ public class StudentControllerTest {
 
   @Test
   void testUpdateStudentSuccess() throws Exception {
-    //Given
+    // Given
     StudentDto studentDto = new StudentDto(1,
         "John",
         "R",
@@ -281,16 +280,16 @@ public class StudentControllerTest {
     String json = this.objectMapper.writeValueAsString(studentDto);
 
     Student updatedStudent = new Student();
-      updatedStudent.setId(1);
-      updatedStudent.setFirstName("John");
-      updatedStudent.setMiddleInitial("R");
-      updatedStudent.setLastName("Smith");
+    updatedStudent.setId(1);
+    updatedStudent.setFirstName("John");
+    updatedStudent.setMiddleInitial("R");
+    updatedStudent.setLastName("Smith");
 
     given(this.studentService.update(eq(1), Mockito.any(Student.class))).willReturn(updatedStudent);
 
-    //When and Then
+    // When and Then
     this.mockMvc.perform(put("/students/1").contentType(MediaType.APPLICATION_JSON)
-              .content(json).accept(MediaType.APPLICATION_JSON))
+        .content(json).accept(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.flag").value(true))
         .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
         .andExpect(jsonPath("$.message").value("Update Success"))
@@ -314,10 +313,10 @@ public class StudentControllerTest {
 
     given(this.studentService.update(eq(1), Mockito.any(Student.class)))
         .willThrow(new ObjectNotFoundException("student", 1));
-    
+
     // When and Then
     this.mockMvc.perform(put("/students/1").contentType(MediaType.APPLICATION_JSON)
-            .content(json).accept(MediaType.APPLICATION_JSON))
+        .content(json).accept(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.flag").value(false))
         .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
         .andExpect(jsonPath("$.message").value("Could not find student with Id 1 :("))
@@ -341,7 +340,7 @@ public class StudentControllerTest {
   void testDeleteArtifactErrorWithNonExistentId() throws Exception {
     // Given
     doThrow(new ObjectNotFoundException("student", 1)).when(this.studentService)
-      .delete(1);
+        .delete(1);
 
     // When and Then
     this.mockMvc.perform(delete("/students/1").accept(MediaType.APPLICATION_JSON))

@@ -50,7 +50,7 @@ public class StudentService {
 
   public Student findById(Integer studentId) {
     return this.studentRepository.findById(studentId)
-            .orElseThrow(() -> new ObjectNotFoundException("student",studentId)); 
+        .orElseThrow(() -> new ObjectNotFoundException("student", studentId));
   }
 
   public Student save(Student newStudent) {
@@ -59,19 +59,19 @@ public class StudentService {
 
   public Student update(Integer studentId, Student update) {
     return this.studentRepository.findById(studentId)
-              .map(oldStudent -> {
-                oldStudent.setFirstName(update.getFirstName());
-                oldStudent.setLastName(update.getLastName());
-                oldStudent.setMiddleInitial(update.getMiddleInitial());
-                oldStudent.setEmail(update.getEmail());
-                return this.studentRepository.save(oldStudent);
-              })
-              .orElseThrow(() -> new ObjectNotFoundException("student", studentId));
+        .map(oldStudent -> {
+          oldStudent.setFirstName(update.getFirstName());
+          oldStudent.setLastName(update.getLastName());
+          oldStudent.setMiddleInitial(update.getMiddleInitial());
+          oldStudent.setEmail(update.getEmail());
+          return this.studentRepository.save(oldStudent);
+        })
+        .orElseThrow(() -> new ObjectNotFoundException("student", studentId));
   }
 
   public void delete(Integer studentId) {
     Student studentToBeDeleted = this.studentRepository.findById(studentId)
-                                        .orElseThrow(() -> new ObjectNotFoundException("student", studentId));
+        .orElseThrow(() -> new ObjectNotFoundException("student", studentId));
     studentToBeDeleted.unassignTeam();
     this.studentRepository.deleteById(studentId);
   }

@@ -307,6 +307,13 @@ public class StudentControllerIntegrationTest {
         .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
         .andExpect(jsonPath("$.message").value("Could not find student with Id 6 :("))
         .andExpect(jsonPath("$.data").isEmpty());
+    this.mockMvc
+        .perform(get("/users/6").accept(MediaType.APPLICATION_JSON)
+            .header(HttpHeaders.AUTHORIZATION, this.token))
+        .andExpect(jsonPath("$.flag").value(false))
+        .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+        .andExpect(jsonPath("$.message").value("Could not find user with Id 6 :("))
+        .andExpect(jsonPath("$.data").isEmpty());
 
     /*TODO
      * There is an issue, to be expected, as if 
