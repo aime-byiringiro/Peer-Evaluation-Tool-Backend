@@ -60,6 +60,20 @@ public class DBDataInitializer implements CommandLineRunner{
   @Override
   public void run(String... args) throws Exception {
 
+    // Create some users.
+    PeerEvalUser u1 = new PeerEvalUser();
+    u1.setId(1);
+    u1.setUsername("john");
+    u1.setPassword("123456");
+    u1.setEnabled(true);
+    u1.setRoles("admin user");
+
+    this.userService.save(u1);
+
+
+
+
+
     //-------------------//
     // Test Student Data //
     //-------------------//

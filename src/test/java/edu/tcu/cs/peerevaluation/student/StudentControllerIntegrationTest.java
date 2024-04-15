@@ -44,7 +44,7 @@ public class StudentControllerIntegrationTest {
   void setUp() throws Exception {
     ResultActions resultActions = this.mockMvc
         .perform(post("/users/login")
-            .with(httpBasic("Asuri", "summer2024!")));
+            .with(httpBasic("john", "123456")));
 
     MvcResult mvcResult = resultActions.andDo(print()).andReturn();
     String contentAsString = mvcResult.getResponse().getContentAsString();
