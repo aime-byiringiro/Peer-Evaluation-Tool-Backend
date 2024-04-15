@@ -133,6 +133,7 @@ public class UserControllerIntegrationTest {
     void testUpdateUserSuccess() throws Exception {
         PeerEvalUser peerEvalUser = new PeerEvalUser();
         peerEvalUser.setUsername("tom123"); // Username is changed. It was tom.
+        peerEvalUser.setPassword("password");
         peerEvalUser.setEnabled(false);
         peerEvalUser.setRoles("user");
 
@@ -153,6 +154,7 @@ public class UserControllerIntegrationTest {
         PeerEvalUser peerEvalUser = new PeerEvalUser();
         peerEvalUser.setId(5); // This id does not exist in the database.
         peerEvalUser.setUsername("john123"); // Username is changed.
+        peerEvalUser.setPassword("password");
         peerEvalUser.setEnabled(true);
         peerEvalUser.setRoles("admin user");
 

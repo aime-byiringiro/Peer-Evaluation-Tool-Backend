@@ -27,6 +27,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.tcu.cs.peerevaluation.peerEvalUser.dto.UserDto;
 import edu.tcu.cs.peerevaluation.section.Section;
 import edu.tcu.cs.peerevaluation.student.dto.StudentDto;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
@@ -223,7 +224,17 @@ public class StudentControllerTest {
         "Smith",
         null,
         null);
-    String json = this.objectMapper.writeValueAsString(studentDto);
+
+    UserDto userDto = new UserDto(1, 
+        "Jsmith", 
+        "password", 
+        true, 
+        "student");
+
+    StudentUserCombined studentUserCombined = new StudentUserCombined();
+    studentUserCombined.setStudentDto(studentDto);
+    studentUserCombined.setUserDto(userDto);
+    String json = this.objectMapper.writeValueAsString(studentUserCombined);
 
     Student savedStudent = new Student();
     savedStudent.setId(1);
@@ -328,6 +339,5 @@ public class StudentControllerTest {
         .andExpect(jsonPath("$.message").value("Could not find student with Id 1 :("))
         .andExpect(jsonPath("$.data").isEmpty());
   }
-
 
 }
