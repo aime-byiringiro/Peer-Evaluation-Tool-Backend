@@ -2,6 +2,7 @@ package edu.tcu.cs.peerevaluation.student;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.tcu.cs.peerevaluation.peerEvalUser.dto.UserDto;
 import edu.tcu.cs.peerevaluation.student.dto.StudentDto;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
 import org.hamcrest.Matchers;
@@ -156,7 +157,14 @@ public class StudentControllerIntegrationTest {
         "Badbarz",
         null,
         null);
-    String json = this.objectMapper.writeValueAsString(studentDto);
+    UserDto userDto = new UserDto(7, 
+        "Kbadbarz", 
+        "password", 
+        true, 
+        "student");
+
+    StudentUserCombined studentUserCombined = new StudentUserCombined(studentDto,userDto);
+    String json = this.objectMapper.writeValueAsString(studentUserCombined);
     System.out.println(json);
 
     this.mockMvc
@@ -180,14 +188,20 @@ public class StudentControllerIntegrationTest {
   @Test
   @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
   void testAddStudentErrorWithInvalidInput() throws Exception {
-    StudentDto studentDto = new StudentDto(1,
+    StudentDto studentDto = new StudentDto(7,
         "",
-        null,
+        "S",
         "",
         null,
         null);
+    UserDto userDto = new UserDto(7, 
+        "Kbadbarz", 
+        "password", 
+        true, 
+        "student");
 
-    String json = this.objectMapper.writeValueAsString(studentDto);
+    StudentUserCombined studentUserCombined = new StudentUserCombined(studentDto,userDto);
+    String json = this.objectMapper.writeValueAsString(studentUserCombined);
 
     this.mockMvc
         .perform(post("/students").contentType(MediaType.APPLICATION_JSON).content(json)
@@ -195,8 +209,8 @@ public class StudentControllerIntegrationTest {
         .andExpect(jsonPath("$.flag").value(false))
         .andExpect(jsonPath("$.code").value(StatusCode.INVALID_ARGUMENT))
         .andExpect(jsonPath("$.message").value("Provided arguments are invalid, see data for details."))
-        .andExpect(jsonPath("$.data.firstName").value("first name is required."))
-        .andExpect(jsonPath("$.data.lastName").value("last name is required."));
+        .andExpect(jsonPath("$.data.['studentDto.firstName']").value("first name is required."))
+        .andExpect(jsonPath("$.data.['studentDto.lastName']").value("last name is required."));
     this.mockMvc
         .perform(get("/students").accept(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION,
             this.token))

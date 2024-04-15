@@ -231,9 +231,7 @@ public class StudentControllerTest {
         true, 
         "student");
 
-    StudentUserCombined studentUserCombined = new StudentUserCombined();
-    studentUserCombined.setStudentDto(studentDto);
-    studentUserCombined.setUserDto(userDto);
+    StudentUserCombined studentUserCombined = new StudentUserCombined(studentDto,userDto);
     String json = this.objectMapper.writeValueAsString(studentUserCombined);
 
     Student savedStudent = new Student();

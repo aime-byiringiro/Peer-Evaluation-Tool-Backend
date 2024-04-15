@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 public class Student implements Serializable{
@@ -17,11 +18,13 @@ public class Student implements Serializable{
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "Student_ID")
   private Integer id;
-
+  
+  @NotEmpty(message = "first name is required.")
   private String firstName;
 
   private String middleInitial;
-
+  
+  @NotEmpty(message = "last name is required.")
   private String lastName;
 
   private String email;

@@ -127,29 +127,6 @@ public class StudentController {
     return new Result(true,StatusCode.SUCCESS,"Delete Success");
   }
 }
-
-class StudentUserCombined {
-
-  private StudentDto studentDto;
-  private UserDto userDto;
-
-
-  public StudentDto getStudentDto() {
-    return this.studentDto;
-  }
-
-  public void setStudentDto(StudentDto studentDto) {
-    this.studentDto = studentDto;
-  }
-
-  public UserDto getUserDto() {
-    return this.userDto;
-  }
-
-  public void setUserDto(UserDto userDto) {
-    this.userDto = userDto;
-  }
-}
   
 
 
