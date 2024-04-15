@@ -5,8 +5,6 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
 import edu.tcu.cs.peerevaluation.peerEvalUser.UserService;
 import edu.tcu.cs.peerevaluation.peerEvalUser.converter.UserDtoToUserConverter;
-import edu.tcu.cs.peerevaluation.peerEvalUser.converter.UserToUserDtoConverter;
-import edu.tcu.cs.peerevaluation.peerEvalUser.dto.UserDto;
 import edu.tcu.cs.peerevaluation.student.converter.StudentDtoToStudentConverter;
 import edu.tcu.cs.peerevaluation.student.converter.StudentToStudentDtoConverter;
 import edu.tcu.cs.peerevaluation.student.dto.StudentDto;
@@ -27,9 +25,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
-
-
 @RestController
 @RequestMapping("/students")
 public class StudentController {
@@ -44,25 +39,22 @@ public class StudentController {
 
   private final UserDtoToUserConverter userDtoToUserConverter;
 
-  private final UserToUserDtoConverter userToUserDtoConverter;
-
-
-  public StudentController(StudentService studentService, StudentToStudentDtoConverter studentToStudentDtoConverter, StudentDtoToStudentConverter studentDtoToStudentConverter, UserService userService,UserToUserDtoConverter userToUserDtoConverter,UserDtoToUserConverter userDtoToUserConverter) {
+  public StudentController(StudentService studentService, StudentToStudentDtoConverter studentToStudentDtoConverter,
+      StudentDtoToStudentConverter studentDtoToStudentConverter, UserService userService,
+      UserDtoToUserConverter userDtoToUserConverter) {
     this.studentService = studentService;
     this.studentToStudentDtoConverter = studentToStudentDtoConverter;
     this.studentDtoToStudentConverter = studentDtoToStudentConverter;
     this.userService = userService;
     this.userDtoToUserConverter = userDtoToUserConverter;
-    this.userToUserDtoConverter = userToUserDtoConverter;
   }
 
   @GetMapping
   public Result findAllStudents() {
     List<Student> foundStudents = this.studentService.findAll();
     List<StudentDto> studentDtos = foundStudents.stream()
-            .map(foundStudent ->
-                    this.studentToStudentDtoConverter.convert(foundStudent))
-            .collect(Collectors.toList());
+        .map(foundStudent -> this.studentToStudentDtoConverter.convert(foundStudent))
+        .collect(Collectors.toList());
     return new Result(true, StatusCode.SUCCESS, "Find All Success", studentDtos);
 
   }
@@ -70,15 +62,17 @@ public class StudentController {
   // /students/search?firstName=John&lastName=Doe&section=A&academicYear=2023&teamName=RedDragons
   @GetMapping("/search")
   public Result searchStudents(
-                  @RequestParam(value = "firstName", required = false) String firstName,
-                  @RequestParam(value = "lastName", required = false) String lastName,
-                  @RequestParam(value = "section", required = false) String section,
-                  @RequestParam(value = "academicYear", required = false) String academicYear,
-                  @RequestParam(value = "teamName", required = false) String teamName) {
+      @RequestParam(value = "firstName", required = false) String firstName,
+      @RequestParam(value = "lastName", required = false) String lastName,
+      @RequestParam(value = "section", required = false) String section,
+      @RequestParam(value = "academicYear", required = false) String academicYear,
+      @RequestParam(value = "teamName", required = false) String teamName) {
 
-    List<Student> foundStudents = this.studentService.searchStudents(firstName, lastName, section, academicYear, teamName);
-    if(foundStudents.size() > 1) {
-      Comparator<Student> sortByAcademicYear = Comparator.comparing(Student::getAcademicYear, Comparator.reverseOrder());
+    List<Student> foundStudents = this.studentService.searchStudents(firstName, lastName, section, academicYear,
+        teamName);
+    if (foundStudents.size() > 1) {
+      Comparator<Student> sortByAcademicYear = Comparator.comparing(Student::getAcademicYear,
+          Comparator.reverseOrder());
       Comparator<Student> sortByLastName = Comparator.comparing(Student::getLastName);
 
       Comparator<Student> sortByBoth = sortByAcademicYear.thenComparing(sortByLastName);
@@ -86,13 +80,12 @@ public class StudentController {
       foundStudents.sort(sortByBoth);
     }
     List<StudentDto> studentDtos = foundStudents.stream()
-    .map(foundStudent ->
-            this.studentToStudentDtoConverter.convert(foundStudent))
-    .collect(Collectors.toList());
+        .map(foundStudent -> this.studentToStudentDtoConverter.convert(foundStudent))
+        .collect(Collectors.toList());
 
     return new Result(true, StatusCode.SUCCESS, "Search Success", studentDtos);
   }
-  
+
   @GetMapping("/{studentId}")
   public Result findStudentById(@PathVariable Integer studentId) {
     Student foundStudent = this.studentService.findById(studentId);
@@ -100,7 +93,6 @@ public class StudentController {
     return new Result(true, StatusCode.SUCCESS, "Find One Success", studentDto);
   }
 
-  
   @PostMapping
   public Result addStudent(@Valid @RequestBody StudentUserCombined studentUserCombined) {
     Student newStudent = this.studentDtoToStudentConverter.convert(studentUserCombined.getStudentDto());
@@ -108,6 +100,8 @@ public class StudentController {
     PeerEvalUser newPeerEvalUser = this.userDtoToUserConverter.convert(studentUserCombined.getUserDto());
     PeerEvalUser savedUser = this.userService.save(newPeerEvalUser);
     savedUser.setStudent(savedStudent);
+    savedStudent.setUser(savedUser);
+    savedStudent = this.studentService.save(savedStudent);
     savedUser = this.userService.save(savedUser);
     StudentDto savedStudentDto = this.studentToStudentDtoConverter.convert(savedStudent);
     return new Result(true, StatusCode.SUCCESS, "Add Success", savedStudentDto);
@@ -118,39 +112,12 @@ public class StudentController {
     Student update = this.studentDtoToStudentConverter.convert(studentDto);
     Student updatedStudent = this.studentService.update(studentId, update);
     StudentDto updatedStudentDto = this.studentToStudentDtoConverter.convert(updatedStudent);
-    return new Result(true,StatusCode.SUCCESS,"Update Success", updatedStudentDto);
+    return new Result(true, StatusCode.SUCCESS, "Update Success", updatedStudentDto);
   }
 
   @DeleteMapping("/{studentId}")
   public Result deleteStudent(@PathVariable Integer studentId) {
     this.studentService.delete(studentId);
-    return new Result(true,StatusCode.SUCCESS,"Delete Success");
+    return new Result(true, StatusCode.SUCCESS, "Delete Success");
   }
 }
-
-class StudentUserCombined {
-
-  private StudentDto studentDto;
-  private UserDto userDto;
-
-
-  public StudentDto getStudentDto() {
-    return this.studentDto;
-  }
-
-  public void setStudentDto(StudentDto studentDto) {
-    this.studentDto = studentDto;
-  }
-
-  public UserDto getUserDto() {
-    return this.userDto;
-  }
-
-  public void setUserDto(UserDto userDto) {
-    this.userDto = userDto;
-  }
-}
-  
-
-
-

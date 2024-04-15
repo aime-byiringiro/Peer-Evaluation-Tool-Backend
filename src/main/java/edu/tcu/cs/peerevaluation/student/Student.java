@@ -2,33 +2,39 @@ package edu.tcu.cs.peerevaluation.student;
 
 import java.io.Serializable;
 
+import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
 import edu.tcu.cs.peerevaluation.team.Team;
-import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
-public class Student implements Serializable{
+public class Student implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "Student_ID")
   private Integer id;
 
+  @NotEmpty(message = "first name is required.")
   private String firstName;
 
   private String middleInitial;
 
+  @NotEmpty(message = "last name is required.")
   private String lastName;
 
   private String email;
 
   @ManyToOne
-  private Team team; 
+  private Team team;
 
+  @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+  private PeerEvalUser user;
 
   public Student() {
   }
@@ -87,15 +93,22 @@ public class Student implements Serializable{
   }
 
   public void unassignTeam() {
-    if(this.team != null) {
+    if (this.team != null) {
       team.removeStudentFromTeam(this);
       this.team = null;
     }
   }
-    
-  
 
   public String getAcademicYear() {
     return this.team.getSection().getAcademicYear();
   }
+
+  public PeerEvalUser getUser() {
+    return this.user;
+  }
+
+  public void setUser(PeerEvalUser user) {
+    this.user = user;
+  }
+
 }

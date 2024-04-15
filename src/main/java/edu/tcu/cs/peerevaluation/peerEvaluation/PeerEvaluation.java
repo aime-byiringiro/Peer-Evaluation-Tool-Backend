@@ -21,20 +21,7 @@ public class PeerEvaluation implements Serializable{
 
   @ManyToOne
   private Student evaluator; 
-  /* TODO
-   * add mappedBy
-   * may need to creat a field on the evaluation object to 
-   * point back to the peer eval it belongs to. 
-   * 1. create the PeerEval object
-   * 2. it automatically gets an id
-   * 3. when you make the Eval object, there will be a field left blank
-   *    when changing from json, but that will quickly be filled with the id 
-   *    of the peer eval 
-   * 
-   * maybe use the evaluator field to link them together 
-   * 
-   * 
-   */
+
   @OneToMany(mappedBy = "peerEvalId")
   private List<Evaluation> evaluations;
 
