@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import edu.tcu.cs.peerevaluation.instructor.Instructor;
 import edu.tcu.cs.peerevaluation.instructor.InstructorRepository;
+import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
+import edu.tcu.cs.peerevaluation.peerEvalUser.UserService;
 import edu.tcu.cs.peerevaluation.peerEvaluation.PeerEvaluation;
 import edu.tcu.cs.peerevaluation.peerEvaluation.PeerEvaluationRepostitory;
 import edu.tcu.cs.peerevaluation.peerEvaluation.evaluation.Evaluation;
@@ -37,9 +39,10 @@ public class DBDataInitializer implements CommandLineRunner{
   private final CriterionRepository criterionRepository;
   private final SectionRepository sectionRepository;
   private final TeamRepository teamRepository;
+  private final UserService userService;
 
 
-  public DBDataInitializer(StudentRepository studentRepository, PeerEvaluationRepostitory peerEvalRepository, EvaluationRepository evalRepository, InstructorRepository instructorRepository, RubricRepository rubricRepository, CriterionRepository criterionRepository, SectionRepository sectionRepository, TeamRepository teamRepository) {
+  public DBDataInitializer(StudentRepository studentRepository, PeerEvaluationRepostitory peerEvalRepository, EvaluationRepository evalRepository, InstructorRepository instructorRepository, RubricRepository rubricRepository, CriterionRepository criterionRepository, SectionRepository sectionRepository, TeamRepository teamRepository, UserService userService) {
     this.studentRepository = studentRepository;
     this.peerEvalRepository = peerEvalRepository;
     this.evalRepository = evalRepository;
@@ -48,6 +51,7 @@ public class DBDataInitializer implements CommandLineRunner{
     this.criterionRepository = criterionRepository;
     this.sectionRepository = sectionRepository;
     this.teamRepository = teamRepository;
+    this.userService = userService;
   }
 
   
@@ -65,37 +69,44 @@ public class DBDataInitializer implements CommandLineRunner{
       s1.setMiddleInitial("S");
       s1.setLastName("Suri");
       s1.setEmail("aliya.suri@tcu.edu");
-      s1.setPassword("summer2024!");
+      //s1.setPassword("summer2024!");
 
     Student s2 = new Student();
       s2.setFirstName("James");
       s2.setMiddleInitial("R");
       s2.setLastName("Edmonson");
       s2.setEmail("james.edmonson@tcu.edu");
-      s2.setPassword("pizzaLover!2");
+      //s2.setPassword("pizzaLover!2");
 
     Student s3 = new Student();
       s3.setFirstName("John");
       s3.setMiddleInitial("P");
       s3.setLastName("Smith");
       s3.setEmail("john.smith@tcu.edu");
-      s3.setPassword("helloSunshine!");
+      //s3.setPassword("helloSunshine!");
 
     Student s4 = new Student();
       s4.setFirstName("John");
       s4.setMiddleInitial("B");
       s4.setLastName("Doe");
       s4.setEmail("john.doe@tcu.edu");
-      s4.setPassword("coffee4Me:)");
+      //s4.setPassword("coffee4Me:)");
 
     Student s5 = new Student();
       s5.setFirstName("Aaron");
       s5.setMiddleInitial("D");
       s5.setLastName("Smith");
       s5.setEmail("aaron.smith@tcu.edu");
-      s5.setPassword("bookWorm123!");
+      //s5.setPassword("bookWorm123!");
+    
+    Student s6 = new Student();
+      s6.setFirstName("Jake");
+      s6.setMiddleInitial("F");
+      s6.setLastName("Farm");
+      s6.setEmail("jake.statefarm@gmail.com");
 
-    studentRepository.saveAll(Arrays.asList(s1, s2, s3, s4, s5));
+
+    studentRepository.saveAll(Arrays.asList(s1, s2, s3, s4, s5, s6));
 
     
     //---------------------//
@@ -151,13 +162,13 @@ public class DBDataInitializer implements CommandLineRunner{
     //----------------//
 
     Team team1 = new Team();
-      team1.setTeamName("Peer Evaluation");
+      team1.setTeamName("PeerEvaluation");
     teamRepository.save(team1);
     Team team2 = new Team();
-      team2.setTeamName("Superfrog Scheduler");
+      team2.setTeamName("SuperfrogScheduler");
     teamRepository.save(team2);
     Team team3 = new Team();
-      team3.setTeamName("Moning Meteorite");
+      team3.setTeamName("MoningMeteorite");
     teamRepository.save(team3);
     
 
@@ -190,9 +201,34 @@ public class DBDataInitializer implements CommandLineRunner{
       i1.setEmail("l.ma@tcu.edu");
     instructorRepository.save(i1);
 
-    //-----------------//
-    // Test Admin Data //
-    //-----------------//
+    //----------------//
+    // Test User Data //
+    //----------------//
+
+    PeerEvalUser u1 = new PeerEvalUser();
+        u1.setId(1);
+        u1.setUsername("john");
+        u1.setPassword("123456");
+        u1.setEnabled(true);
+        u1.setRoles("admin student");
+
+        PeerEvalUser u2 = new PeerEvalUser();
+        u2.setId(2);
+        u2.setUsername("eric");
+        u2.setPassword("654321");
+        u2.setEnabled(true);
+        u2.setRoles("student");
+
+        PeerEvalUser u3 = new PeerEvalUser();
+        u3.setId(3);
+        u3.setUsername("tom");
+        u3.setPassword("qwerty");
+        u3.setEnabled(false);
+        u3.setRoles("student");
+
+        this.userService.save(u1);
+        this.userService.save(u2);
+        this.userService.save(u3);
 
     //---------------------------//
     // Test Peer Evaluation Data //

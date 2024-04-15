@@ -26,8 +26,6 @@ public class Student implements Serializable{
 
   private String email;
 
-  private String password;
-
   @ManyToOne
   private Team team; 
 
@@ -67,14 +65,6 @@ public class Student implements Serializable{
     this.email = email;
   }
 
-  public String getPassword() {
-    return this.password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
   public String getMiddleInitial() {
     return this.middleInitial;
   }
@@ -95,6 +85,15 @@ public class Student implements Serializable{
     this.team = team;
     team.addStudentToTeam(this);
   }
+
+  public void unassignTeam() {
+    if(this.team != null) {
+      team.removeStudentFromTeam(this);
+      this.team = null;
+    }
+  }
+    
+  
 
   public String getAcademicYear() {
     return this.team.getSection().getAcademicYear();

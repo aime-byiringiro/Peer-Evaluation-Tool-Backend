@@ -70,8 +70,9 @@ public class StudentService {
   }
 
   public void delete(Integer studentId) {
-    this.studentRepository.findById(studentId)
-              .orElseThrow(() -> new ObjectNotFoundException("student", studentId));
+    Student studentToBeDeleted = this.studentRepository.findById(studentId)
+                                        .orElseThrow(() -> new ObjectNotFoundException("student", studentId));
+    studentToBeDeleted.unassignTeam();
     this.studentRepository.deleteById(studentId);
   }
 
