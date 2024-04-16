@@ -1,7 +1,5 @@
 package edu.tcu.cs.peerevaluation.rubric.criterion;
 
-import org.hibernate.annotations.ManyToAny;
-
 import edu.tcu.cs.peerevaluation.rubric.Rubric;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

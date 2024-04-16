@@ -16,7 +16,6 @@ import edu.tcu.cs.peerevaluation.peerEvalUser.UserService;
 import edu.tcu.cs.peerevaluation.peerEvaluation.PeerEvaluation;
 import edu.tcu.cs.peerevaluation.peerEvaluation.PeerEvaluationRepostitory;
 import edu.tcu.cs.peerevaluation.peerEvaluation.evaluation.Evaluation;
-import edu.tcu.cs.peerevaluation.peerEvaluation.evaluation.EvaluationRepository;
 import edu.tcu.cs.peerevaluation.rubric.Rubric;
 import edu.tcu.cs.peerevaluation.rubric.RubricRepository;
 import edu.tcu.cs.peerevaluation.rubric.criterion.Criterion;
@@ -34,7 +33,6 @@ public class DBDataInitializer implements CommandLineRunner {
 
   private final StudentRepository studentRepository;
   private final PeerEvaluationRepostitory peerEvalRepository;
-  private final EvaluationRepository evalRepository;
   private final InstructorRepository instructorRepository;
   private final RubricRepository rubricRepository;
   private final CriterionRepository criterionRepository;
@@ -43,12 +41,11 @@ public class DBDataInitializer implements CommandLineRunner {
   private final UserService userService;
 
   public DBDataInitializer(StudentRepository studentRepository, PeerEvaluationRepostitory peerEvalRepository,
-      EvaluationRepository evalRepository, InstructorRepository instructorRepository, RubricRepository rubricRepository,
+      InstructorRepository instructorRepository, RubricRepository rubricRepository,
       CriterionRepository criterionRepository, SectionRepository sectionRepository, TeamRepository teamRepository,
       UserService userService) {
     this.studentRepository = studentRepository;
     this.peerEvalRepository = peerEvalRepository;
-    this.evalRepository = evalRepository;
     this.instructorRepository = instructorRepository;
     this.rubricRepository = rubricRepository;
     this.criterionRepository = criterionRepository;
@@ -352,7 +349,6 @@ public class DBDataInitializer implements CommandLineRunner {
       eval.setScores(scores);
       eval.setPrivateComments(comments[rand.nextInt(5)]);
       eval.setPublicComments(comments[rand.nextInt(5)]);
-      evalRepository.save(eval);
       evals.add(eval);
     }
     return evals;

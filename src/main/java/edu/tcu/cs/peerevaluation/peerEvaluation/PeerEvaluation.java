@@ -5,6 +5,7 @@ import java.util.List;
 
 import edu.tcu.cs.peerevaluation.peerEvaluation.evaluation.Evaluation;
 import edu.tcu.cs.peerevaluation.student.Student;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,7 +23,7 @@ public class PeerEvaluation implements Serializable{
   @ManyToOne
   private Student evaluator; 
 
-  @OneToMany(mappedBy = "peerEvalId")
+  @OneToMany(mappedBy = "peerEvalId", cascade = CascadeType.ALL)
   private List<Evaluation> evaluations;
 
   private String week;

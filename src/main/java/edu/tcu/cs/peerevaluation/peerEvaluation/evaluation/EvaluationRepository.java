@@ -13,4 +13,11 @@ public interface EvaluationRepository extends JpaRepository<Evaluation, Integer>
 
   List<Evaluation> findByEvaluated(Student student);
 
+  /*
+   * TODO
+   * If i move/copy the week field from PeerEvaluation to Evaluation,
+   * then i could create a findByEvaluatedAndWeek field here to quickly
+   * retreive all evals of a specific student on a given week 
+   */
+
 }

@@ -68,11 +68,10 @@ public class SecurityConfiguration {
         .csrf(csrf -> csrf.disable())
         .cors(Customizer.withDefaults())
         .httpBasic(httpBasic -> httpBasic.authenticationEntryPoint(this.customBasicAuthenticationEntryPoint))
-        //.httpBasic(Customizer.withDefaults())
-        //.oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
-        //    .jwt(Customizer.withDefaults())
-        //    .authenticationEntryPoint(this.customBearerTokenAuthenticationEntryPoint)
-        //    .accessDeniedHandler(this.customBearerTokenAccessDeniedHandler))
+        .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
+            .jwt(Customizer.withDefaults())
+            .authenticationEntryPoint(this.customBearerTokenAuthenticationEntryPoint)
+            .accessDeniedHandler(this.customBearerTokenAccessDeniedHandler))
         .sessionManagement(
             sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .build();
