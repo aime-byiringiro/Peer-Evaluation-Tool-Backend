@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import edu.tcu.cs.peerevaluation.instructor.Instructor;
@@ -28,6 +29,7 @@ import edu.tcu.cs.peerevaluation.team.Team;
 import edu.tcu.cs.peerevaluation.team.TeamRepository;
 
 @Component
+@Profile("!test")
 public class DBDataInitializer implements CommandLineRunner {
 
   private final StudentRepository studentRepository;
@@ -209,8 +211,16 @@ public class DBDataInitializer implements CommandLineRunner {
 
     Rubric r1 = new Rubric();
     r1.setRubricName("2024 Rubric");
-    r1.setCriterionList(criterionList);
+    r1.addCriterion(c6);
     rubricRepository.save(r1);
+
+    c1.setRubricId(r1);
+    c2.setRubricId(r1);
+    c3.setRubricId(r1);
+    c4.setRubricId(r1);
+    c5.setRubricId(r1);
+    c6.setRubricId(r1);
+    criterionRepository.saveAll(criterionList);
 
     // ----------------//
     // Test Team Data //

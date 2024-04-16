@@ -5,11 +5,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.tcu.cs.peerevaluation.peerEvaluation.converter.PeerEvaluationDtoToPeerEvaluationConverter;
 import edu.tcu.cs.peerevaluation.peerEvaluation.converter.PeerEvaluationToPeerEvaluationDtoConverter;
+import edu.tcu.cs.peerevaluation.peerEvaluation.dto.PeerEvaluationDto;
 import edu.tcu.cs.peerevaluation.system.Result;
+import edu.tcu.cs.peerevaluation.system.StatusCode;
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+
+
 
 
 @RestController
@@ -29,13 +36,19 @@ public class PeerEvaluationController {
     this.dtoToPeerEvalConverter = dtoToPeerEvalConverter;
   }
 
-  @GetMapping("/peerEval/blank/{studentId}")
-  public Result getPeerEvalForm(@PathVariable Integer studentId) {
-      
-      return new Result();
+  @PostMapping
+  public Result newPeerEvaluation(@Valid @RequestBody PeerEvaluationDto peerEvalDto) {
+    PeerEvaluation newPeerEval = this.dtoToPeerEvalConverter.convert(peerEvalDto);
+    PeerEvaluation savedPeerEval = this.peerEvalService.save(newPeerEval);
+    PeerEvaluationDto savedDto = this.peerEvalToDtoConverter.convert(savedPeerEval);
+    return new Result(true,StatusCode.SUCCESS,"add success", savedDto);
+  }
+
+  @GetMapping("/{peerEvalId}")
+  public Result getPeerEvalById(@PathVariable Integer peerEvalId) {
+    PeerEvaluation peerEval = this.peerEvalService.findById(peerEvalId);
+    PeerEvaluationDto peerEvalDto = this.peerEvalToDtoConverter.convert(peerEval);
+    return new Result(true,StatusCode.SUCCESS,"find success", peerEvalDto);
   }
   
-
-
-
 }

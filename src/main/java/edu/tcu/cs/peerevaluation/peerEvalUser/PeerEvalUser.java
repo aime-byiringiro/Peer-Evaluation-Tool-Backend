@@ -1,6 +1,7 @@
 package edu.tcu.cs.peerevaluation.peerEvalUser;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -29,7 +30,7 @@ public class PeerEvalUser implements Serializable {
     @NotEmpty(message = "roles are required.")
     private String roles; // Space separated string
 
-    @OneToOne() // mappedBy = "user")
+    @OneToOne(fetch = FetchType.EAGER) // mappedBy = "user")
     private Student student;
 
     public PeerEvalUser() {

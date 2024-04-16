@@ -2,20 +2,25 @@ package edu.tcu.cs.peerevaluation.student;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.tcu.cs.peerevaluation.peerEvalUser.MyUserPrincipal;
 import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
 import edu.tcu.cs.peerevaluation.peerEvalUser.UserService;
 import edu.tcu.cs.peerevaluation.peerEvalUser.converter.UserDtoToUserConverter;
+import edu.tcu.cs.peerevaluation.rubric.Rubric;
+import edu.tcu.cs.peerevaluation.rubric.converter.RubricToRubricDtoConverter;
+import edu.tcu.cs.peerevaluation.section.Section;
 import edu.tcu.cs.peerevaluation.student.converter.StudentDtoToStudentConverter;
 import edu.tcu.cs.peerevaluation.student.converter.StudentToStudentDtoConverter;
 import edu.tcu.cs.peerevaluation.student.dto.StudentDto;
 import edu.tcu.cs.peerevaluation.system.Result;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
 import jakarta.validation.Valid;
-
+import org.springframework.security.core.Authentication;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

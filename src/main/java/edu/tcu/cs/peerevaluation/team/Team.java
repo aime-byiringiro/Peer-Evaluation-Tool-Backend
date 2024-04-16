@@ -24,7 +24,7 @@ public class Team implements Serializable {
      private Section section;
 
     @JsonIgnoreProperties("team")
-    @OneToMany(mappedBy = "team")
+    @OneToMany(mappedBy = "team",fetch = FetchType.EAGER)
     private List<Student> students;
 
     public Team() {
