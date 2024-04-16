@@ -29,7 +29,7 @@ public class SectionController {
 
     @GetMapping("/{sectionID}")
     public Result findSectionBySectionName(@PathVariable Integer sectionID) {
-        Section foundSection = this.sectionService.adminFindsSeniorDesignSectionsBySectionName(sectionID);
+        Section foundSection = this.sectionService.adminFindsSeniorDesignSectionsBySectionID(sectionID);
         SectionDto sectionDto = this.sectionToSectionDtoConverter.convert(foundSection); // convert the json section into section object
         return new Result(true, StatusCode.SUCCESS, "Find Success", sectionDto);
 
