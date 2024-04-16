@@ -29,6 +29,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
+
 @Configuration
 public class SecurityConfiguration {
 
@@ -67,10 +68,11 @@ public class SecurityConfiguration {
         .csrf(csrf -> csrf.disable())
         .cors(Customizer.withDefaults())
         .httpBasic(httpBasic -> httpBasic.authenticationEntryPoint(this.customBasicAuthenticationEntryPoint))
-        .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
-            .jwt(Customizer.withDefaults())
-            .authenticationEntryPoint(this.customBearerTokenAuthenticationEntryPoint)
-            .accessDeniedHandler(this.customBearerTokenAccessDeniedHandler))
+        //.httpBasic(Customizer.withDefaults())
+        //.oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
+        //    .jwt(Customizer.withDefaults())
+        //    .authenticationEntryPoint(this.customBearerTokenAuthenticationEntryPoint)
+        //    .accessDeniedHandler(this.customBearerTokenAccessDeniedHandler))
         .sessionManagement(
             sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .build();

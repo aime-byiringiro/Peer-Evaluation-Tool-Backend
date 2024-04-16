@@ -97,8 +97,7 @@ public class StudentController {
   public Result addStudent(@Valid @RequestBody StudentUserCombined studentUserCombined) {
     Student newStudent = this.studentDtoToStudentConverter.convert(studentUserCombined.getStudentDto());
     Student savedStudent = this.studentService.save(newStudent);
-    PeerEvalUser newPeerEvalUser = this.userDtoToUserConverter.convert(studentUserCombined.getUserDto());
-    PeerEvalUser savedUser = this.userService.save(newPeerEvalUser);
+    PeerEvalUser savedUser = this.userService.save(studentUserCombined.getUser());
     savedUser.setStudent(savedStudent);
     savedStudent.setUser(savedUser);
     savedStudent = this.studentService.save(savedStudent);
