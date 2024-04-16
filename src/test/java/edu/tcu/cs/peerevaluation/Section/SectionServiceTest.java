@@ -66,14 +66,6 @@ public class SectionServiceTest {
     @BeforeEach
     void setUp() {
 
-//        Section sectionA = new Section();
-//        sectionA.setId("123456789");
-//        sectionA.setAcademicYear("2024");
-//        sectionA.setTeams(team);
-//
-//       this.sections = new ArrayList<>();
-//       this.sections.add(sectionA);
-
 
     }
 
@@ -86,7 +78,6 @@ public class SectionServiceTest {
     @Test
     void testAdminFindsSeniorDesignSectionsByIdSuccess() {
         // Given, Example of json result
-
 
         /*
         creating fake creterionList
@@ -128,7 +119,7 @@ public class SectionServiceTest {
 
         given(this.sectionRepository.findById(1)).willReturn(Optional.of(section1));
         // when
-        Section returnedSection = this.sectionService.adminFindsSeniorDesignSectionsBySectionName(1);
+        Section returnedSection = this.sectionService.adminFindsSeniorDesignSectionsBySectionID(1);
         //Then
 
         assertThat(returnedSection.getSectionName()).isEqualTo(section1.getSectionName());

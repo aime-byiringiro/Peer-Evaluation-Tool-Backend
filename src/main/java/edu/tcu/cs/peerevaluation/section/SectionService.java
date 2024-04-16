@@ -19,13 +19,10 @@ public class SectionService {
     }
 
 
-    public Section adminFindsSeniorDesignSectionsBySectionName(Integer sectionID){
+    public Section adminFindsSeniorDesignSectionsBySectionID(Integer sectionID){
         return this.sectionRepository
                 .findById(sectionID)
                 .orElseThrow( () -> new SectionNotFoundException(sectionID));
-    }
-    public Section adminViewSeniorDesignSectionsById(Integer Id){
-        return null;
     }
 
     public Section save(Section newSection){

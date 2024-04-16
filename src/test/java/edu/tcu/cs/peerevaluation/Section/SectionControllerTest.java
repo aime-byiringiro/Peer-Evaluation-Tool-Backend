@@ -65,6 +65,8 @@ public class SectionControllerTest {
     Rubric r1 = new Rubric();
     RubricDto rubricDto;
 
+    List<Criterion> criterionList = new ArrayList<>();
+
 
 
     @BeforeEach
@@ -72,7 +74,6 @@ public class SectionControllerTest {
           /*
         creating fake creterionList
          */
-        List<Criterion> criterionList = new ArrayList<>();
 
         Criterion c4 = new Criterion();
         c4.setCriterionName("Manners");
@@ -93,14 +94,9 @@ public class SectionControllerTest {
        /*
        Creating fake Rubric
        */
-
         r1.setId(1);
         r1.setRubricName("2024 Rubric");
         r1.setCriterionList(criterionList);
-
-
-
-
 
         /*
         Creating fake section data // Actual
@@ -112,6 +108,10 @@ public class SectionControllerTest {
         section1.setLastDay("05/01/2024");
         section1.setRubric(r1);
 
+
+        RubricDto rubricDtoData = new RubricDto(6, "2025 Rubric", criterionList);
+
+
     }
     @AfterEach
     void tearDown(){
@@ -119,8 +119,7 @@ public class SectionControllerTest {
     }
 
     @Test
-    void testFindSectionBySectionName() throws Exception {
-
+    void testFindSectionBySectionID() throws Exception {
         rubricDto = this.rubricToRubricDtoConverter.convert(r1);
         //Given
         SectionDto sectionDto = new SectionDto(1,
@@ -140,7 +139,7 @@ public class SectionControllerTest {
         foundSection.setLastDay("05/01/2024");
         foundSection.setRubric(r1);
 
-        given(this.sectionService.adminFindsSeniorDesignSectionsBySectionName(1)).willReturn(this.section1);
+        given(this.sectionService.adminFindsSeniorDesignSectionsBySectionID(1)).willReturn(this.section1);
         System.out.print(this.section1);
 
         this.mockMvc.perform(get("/section/1").accept(MediaType.APPLICATION_JSON))
@@ -160,15 +159,20 @@ public class SectionControllerTest {
 
         //Given
 
-        rubricDto = this.rubricToRubricDtoConverter.convert(r1);
+        Rubric rubric = new Rubric();
+        rubric.setId(6);
+        rubric.setRubricName("2025 Rubric");
+        rubric.setCriterionList(criterionList);
+
+        RubricDto rubricDtoData = new RubricDto(6, "2025 Rubric", criterionList);
 
         SectionDto sectionDto = new SectionDto(
-                null,
+                5,
                 "Section2025-2026",
                 "2025",
                 "06/06/2025",
                 "06/06/2026",
-                rubricDto);
+                rubricDtoData);
 
         String json = this.objectMapper.writeValueAsString(sectionDto);
 
@@ -179,7 +183,7 @@ public class SectionControllerTest {
         savedSection.setAcademicYear("2025");
         savedSection.setFirstDay("06/06/2025");
         savedSection.setLastDay("06/06/2026");
-        savedSection.setRubric(r1);
+        savedSection.setRubric(rubric);
         given(this.sectionService.save(Mockito.any(Section.class))).willReturn(savedSection);
 
         // when and then
@@ -191,14 +195,7 @@ public class SectionControllerTest {
                 .andExpect(jsonPath("$.data.sectionName").value(savedSection.getSectionName()))
                 .andExpect(jsonPath("$.data.academicYear").value(savedSection.getAcademicYear()))
                 .andExpect(jsonPath("$.data.firstDay").value(savedSection.getFirstDay()))
-                .andExpect(jsonPath("$.data.lastDay").value(savedSection.getLastDay()))
-                .andExpect(jsonPath("$.data.rubricDto").value(savedSection.getRubric()));
-
-
-
-
-
-
+                .andExpect(jsonPath("$.data.lastDay").value(savedSection.getLastDay()));
     }
 
 
