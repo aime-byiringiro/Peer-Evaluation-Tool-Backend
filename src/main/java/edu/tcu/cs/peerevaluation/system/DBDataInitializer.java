@@ -26,6 +26,9 @@ import edu.tcu.cs.peerevaluation.student.Student;
 import edu.tcu.cs.peerevaluation.student.StudentRepository;
 import edu.tcu.cs.peerevaluation.team.Team;
 import edu.tcu.cs.peerevaluation.team.TeamRepository;
+import edu.tcu.cs.peerevaluation.war.WAR;
+import edu.tcu.cs.peerevaluation.war.WARRepository;
+import edu.tcu.cs.peerevaluation.war.submission.Submission;
 
 @Component
 @Profile("!test")
@@ -39,11 +42,9 @@ public class DBDataInitializer implements CommandLineRunner {
   private final SectionRepository sectionRepository;
   private final TeamRepository teamRepository;
   private final UserService userService;
+  private final WARRepository warRepository;
 
-  public DBDataInitializer(StudentRepository studentRepository, PeerEvaluationRepostitory peerEvalRepository,
-      InstructorRepository instructorRepository, RubricRepository rubricRepository,
-      CriterionRepository criterionRepository, SectionRepository sectionRepository, TeamRepository teamRepository,
-      UserService userService) {
+  public DBDataInitializer(StudentRepository studentRepository, PeerEvaluationRepostitory peerEvalRepository, InstructorRepository instructorRepository, RubricRepository rubricRepository, CriterionRepository criterionRepository, SectionRepository sectionRepository, TeamRepository teamRepository, UserService userService, WARRepository warRepository) {
     this.studentRepository = studentRepository;
     this.peerEvalRepository = peerEvalRepository;
     this.instructorRepository = instructorRepository;
@@ -52,6 +53,7 @@ public class DBDataInitializer implements CommandLineRunner {
     this.sectionRepository = sectionRepository;
     this.teamRepository = teamRepository;
     this.userService = userService;
+    this.warRepository = warRepository;
   }
 
   @Override
@@ -131,7 +133,6 @@ public class DBDataInitializer implements CommandLineRunner {
     this.userService.save(s4u);
     this.userService.save(s5u);
     this.userService.save(s6u);
-    
 
     s1u.setStudent(s1);
     // s2u.setStudent(s2);
@@ -155,7 +156,7 @@ public class DBDataInitializer implements CommandLineRunner {
     s6.setUser(s6u);
 
     studentRepository.saveAll(Arrays.asList(s1, s2, s3, s4, s5, s6));
- 
+
     // Create some users.
     PeerEvalUser u1 = new PeerEvalUser();
     u1.setUsername("john");
@@ -253,18 +254,18 @@ public class DBDataInitializer implements CommandLineRunner {
     sec2.setRubric(r1);
     sectionRepository.save(sec2);
 
-
+    // ---------------------//
     // Test Instructor Data //
-    // ----------------------//
+    // ---------------------//
     Instructor i1 = new Instructor();
     i1.setFirstName("Liran");
     i1.setLastName("Ma");
     i1.setEmail("l.ma@tcu.edu");
     instructorRepository.save(i1);
 
-    // ---------------------------//
+    // --------------------------//
     // Test Peer Evaluation Data //
-    // ---------------------------//
+    // --------------------------//
 
     PeerEvaluation peerEval1 = new PeerEvaluation();
     peerEvalRepository.save(peerEval1);
@@ -301,9 +302,9 @@ public class DBDataInitializer implements CommandLineRunner {
     peerEval5.setWeek(4);
     peerEvalRepository.save(peerEval5);
 
-    // ------------------------//
+    // -----------------------//
     // Foreign Key Assignment //
-    // ------------------------//
+    // -----------------------//
 
     s1.setTeam(team1);
     s2.setTeam(team1);
@@ -322,6 +323,70 @@ public class DBDataInitializer implements CommandLineRunner {
     studentRepository.saveAll(Arrays.asList(s1, s2, s3, s4, s5));
     teamRepository.saveAll(Arrays.asList(team1, team2, team3));
     sectionRepository.saveAll(Arrays.asList(sec1, sec2));
+
+    // --------------//
+    // Test WAR Data //
+    // --------------//
+
+    List<Submission> submissions = new ArrayList<>();
+
+    Submission sub1 = new Submission();
+    sub1.setTeamMember(s1);
+    sub1.setTaskCategory("Backend dev");
+    sub1.setPlannedTask("Task1");
+    sub1.setDescription("description of task");
+    sub1.setPlannedHours(5.0);
+    sub1.setActualHours(6.0);
+    sub1.setStatus(true);
+    submissions.add(sub1);
+
+    Submission sub2 = new Submission();
+    sub2.setTeamMember(s1);
+    sub2.setTaskCategory("Documentation");
+    sub2.setPlannedTask("Task2");
+    sub2.setDescription("description of task");
+    sub2.setPlannedHours(1.0);
+    sub2.setActualHours(0.5);
+    sub2.setStatus(true);
+    submissions.add(sub2);
+
+    Submission sub3 = new Submission();
+    sub3.setTeamMember(s1);
+    sub3.setTaskCategory("Frontend dec");
+    sub3.setPlannedTask("Task3");
+    sub3.setDescription("description of task");
+    sub3.setPlannedHours(4.0);
+    sub3.setActualHours(8.0);
+    sub3.setStatus(false);
+    submissions.add(sub3);
+
+    Submission sub4 = new Submission();
+    sub4.setTeamMember(s2);
+    sub4.setTaskCategory("Integration testing");
+    sub4.setPlannedTask("Task4");
+    sub4.setDescription("description of task");
+    submissions.add(sub4);
+
+    Submission sub5 = new Submission();
+    sub5.setTeamMember(s2);
+    sub5.setTaskCategory("Documentation");
+    sub5.setPlannedTask("Task5");
+    sub5.setDescription("description of task");
+    submissions.add(sub5);
+
+    Submission sub6 = new Submission();
+    sub6.setTeamMember(s2);
+    sub6.setTaskCategory("Deployment");
+    sub6.setPlannedTask("Task6");
+    sub6.setDescription("description of task");
+    submissions.add(sub6);
+    
+    WAR war1 = new WAR();
+    war1.setSubmissions(submissions);
+    war1.setTeam(team1);
+    war1.setWeek(4);
+
+    warRepository.save(war1);
 
   }
 
