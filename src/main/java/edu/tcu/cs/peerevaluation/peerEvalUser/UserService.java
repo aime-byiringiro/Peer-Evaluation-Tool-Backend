@@ -22,7 +22,6 @@ public class UserService implements UserDetailsService {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
   }
-   
 
   public List<PeerEvalUser> findAll() {
     return this.userRepository.findAll();
@@ -30,7 +29,7 @@ public class UserService implements UserDetailsService {
 
   public PeerEvalUser findById(Integer userId) {
     return this.userRepository.findById(userId)
-              .orElseThrow(() -> new ObjectNotFoundException("user", userId));
+        .orElseThrow(() -> new ObjectNotFoundException("user", userId));
   }
 
   public PeerEvalUser save(PeerEvalUser newPeerEvalUser) {
@@ -40,7 +39,7 @@ public class UserService implements UserDetailsService {
 
   public PeerEvalUser update(Integer userId, PeerEvalUser update) {
     PeerEvalUser oldPeerEvalUser = this.userRepository.findById(userId)
-          .orElseThrow(() -> new ObjectNotFoundException("user", userId));
+        .orElseThrow(() -> new ObjectNotFoundException("user", userId));
     oldPeerEvalUser.setUsername(update.getUsername());
     oldPeerEvalUser.setEnabled(update.isEnabled());
     oldPeerEvalUser.setRoles(update.getRoles());
@@ -49,14 +48,17 @@ public class UserService implements UserDetailsService {
 
   public void delete(Integer userId) {
     this.userRepository.findById(userId)
-            .orElseThrow(() -> new ObjectNotFoundException("user", userId));
+        .orElseThrow(() -> new ObjectNotFoundException("user", userId));
     this.userRepository.deleteById(userId);
   }
 
   @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return this.userRepository.findByUsername(username) // First, we need to find this user from database.
-                .map(peerEvalUser -> new MyUserPrincipal(peerEvalUser)) // If found, wrap the returned user instance in a MyUserPrincipal instance.
-                .orElseThrow(() -> new UsernameNotFoundException("username " + username + " is not found.")); // Otherwise, throw an exception.
-    }
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    return this.userRepository.findByUsername(username) // First, we need to find this user from database.
+        .map(peerEvalUser -> new MyUserPrincipal(peerEvalUser)) // If found, wrap the returned user instance in a
+                                                                // MyUserPrincipal instance.
+        .orElseThrow(() -> new UsernameNotFoundException("username " + username + " is not found.")); // Otherwise,
+                                                                                                      // throw an
+                                                                                                      // exception.
+  }
 }

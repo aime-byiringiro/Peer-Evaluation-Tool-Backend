@@ -4,14 +4,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
 import edu.tcu.cs.peerevaluation.peerEvalUser.UserService;
-import edu.tcu.cs.peerevaluation.peerEvalUser.converter.UserDtoToUserConverter;
 import edu.tcu.cs.peerevaluation.student.converter.StudentDtoToStudentConverter;
 import edu.tcu.cs.peerevaluation.student.converter.StudentToStudentDtoConverter;
 import edu.tcu.cs.peerevaluation.student.dto.StudentDto;
 import edu.tcu.cs.peerevaluation.system.Result;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
 import jakarta.validation.Valid;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,16 +35,12 @@ public class StudentController {
 
   private final UserService userService;
 
-  private final UserDtoToUserConverter userDtoToUserConverter;
-
   public StudentController(StudentService studentService, StudentToStudentDtoConverter studentToStudentDtoConverter,
-      StudentDtoToStudentConverter studentDtoToStudentConverter, UserService userService,
-      UserDtoToUserConverter userDtoToUserConverter) {
+      StudentDtoToStudentConverter studentDtoToStudentConverter, UserService userService) {
     this.studentService = studentService;
     this.studentToStudentDtoConverter = studentToStudentDtoConverter;
     this.studentDtoToStudentConverter = studentDtoToStudentConverter;
     this.userService = userService;
-    this.userDtoToUserConverter = userDtoToUserConverter;
   }
 
   @GetMapping
@@ -97,8 +91,7 @@ public class StudentController {
   public Result addStudent(@Valid @RequestBody StudentUserCombined studentUserCombined) {
     Student newStudent = this.studentDtoToStudentConverter.convert(studentUserCombined.getStudentDto());
     Student savedStudent = this.studentService.save(newStudent);
-    PeerEvalUser newPeerEvalUser = this.userDtoToUserConverter.convert(studentUserCombined.getUserDto());
-    PeerEvalUser savedUser = this.userService.save(newPeerEvalUser);
+    PeerEvalUser savedUser = this.userService.save(studentUserCombined.getUser());
     savedUser.setStudent(savedStudent);
     savedStudent.setUser(savedUser);
     savedStudent = this.studentService.save(savedStudent);

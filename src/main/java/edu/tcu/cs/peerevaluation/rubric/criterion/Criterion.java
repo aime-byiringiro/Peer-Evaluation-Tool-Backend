@@ -1,9 +1,11 @@
 package edu.tcu.cs.peerevaluation.rubric.criterion;
 
+import edu.tcu.cs.peerevaluation.rubric.Rubric;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
 
@@ -23,7 +25,8 @@ public class Criterion {
     @Positive(message = "max score is must positive")
     private Integer maxScore;
 
-    private Integer rubricId;
+    @ManyToOne
+    private Rubric rubricId;
 
     public String getDescription() {
         return this.description;
@@ -57,12 +60,12 @@ public class Criterion {
         this.id = id;
     }
 
-    public Integer getRubricId() {
+    public Rubric getRubricId() {
         return this.rubricId;
     }
 
-    public void setRubricId(Integer rubricId) {
+    public void setRubricId(Rubric rubricId) {
         this.rubricId = rubricId;
     }
-    
+
 }

@@ -12,6 +12,7 @@ public record EvaluationDto(Integer id,
                             @NotEmpty(message = "scores is required.")
                             List<Integer> scores,
                             String privateComments,
-                            String publicComments) {
+                            String publicComments,
+                            String evaluator) {
 
 }

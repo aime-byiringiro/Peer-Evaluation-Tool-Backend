@@ -6,6 +6,7 @@ import edu.tcu.cs.peerevaluation.rubric.Rubric;
 import edu.tcu.cs.peerevaluation.rubric.converter.RubricToRubricDtoConverter;
 import edu.tcu.cs.peerevaluation.rubric.criterion.Criterion;
 import edu.tcu.cs.peerevaluation.rubric.criterion.converter.CriterionToCriterionDtoConverter;
+import edu.tcu.cs.peerevaluation.rubric.criterion.dto.CriterionDto;
 import edu.tcu.cs.peerevaluation.rubric.dto.RubricDto;
 import edu.tcu.cs.peerevaluation.section.Section;
 import edu.tcu.cs.peerevaluation.section.SectionService;
@@ -57,6 +58,9 @@ public class SectionControllerTest {
     @Mock
     RubricToRubricDtoConverter  rubricToRubricDtoConverter;
 
+    @Mock
+    CriterionToCriterionDtoConverter criterionToCriterionDtoConverter;
+
 
 
     @Autowired
@@ -66,6 +70,7 @@ public class SectionControllerTest {
     RubricDto rubricDto;
 
     List<Criterion> criterionList = new ArrayList<>();
+    List<CriterionDto> criterionDtos = new ArrayList<>();
 
 
 
@@ -90,6 +95,12 @@ public class SectionControllerTest {
         c6.setDescription("How is this teammate's performance during meetings? (1-10)");
         c6.setMaxScore(10);
         criterionList.addAll(Arrays.asList( c4, c5, c6));
+        
+        criterionDtos.add(this.criterionToCriterionDtoConverter.convert(c4));
+        criterionDtos.add(this.criterionToCriterionDtoConverter.convert(c5));
+        criterionDtos.add(this.criterionToCriterionDtoConverter.convert(c6));
+
+
 
        /*
        Creating fake Rubric
@@ -109,7 +120,7 @@ public class SectionControllerTest {
         section1.setRubric(r1);
 
 
-        RubricDto rubricDtoData = new RubricDto(6, "2025 Rubric", criterionList);
+        //RubricDto rubricDtoData = new RubricDto(6, "2025 Rubric", criterionList);
 
 
     }
@@ -164,7 +175,9 @@ public class SectionControllerTest {
         rubric.setRubricName("2025 Rubric");
         rubric.setCriterionList(criterionList);
 
-        RubricDto rubricDtoData = new RubricDto(6, "2025 Rubric", criterionList);
+
+
+        RubricDto rubricDtoData = new RubricDto(6, "2025 Rubric", criterionDtos);
 
         SectionDto sectionDto = new SectionDto(
                 5,
@@ -173,7 +186,7 @@ public class SectionControllerTest {
                 "06/06/2025",
                 "06/06/2026",
                 rubricDtoData);
-
+       
         String json = this.objectMapper.writeValueAsString(sectionDto);
 
         Section savedSection = new Section();

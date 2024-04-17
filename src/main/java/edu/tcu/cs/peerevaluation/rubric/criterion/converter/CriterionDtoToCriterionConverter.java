@@ -9,7 +9,7 @@ import edu.tcu.cs.peerevaluation.rubric.criterion.dto.CriterionDto;
 
 
 @Component
-public class CriterionDtoToCriteronConverter implements Converter<CriterionDto,Criterion> {
+public class CriterionDtoToCriterionConverter implements Converter<CriterionDto,Criterion> {
 
   @Override
   public Criterion convert(CriterionDto source) {
@@ -18,7 +18,7 @@ public class CriterionDtoToCriteronConverter implements Converter<CriterionDto,C
     criterion.setDescription(source.description());
     criterion.setId(source.id());
     criterion.setMaxScore(source.maxScore());
-    criterion.setRubricId(source.rubricId());
+    //criterion.setRubricId(source.rubricId());
     return criterion;
   }
 

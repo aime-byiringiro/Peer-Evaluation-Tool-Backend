@@ -2,7 +2,7 @@ package edu.tcu.cs.peerevaluation.student;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import edu.tcu.cs.peerevaluation.peerEvalUser.dto.UserDto;
+import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
 import edu.tcu.cs.peerevaluation.student.dto.StudentDto;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
 import org.hamcrest.Matchers;
@@ -157,13 +157,14 @@ public class StudentControllerIntegrationTest {
         "Badbarz",
         null,
         null);
-    UserDto userDto = new UserDto(7, 
-        "Kbadbarz", 
-        "password", 
-        true, 
-        "student");
+    PeerEvalUser user = new PeerEvalUser();
+        user.setId(7);
+        user.setUsername("Kbadbarz");
+        user.setPassword("password");
+        user.setEnabled(true);
+        user.setRoles("student");
 
-    StudentUserCombined studentUserCombined = new StudentUserCombined(studentDto,userDto);
+    StudentUserCombined studentUserCombined = new StudentUserCombined(studentDto,user);
     String json = this.objectMapper.writeValueAsString(studentUserCombined);
     System.out.println(json);
 
@@ -194,13 +195,15 @@ public class StudentControllerIntegrationTest {
         "",
         null,
         null);
-    UserDto userDto = new UserDto(7, 
-        "Kbadbarz", 
-        "password", 
-        true, 
-        "student");
 
-    StudentUserCombined studentUserCombined = new StudentUserCombined(studentDto,userDto);
+    PeerEvalUser user = new PeerEvalUser();
+        user.setId(7);
+        user.setUsername("Kbadbarz");
+        user.setPassword("password");
+        user.setEnabled(true);
+        user.setRoles("student");
+
+    StudentUserCombined studentUserCombined = new StudentUserCombined(studentDto,user);
     String json = this.objectMapper.writeValueAsString(studentUserCombined);
 
     this.mockMvc
