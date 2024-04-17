@@ -225,6 +225,7 @@ public class DBDataInitializer implements CommandLineRunner {
     Team team2 = new Team();
     team2.setTeamName("SuperfrogScheduler");
     teamRepository.save(team2);
+
     Team team3 = new Team();
     team3.setTeamName("MoningMeteorite");
     teamRepository.save(team3);
@@ -248,7 +249,7 @@ public class DBDataInitializer implements CommandLineRunner {
     sec2.setRubric(r1);
     sectionRepository.save(sec2);
 
-    // ----------------------//
+
     // Test Instructor Data //
     // ----------------------//
     Instructor i1 = new Instructor();
