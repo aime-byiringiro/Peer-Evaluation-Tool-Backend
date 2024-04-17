@@ -345,7 +345,7 @@ public class DBDataInitializer implements CommandLineRunner {
 
       Evaluation eval = new Evaluation();
       eval.setEvaluated(students.get(i));
-      eval.setPeerEvalId(peerEval.getId());
+      eval.setPeerEvaluation(peerEval);
       eval.setScores(scores);
       eval.setPrivateComments(comments[rand.nextInt(5)]);
       eval.setPublicComments(comments[rand.nextInt(5)]);

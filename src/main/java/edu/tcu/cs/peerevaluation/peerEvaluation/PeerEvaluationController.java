@@ -7,10 +7,19 @@ import edu.tcu.cs.peerevaluation.peerEvalUser.MyUserPrincipal;
 import edu.tcu.cs.peerevaluation.peerEvaluation.converter.PeerEvaluationDtoToPeerEvaluationConverter;
 import edu.tcu.cs.peerevaluation.peerEvaluation.converter.PeerEvaluationToPeerEvaluationDtoConverter;
 import edu.tcu.cs.peerevaluation.peerEvaluation.dto.PeerEvaluationDto;
+import edu.tcu.cs.peerevaluation.peerEvaluation.evaluation.Evaluation;
+import edu.tcu.cs.peerevaluation.peerEvaluation.evaluation.converter.EvaluationToEvalutionDtoConverter;
+import edu.tcu.cs.peerevaluation.peerEvaluation.evaluation.dto.EvaluationDto;
+import edu.tcu.cs.peerevaluation.rubric.Rubric;
+import edu.tcu.cs.peerevaluation.rubric.converter.RubricToRubricDtoConverter;
+import edu.tcu.cs.peerevaluation.rubric.dto.RubricDto;
 import edu.tcu.cs.peerevaluation.student.Student;
 import edu.tcu.cs.peerevaluation.system.Result;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
 import jakarta.validation.Valid;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,11 +41,16 @@ public class PeerEvaluationController {
 
   private final PeerEvaluationDtoToPeerEvaluationConverter dtoToPeerEvalConverter;
 
+  private final EvaluationToEvalutionDtoConverter evalutionDtoConverter;
 
-  public PeerEvaluationController(PeerEvaluationService peerEvalService, PeerEvaluationToPeerEvaluationDtoConverter peerEvalToDtoConverter, PeerEvaluationDtoToPeerEvaluationConverter dtoToPeerEvalConverter) {
+  private final RubricToRubricDtoConverter rubricToRubricDtoConverter;
+
+  public PeerEvaluationController(PeerEvaluationService peerEvalService, PeerEvaluationToPeerEvaluationDtoConverter peerEvalToDtoConverter, PeerEvaluationDtoToPeerEvaluationConverter dtoToPeerEvalConverter, EvaluationToEvalutionDtoConverter evalutionDtoConverter, RubricToRubricDtoConverter rubricToRubricDtoConverter) {
     this.peerEvalService = peerEvalService;
     this.peerEvalToDtoConverter = peerEvalToDtoConverter;
     this.dtoToPeerEvalConverter = dtoToPeerEvalConverter;
+    this.evalutionDtoConverter = evalutionDtoConverter;
+    this.rubricToRubricDtoConverter = rubricToRubricDtoConverter;
   }
 
   @PostMapping
@@ -44,7 +58,7 @@ public class PeerEvaluationController {
     PeerEvaluation newPeerEval = this.dtoToPeerEvalConverter.convert(peerEvalDto);
     PeerEvaluation savedPeerEval = this.peerEvalService.save(newPeerEval);
     savedPeerEval.getEvaluations().forEach(eval -> {
-      eval.setPeerEvalId(newPeerEval.getId());
+      eval.setPeerEvaluation(newPeerEval);
     });
     savedPeerEval = this.peerEvalService.save(newPeerEval);
     PeerEvaluationDto savedDto = this.peerEvalToDtoConverter.convert(savedPeerEval);
@@ -83,5 +97,63 @@ public class PeerEvaluationController {
 
     return new Result(true,StatusCode.SUCCESS,"generate success",loggedInStudent.getFirstName());
   }
+
+  @GetMapping("/byWeek/{week}")
+  public Result getEvalsOfByWeek() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    MyUserPrincipal principal = (MyUserPrincipal) authentication.getPrincipal();
+    Student loggedInStudent = principal.getPeerEvalUser().getStudent();
+    Rubric rubric = loggedInStudent.getTeam().getSection().getRubric();
+    List<Evaluation> evals = this.peerEvalService.findByEvaluatedAndWeek("week 4",loggedInStudent);
+
+    List<EvaluationDto> evalDtos = evals.stream()
+        .map(foundEval -> this.evalutionDtoConverter.convert(foundEval))
+        .collect(Collectors.toList());
+    Report newReport = new Report(evalDtos,this.rubricToRubricDtoConverter.convert(rubric));
+
+    return new Result(true,StatusCode.SUCCESS,"generate success",newReport);
+  }
+
+  @GetMapping("/getEvals")
+  public Result getEvalsByEvaluated(){
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    MyUserPrincipal principal = (MyUserPrincipal) authentication.getPrincipal();
+    Student loggedInStudent = principal.getPeerEvalUser().getStudent();
+    Rubric rubric = loggedInStudent.getTeam().getSection().getRubric();
+    List<Evaluation> evals = this.peerEvalService.getEvaluationsById(loggedInStudent);
+    List<EvaluationDto> evalDtos = evals.stream()
+         .map(foundEval -> this.evalutionDtoConverter.convert(foundEval))
+         .collect(Collectors.toList());
+    Report newReport = new Report(evalDtos,this.rubricToRubricDtoConverter.convert(rubric));
+    return new Result(true,StatusCode.SUCCESS,"generate success",newReport);
+  }
   
+}
+
+class Report {
+  List<EvaluationDto> evals;
+  RubricDto rubricDto;
+
+  public Report(List<EvaluationDto> evals, RubricDto rubricDto) {
+    this.evals = evals;
+    this.rubricDto = rubricDto;
+  }
+  
+  public List<EvaluationDto> getEvals() {
+    return this.evals;
+  }
+
+  public void setEvals(List<EvaluationDto> evals) {
+    this.evals = evals;
+  }
+
+  public RubricDto getRubric() {
+    return this.rubricDto;
+  }
+
+  public void setRubric(RubricDto rubricDto) {
+    this.rubricDto = rubricDto;
+  }
+
 }

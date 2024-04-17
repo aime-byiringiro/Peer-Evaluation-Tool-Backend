@@ -111,4 +111,8 @@ public class Student implements Serializable {
     this.user = user;
   }
 
+  public String getFirstAndLastName() {
+    return (this.firstName + " " + this.lastName);
+  }
+
 }

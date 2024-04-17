@@ -23,7 +23,7 @@ public class PeerEvaluation implements Serializable{
   @ManyToOne
   private Student evaluator; 
 
-  @OneToMany(mappedBy = "peerEvalId", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "peerEvaluation", cascade = CascadeType.ALL)
   private List<Evaluation> evaluations;
 
   private String week;
