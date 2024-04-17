@@ -1,5 +1,6 @@
 package edu.tcu.cs.peerevaluation.rubric;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import edu.tcu.cs.peerevaluation.rubric.criterion.Criterion;
@@ -11,7 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
 @Entity
-public class Rubric {
+public class Rubric implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,8 +37,6 @@ public class Rubric {
             } 
             this.criterionList.add(criterion);
 
-    
-        
     }
 
     public String getRubricName() {

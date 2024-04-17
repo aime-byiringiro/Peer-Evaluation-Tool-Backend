@@ -1,5 +1,7 @@
 package edu.tcu.cs.peerevaluation.rubric.criterion;
 
+import java.io.Serializable;
+
 import edu.tcu.cs.peerevaluation.rubric.Rubric;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,7 +12,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
 
 @Entity
-public class Criterion {
+public class Criterion implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
