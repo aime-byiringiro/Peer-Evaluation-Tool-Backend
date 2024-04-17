@@ -1,4 +1,4 @@
-package edu.tcu.cs.peerevaluation.Student;
+package edu.tcu.cs.peerevaluation.student;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -27,16 +27,17 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
+import edu.tcu.cs.peerevaluation.peerEvalUser.UserService;
+import edu.tcu.cs.peerevaluation.peerEvalUser.dto.UserDto;
 import edu.tcu.cs.peerevaluation.section.Section;
-import edu.tcu.cs.peerevaluation.student.Student;
-import edu.tcu.cs.peerevaluation.student.StudentService;
 import edu.tcu.cs.peerevaluation.student.dto.StudentDto;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
 import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
 import edu.tcu.cs.peerevaluation.team.Team;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public class StudentControllerTest {
 
   @Autowired
@@ -44,6 +45,9 @@ public class StudentControllerTest {
 
   @MockBean
   StudentService studentService;
+
+  @MockBean
+  UserService userService;
 
   @Autowired
   ObjectMapper objectMapper;
@@ -219,21 +223,36 @@ public class StudentControllerTest {
   @Test
   void testAddStudentSuccess() throws Exception {
     // Given
-    StudentDto studentDto = new StudentDto(1,
+    StudentDto studentDto = new StudentDto(7,
         "John",
         "R",
         "Smith",
         null,
         null);
-    String json = this.objectMapper.writeValueAsString(studentDto);
+
+    UserDto userDto = new UserDto(7,
+        "Jsmith",
+        "password",
+        true,
+        "student");
+
+    StudentUserCombined studentUserCombined = new StudentUserCombined(studentDto, userDto);
+    String json = this.objectMapper.writeValueAsString(studentUserCombined);
 
     Student savedStudent = new Student();
-    savedStudent.setId(1);
+    savedStudent.setId(7);
     savedStudent.setFirstName("John");
     savedStudent.setMiddleInitial("R");
     savedStudent.setLastName("Smith");
 
+    PeerEvalUser savedUser = new PeerEvalUser();
+    savedUser.setUsername("Jsmith");
+    savedUser.setPassword("password");
+    savedUser.setEnabled(true);
+    savedUser.setRoles("student");
+
     given(this.studentService.save(Mockito.any(Student.class))).willReturn(savedStudent);
+    given(this.userService.save(Mockito.any(PeerEvalUser.class))).willReturn(savedUser);
 
     // When and Then
     this.mockMvc
@@ -242,15 +261,15 @@ public class StudentControllerTest {
         .andExpect(jsonPath("$.flag").value(true))
         .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
         .andExpect(jsonPath("$.message").value("Add Success"))
-        .andExpect(jsonPath("$.data.id").value(savedStudent.getId()))
-        .andExpect(jsonPath("$.data.firstName").value(savedStudent.getFirstName()))
-        .andExpect(jsonPath("$.data.middleInitial").value(savedStudent.getMiddleInitial()))
-        .andExpect(jsonPath("$.data.lastName").value(savedStudent.getLastName()));
+        .andExpect(jsonPath("$.data.id").value(7))
+        .andExpect(jsonPath("$.data.firstName").value("John"))
+        .andExpect(jsonPath("$.data.middleInitial").value("R"))
+        .andExpect(jsonPath("$.data.lastName").value("Smith"));
   }
 
   @Test
   void testUpdateStudentSuccess() throws Exception {
-    //Given
+    // Given
     StudentDto studentDto = new StudentDto(1,
         "John",
         "R",
@@ -261,16 +280,16 @@ public class StudentControllerTest {
     String json = this.objectMapper.writeValueAsString(studentDto);
 
     Student updatedStudent = new Student();
-      updatedStudent.setId(1);
-      updatedStudent.setFirstName("John");
-      updatedStudent.setMiddleInitial("R");
-      updatedStudent.setLastName("Smith");
+    updatedStudent.setId(1);
+    updatedStudent.setFirstName("John");
+    updatedStudent.setMiddleInitial("R");
+    updatedStudent.setLastName("Smith");
 
     given(this.studentService.update(eq(1), Mockito.any(Student.class))).willReturn(updatedStudent);
 
-    //When and Then
+    // When and Then
     this.mockMvc.perform(put("/students/1").contentType(MediaType.APPLICATION_JSON)
-              .content(json).accept(MediaType.APPLICATION_JSON))
+        .content(json).accept(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.flag").value(true))
         .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
         .andExpect(jsonPath("$.message").value("Update Success"))
@@ -294,10 +313,10 @@ public class StudentControllerTest {
 
     given(this.studentService.update(eq(1), Mockito.any(Student.class)))
         .willThrow(new ObjectNotFoundException("student", 1));
-    
+
     // When and Then
     this.mockMvc.perform(put("/students/1").contentType(MediaType.APPLICATION_JSON)
-            .content(json).accept(MediaType.APPLICATION_JSON))
+        .content(json).accept(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.flag").value(false))
         .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
         .andExpect(jsonPath("$.message").value("Could not find student with Id 1 :("))
@@ -321,7 +340,7 @@ public class StudentControllerTest {
   void testDeleteArtifactErrorWithNonExistentId() throws Exception {
     // Given
     doThrow(new ObjectNotFoundException("student", 1)).when(this.studentService)
-      .delete(1);
+        .delete(1);
 
     // When and Then
     this.mockMvc.perform(delete("/students/1").accept(MediaType.APPLICATION_JSON))
@@ -330,6 +349,5 @@ public class StudentControllerTest {
         .andExpect(jsonPath("$.message").value("Could not find student with Id 1 :("))
         .andExpect(jsonPath("$.data").isEmpty());
   }
-
 
 }
