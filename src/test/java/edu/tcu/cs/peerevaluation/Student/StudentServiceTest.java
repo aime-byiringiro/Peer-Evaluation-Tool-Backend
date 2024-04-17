@@ -42,6 +42,25 @@ public class StudentServiceTest {
   @BeforeEach
   void setUp(){
 
+//    Student s1 = new Student();
+//    s1.setId("1");
+//    s1.setFirstName("John");
+//    s1.setLastName("Doe");
+//
+//    Student s2 = new Student();
+//    s2.setId("2");
+//    s2.setFirstName("Jane");
+//    s2.setLastName("Doe");
+//
+//    Student s3 = new Student();
+//    s3.setId("3");
+//    s3.setFirstName("John");
+//    s3.setLastName("Smith");
+//
+//    students.add(s1);
+//    students.add(s2);
+//    students.add(s3);
+
     List<Team> team1List = new ArrayList<Team>();
     List<Team> team2List = new ArrayList<Team>();
 
@@ -89,6 +108,7 @@ public class StudentServiceTest {
     students.add(s1);
     students.add(s2);
     students.add(s3);
+
   }
 
   @AfterEach
