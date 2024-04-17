@@ -10,5 +10,5 @@ public record PeerEvaluationDto(Integer id,
                                 StudentDto evaluator,
                                 List<EvaluationDto> evaluations,
                                 @NotEmpty(message = "Week is required.")
-                                String week) {
+                                Integer week) {
 }

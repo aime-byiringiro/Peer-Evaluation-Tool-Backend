@@ -98,7 +98,7 @@ public class PeerEvaluationController {
     return new Result(true,StatusCode.SUCCESS,"generate success",loggedInStudent.getFirstName());
   }
 
-  @GetMapping("/byWeek/{week}")
+  @GetMapping("/byWeek")
   public Result getEvalsOfByWeek() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     MyUserPrincipal principal = (MyUserPrincipal) authentication.getPrincipal();
