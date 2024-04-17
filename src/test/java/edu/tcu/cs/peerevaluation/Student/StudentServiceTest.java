@@ -1,4 +1,4 @@
-package edu.tcu.cs.peerevaluation.Student;
+package edu.tcu.cs.peerevaluation.student;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,9 +11,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.jpa.domain.Specification;
 
 import edu.tcu.cs.peerevaluation.section.Section;
-import edu.tcu.cs.peerevaluation.student.Student;
-import edu.tcu.cs.peerevaluation.student.StudentRepository;
-import edu.tcu.cs.peerevaluation.student.StudentService;
 import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
 import edu.tcu.cs.peerevaluation.team.Team;
 

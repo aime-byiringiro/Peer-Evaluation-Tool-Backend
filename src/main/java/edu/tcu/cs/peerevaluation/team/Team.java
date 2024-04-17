@@ -69,4 +69,11 @@ public class Team implements Serializable {
         students.add(student);
     }
 
+    public void removeStudentFromTeam(Student student) {
+        if (students != null) {
+            students.remove(student);
+        }
+    }
+    
+
 }

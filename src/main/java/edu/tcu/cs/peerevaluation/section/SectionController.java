@@ -27,15 +27,13 @@ public class SectionController {
         this.sectionToSectionDtoConverter = sectionToSectionDtoConverter;
     }
 
-    @GetMapping("/{sectionID}")
-    public Result findSectionBySectionName(@PathVariable Integer sectionID) {
+     @GetMapping("{sectionID}")
+    public Result findSectionBySectionID(@PathVariable Integer sectionID) {
         Section foundSection = this.sectionService.adminFindsSeniorDesignSectionsBySectionID(sectionID);
         SectionDto sectionDto = this.sectionToSectionDtoConverter.convert(foundSection); // convert the json section into section object
         return new Result(true, StatusCode.SUCCESS, "Find Success", sectionDto);
 
     }
-
-
 
     @PostMapping
     public Result createNewSection(@RequestBody SectionDto sectionDto) {
