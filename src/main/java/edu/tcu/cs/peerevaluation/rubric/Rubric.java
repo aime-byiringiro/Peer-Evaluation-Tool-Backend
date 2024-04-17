@@ -1,6 +1,7 @@
 package edu.tcu.cs.peerevaluation.rubric;
 
 import java.util.List;
+import java.util.Optional;
 
 import edu.tcu.cs.peerevaluation.rubric.criterion.Criterion;
 import jakarta.persistence.Entity;
@@ -8,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.criteria.CriteriaBuilder;
 
 @Entity
 public class Rubric {

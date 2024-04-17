@@ -1,6 +1,8 @@
 package edu.tcu.cs.peerevaluation.section;
 
 
+import edu.tcu.cs.peerevaluation.section.utils.IdWorker;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -8,20 +10,24 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class SectionService {
 
-
-
     private final SectionRepository sectionRepository;
-    public SectionService(SectionRepository sectionRepository) {
+    private final IdWorker idWorker;
+
+    public SectionService(SectionRepository sectionRepository, IdWorker idWorker) {
         this.sectionRepository = sectionRepository;
+        this.idWorker = idWorker;
     }
 
-    public Section adminFindsSeniorDesignSectionsBySectionName(Integer sectionID){
+
+    public Section adminFindsSeniorDesignSectionsBySectionID(Integer sectionID){
         return this.sectionRepository
                 .findById(sectionID)
                 .orElseThrow( () -> new SectionNotFoundException(sectionID));
     }
-    public Section adminViewSeniorDesignSectionsById(String Id){
-        return null;
+
+    public Section save(Section newSection){
+        newSection.setId((int)idWorker.nextId());
+        return this.sectionRepository.save(newSection);
     }
 
 
