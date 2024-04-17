@@ -196,6 +196,7 @@ public class SectionControllerTest {
                 .andExpect(jsonPath("$.data.academicYear").value(savedSection.getAcademicYear()))
                 .andExpect(jsonPath("$.data.firstDay").value(savedSection.getFirstDay()))
                 .andExpect(jsonPath("$.data.lastDay").value(savedSection.getLastDay()));
+
     }
 
 
