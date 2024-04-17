@@ -156,6 +156,7 @@ public class DBDataInitializer implements CommandLineRunner{
     Team team2 = new Team();
       team2.setTeamName("Superfrog Scheduler");
     teamRepository.save(team2);
+
     Team team3 = new Team();
       team3.setTeamName("Moning Meteorite");
     teamRepository.save(team3);
