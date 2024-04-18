@@ -7,7 +7,6 @@ import java.util.List;
 import edu.tcu.cs.peerevaluation.team.Team;
 import edu.tcu.cs.peerevaluation.war.submission.Submission;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
