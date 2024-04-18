@@ -61,4 +61,9 @@ public class UserService implements UserDetailsService {
                                                                                                       // throw an
                                                                                                       // exception.
   }
+
+  public PeerEvalUser updatePass(PeerEvalUser currentUser) {
+    currentUser.setPassword(this.passwordEncoder.encode(currentUser.getPassword()));
+    return this.userRepository.save(currentUser);
+  }
 }

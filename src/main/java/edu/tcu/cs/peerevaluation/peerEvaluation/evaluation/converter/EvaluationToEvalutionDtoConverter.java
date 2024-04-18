@@ -25,6 +25,7 @@ public class EvaluationToEvalutionDtoConverter implements Converter<Evaluation, 
                                                       : null,
                                               source.getPeerEvaluation().getId(),
                                               source.getScores(),
+                                              source.getScores().stream().reduce(0, (a, b) -> a + b),
                                               source.getPrivateComments(),
                                               source.getPublicComments(),
                                               source.getPeerEvaluation() != null
