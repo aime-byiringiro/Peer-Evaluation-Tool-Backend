@@ -12,6 +12,7 @@ public class SubmissionDtoToSubmissionConverter implements Converter<SubmissionD
   @Override
   public Submission convert(SubmissionDto source) {
     Submission submission = new Submission();
+      submission.setId(source.id());
       submission.setTaskCategory(source.taskCategory());
       submission.setPlannedTask(source.plannedTask());
       submission.setDescription(source.description());

@@ -12,6 +12,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
@@ -23,6 +24,7 @@ public class WAR implements Serializable {
   private Integer id;
 
   @ManyToOne
+  @JoinColumn(name = "Team")
   private Team team;
 
   private Integer week;
@@ -71,6 +73,12 @@ public class WAR implements Serializable {
       submissions = new ArrayList<Submission>();
       } 
       submissions.add(submission);
+  }
+
+  public void removeSubmission(Submission submission) {
+    if (submissions != null) {
+      submissions.remove(submission);
+  }
   }
 
 }

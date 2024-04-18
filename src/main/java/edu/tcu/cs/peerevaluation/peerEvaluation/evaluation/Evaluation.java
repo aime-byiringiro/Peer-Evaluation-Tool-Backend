@@ -3,7 +3,6 @@ package edu.tcu.cs.peerevaluation.peerEvaluation.evaluation;
 import java.io.Serializable;
 import java.util.List;
 
-import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
 import edu.tcu.cs.peerevaluation.peerEvaluation.PeerEvaluation;
 import edu.tcu.cs.peerevaluation.student.Student;
 import jakarta.persistence.Entity;

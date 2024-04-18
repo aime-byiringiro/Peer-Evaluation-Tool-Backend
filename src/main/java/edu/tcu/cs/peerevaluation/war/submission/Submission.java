@@ -30,7 +30,7 @@ public class Submission implements Serializable {
 
   private Double actualHours;
 
-  private Boolean status;
+  private String status;
 
   @ManyToOne
   private WAR war;
@@ -94,16 +94,28 @@ public class Submission implements Serializable {
     this.actualHours = actualHours;
   }
 
-  public Boolean isStatus() {
+  public String getStatus() {
     return this.status;
   }
 
-  public Boolean getStatus() {
-    return this.status;
-  }
-
-  public void setStatus(Boolean status) {
+  public void setStatus(String status) {
     this.status = status;
   }
+
+  public WAR getWar() {
+    return this.war;
+  }
+
+  public void setWar(WAR war) {
+    this.war = war;
+  }
+
+  public void removeFromWAR() {
+    if (this.war != null) {
+      war.removeSubmission(this);
+      this.war = null;
+    }
+  }
+
 
 }
