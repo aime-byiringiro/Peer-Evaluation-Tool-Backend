@@ -1,4 +1,4 @@
-package edu.tcu.cs.peerevaluation.Student;
+package edu.tcu.cs.peerevaluation.student;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
