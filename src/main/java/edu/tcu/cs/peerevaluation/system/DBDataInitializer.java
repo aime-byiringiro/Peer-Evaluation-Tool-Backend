@@ -27,7 +27,6 @@ import edu.tcu.cs.peerevaluation.student.StudentRepository;
 import edu.tcu.cs.peerevaluation.team.Team;
 import edu.tcu.cs.peerevaluation.team.TeamRepository;
 import edu.tcu.cs.peerevaluation.war.WAR;
-import edu.tcu.cs.peerevaluation.war.WARRepository;
 import edu.tcu.cs.peerevaluation.war.WARService;
 import edu.tcu.cs.peerevaluation.war.submission.Submission;
 
@@ -353,7 +352,7 @@ public class DBDataInitializer implements CommandLineRunner {
 
     Submission sub3 = new Submission();
     sub3.setTeamMember(s1);
-    sub3.setTaskCategory("Frontend dec");
+    sub3.setTaskCategory("Frontend dev");
     sub3.setPlannedTask("Task3");
     sub3.setDescription("description of task");
     sub3.setPlannedHours(4.0);
@@ -366,9 +365,9 @@ public class DBDataInitializer implements CommandLineRunner {
     sub4.setTaskCategory("Integration testing");
     sub4.setPlannedTask("Task4");
     sub4.setDescription("description of task");
-    sub3.setPlannedHours(4.0);
-    sub3.setActualHours(4.0);
-    sub3.setStatus("Done");
+    sub4.setPlannedHours(4.0);
+    sub4.setActualHours(4.0);
+    sub4.setStatus("Done");
     submissions.add(sub4);
 
     Submission sub5 = new Submission();
