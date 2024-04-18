@@ -28,6 +28,7 @@ import edu.tcu.cs.peerevaluation.team.Team;
 import edu.tcu.cs.peerevaluation.team.TeamRepository;
 import edu.tcu.cs.peerevaluation.war.WAR;
 import edu.tcu.cs.peerevaluation.war.WARRepository;
+import edu.tcu.cs.peerevaluation.war.WARService;
 import edu.tcu.cs.peerevaluation.war.submission.Submission;
 
 @Component
@@ -42,9 +43,9 @@ public class DBDataInitializer implements CommandLineRunner {
   private final SectionRepository sectionRepository;
   private final TeamRepository teamRepository;
   private final UserService userService;
-  private final WARRepository warRepository;
+  private final WARService warService;
 
-  public DBDataInitializer(StudentRepository studentRepository, PeerEvaluationRepostitory peerEvalRepository, InstructorRepository instructorRepository, RubricRepository rubricRepository, CriterionRepository criterionRepository, SectionRepository sectionRepository, TeamRepository teamRepository, UserService userService, WARRepository warRepository) {
+  public DBDataInitializer(StudentRepository studentRepository, PeerEvaluationRepostitory peerEvalRepository, InstructorRepository instructorRepository, RubricRepository rubricRepository, CriterionRepository criterionRepository, SectionRepository sectionRepository, TeamRepository teamRepository, UserService userService, WARService warService) {
     this.studentRepository = studentRepository;
     this.peerEvalRepository = peerEvalRepository;
     this.instructorRepository = instructorRepository;
@@ -53,7 +54,7 @@ public class DBDataInitializer implements CommandLineRunner {
     this.sectionRepository = sectionRepository;
     this.teamRepository = teamRepository;
     this.userService = userService;
-    this.warRepository = warRepository;
+    this.warService = warService;
   }
 
   @Override
@@ -337,7 +338,7 @@ public class DBDataInitializer implements CommandLineRunner {
     sub1.setDescription("description of task");
     sub1.setPlannedHours(5.0);
     sub1.setActualHours(6.0);
-    sub1.setStatus(true);
+    sub1.setStatus("Done");
     submissions.add(sub1);
 
     Submission sub2 = new Submission();
@@ -347,7 +348,7 @@ public class DBDataInitializer implements CommandLineRunner {
     sub2.setDescription("description of task");
     sub2.setPlannedHours(1.0);
     sub2.setActualHours(0.5);
-    sub2.setStatus(true);
+    sub2.setStatus("Done");
     submissions.add(sub2);
 
     Submission sub3 = new Submission();
@@ -357,7 +358,7 @@ public class DBDataInitializer implements CommandLineRunner {
     sub3.setDescription("description of task");
     sub3.setPlannedHours(4.0);
     sub3.setActualHours(8.0);
-    sub3.setStatus(false);
+    sub3.setStatus("Not Done");
     submissions.add(sub3);
 
     Submission sub4 = new Submission();
@@ -365,6 +366,9 @@ public class DBDataInitializer implements CommandLineRunner {
     sub4.setTaskCategory("Integration testing");
     sub4.setPlannedTask("Task4");
     sub4.setDescription("description of task");
+    sub3.setPlannedHours(4.0);
+    sub3.setActualHours(4.0);
+    sub3.setStatus("Done");
     submissions.add(sub4);
 
     Submission sub5 = new Submission();
@@ -386,7 +390,7 @@ public class DBDataInitializer implements CommandLineRunner {
     war1.setTeam(team1);
     war1.setWeek(4);
 
-    warRepository.save(war1);
+    this.warService.saveWar(war1);
 
   }
 
