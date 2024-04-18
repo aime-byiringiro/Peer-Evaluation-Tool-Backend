@@ -1,9 +1,8 @@
-package edu.tcu.cs.peerevaluation.Student;
+package edu.tcu.cs.peerevaluation.student;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
-import edu.tcu.cs.peerevaluation.student.StudentUserCombined;
 import edu.tcu.cs.peerevaluation.student.dto.StudentDto;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
 import org.hamcrest.Matchers;

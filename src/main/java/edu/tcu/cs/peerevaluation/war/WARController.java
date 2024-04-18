@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -50,9 +52,26 @@ public class WARController {
     this.submissionToSubmissionDtoConverter = submissionToSubmissionDtoConverter;
   }
 
+  //find submission by ID
+  @GetMapping("/{submissionId}")
+  public Result findSubmissionById(@PathVariable Integer submissionId){
+    Submission foundSubmission = this.warService.findById(submissionId);
+    SubmissionDto foundDto = this.submissionToSubmissionDtoConverter.convert(foundSubmission);
+    return new Result(true,StatusCode.SUCCESS,"find by id success", foundDto);
+  }
+
+  @GetMapping
+  public Result findAllSubmissions() {
+    List<Submission> foundSubmissions = this.warService.findAll();
+    List<SubmissionDto> submissionDtos = foundSubmissions.stream()
+        .map(foundSubmission -> this.submissionToSubmissionDtoConverter.convert(foundSubmission))
+        .collect(Collectors.toList());
+    return new Result(true,StatusCode.SUCCESS,"Find All Success", submissionDtos);
+  }
+  
   //findByActiveWeek
   @GetMapping("/{activeWeek}")
-  public Result getMethodName(@PathVariable String activeWeek) {
+  public Result getByActiveWeek(@PathVariable String activeWeek) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     MyUserPrincipal principal = (MyUserPrincipal) authentication.getPrincipal();
     Student loggedInStudent = principal.getPeerEvalUser().getStudent(); 

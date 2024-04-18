@@ -62,4 +62,13 @@ public class WARService {
     this.submissionRepository.deleteById(submissionId);
   }
 
+  public Submission findById(Integer submissionId) {
+    return this.submissionRepository.findById(submissionId)
+        .orElseThrow(() -> new ObjectNotFoundException("submission", submissionId));
+  }
+
+  public List<Submission> findAll() {
+    return this.submissionRepository.findAll();
+  }
+
 }
