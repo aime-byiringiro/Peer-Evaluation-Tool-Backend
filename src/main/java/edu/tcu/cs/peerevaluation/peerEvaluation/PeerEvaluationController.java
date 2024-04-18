@@ -88,32 +88,25 @@ public class PeerEvaluationController {
   }
 
   /*
-   * currently not sure what this is for, but it returns the first 
-   * name of the logged in student
+   * Returns the rubric and evals of a the current student 
+   * based on the week
    */
 
-  @GetMapping("/peerEvalReportStudent")
-  public Result generatePeerEvalReportStudent() {
+  @GetMapping("/peerEvalReportStudent/{week}")
+  public Result generatePeerEvalReportStudent(@PathVariable Integer week) {
+    // Retrieve the currently logged in user
     Student loggedInStudent = getLoggedInStudent();
-    return new Result(true,StatusCode.SUCCESS,"generate success",loggedInStudent.getFirstName());
-  }
-
-  /*
-   * this method returns a list of all the evaluations of
-   * a the current logged in student, based on a specific week
-   */
-  @GetMapping("/byWeek")
-  public Result getEvalsOfByWeek() {
-    Student loggedInStudent = getLoggedInStudent();
-    Rubric rubric = loggedInStudent.getTeam().getSection().getRubric();
-    List<Evaluation> evals = this.peerEvalService.findByEvaluatedAndWeek("week 4",loggedInStudent);
-
+    // Retrieve the rubric for that student
+    RubricDto rubric = this.rubricToRubricDtoConverter.convert(loggedInStudent.getTeam().getSection().getRubric());
+    // Get a list of evals from {week} and for loggedInStudent
+    List<Evaluation> evals = this.peerEvalService.findByEvaluatedAndWeek(4,loggedInStudent);
+    // Convert Evaluations to EvaluationDtos
     List<EvaluationDto> evalDtos = evals.stream()
         .map(foundEval -> this.evalutionDtoConverter.convert(foundEval))
         .collect(Collectors.toList());
-    Report newReport = new Report(evalDtos,this.rubricToRubricDtoConverter.convert(rubric));
-
-    return new Result(true,StatusCode.SUCCESS,"generate success",newReport);
+    // Combine it all into a report object to send to the front end
+    Report report = new Report(evalDtos, rubric);
+    return new Result(true,StatusCode.SUCCESS,"generate success",report);
   }
 
   /*
@@ -123,13 +116,11 @@ public class PeerEvaluationController {
   @GetMapping("/getEvals")
   public Result getEvalsByEvaluated(){
     Student loggedInStudent = getLoggedInStudent();
-    Rubric rubric = loggedInStudent.getTeam().getSection().getRubric();
     List<Evaluation> evals = this.peerEvalService.getEvaluationsById(loggedInStudent);
     List<EvaluationDto> evalDtos = evals.stream()
          .map(foundEval -> this.evalutionDtoConverter.convert(foundEval))
          .collect(Collectors.toList());
-    Report newReport = new Report(evalDtos,this.rubricToRubricDtoConverter.convert(rubric));
-    return new Result(true,StatusCode.SUCCESS,"generate success",newReport);
+    return new Result(true,StatusCode.SUCCESS,"generate success", evalDtos);
   }
 
   /*
@@ -155,11 +146,25 @@ public class PeerEvaluationController {
 
 class Report {
   List<EvaluationDto> evals;
-  RubricDto rubricDto;
+  RubricDto rubric;
+  Integer totalMaxScore;
 
-  public Report(List<EvaluationDto> evals, RubricDto rubricDto) {
+  public Report(List<EvaluationDto> evals, RubricDto rubric) {
     this.evals = evals;
-    this.rubricDto = rubricDto;
+    this.rubric = rubric;
+    this.totalMaxScore = calculateMaxPossibleScore();
+  }
+
+  /*
+   * calculating the max possbile score here, is becuase it requires 
+   * adding values from multiple lists, the reason this isn't done for 
+   * the actual scores is that they all exist within the same method, so 
+   * its much easier to calculate the sum, but also you need the individual scores 
+   */
+  private Integer calculateMaxPossibleScore(){
+    return this.rubric.criterion().stream()
+                        .mapToInt(crit -> crit.maxScore())
+                        .sum();
   }
   
   public List<EvaluationDto> getEvals() {
@@ -171,11 +176,20 @@ class Report {
   }
 
   public RubricDto getRubric() {
-    return this.rubricDto;
+    return this.rubric;
   }
 
   public void setRubric(RubricDto rubricDto) {
-    this.rubricDto = rubricDto;
+    this.rubric = rubricDto;
   }
+
+  public Integer getTotalMaxScore() {
+    return this.totalMaxScore;
+  }
+
+  public void setTotalMaxScore(Integer totalMaxScore) {
+    this.totalMaxScore = totalMaxScore;
+  }
+
 
 }

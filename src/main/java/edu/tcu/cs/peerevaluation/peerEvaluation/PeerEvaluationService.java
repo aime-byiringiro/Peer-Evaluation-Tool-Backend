@@ -32,7 +32,7 @@ public class PeerEvaluationService {
     .orElseThrow(() -> new ObjectNotFoundException("peer evaluation", peerEvalId));
   }
 
-  public List<Evaluation> findByEvaluatedAndWeek(String week, Student evaluated) {
+  public List<Evaluation> findByEvaluatedAndWeek(Integer week, Student evaluated) {
     return this.evalRepository.findByWeekAndEvaluated(evaluated.getId(), week);
   }
 
