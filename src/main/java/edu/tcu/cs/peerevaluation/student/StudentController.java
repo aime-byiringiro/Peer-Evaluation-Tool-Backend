@@ -53,7 +53,10 @@ public class StudentController {
 
   }
 
-  // /students/search?firstName=John&lastName=Doe&section=A&academicYear=2023&teamName=RedDragons
+  /*
+   * returns a list of students who match the requested criteria
+   * /students/search?firstName=John&lastName=Doe&section=A&academicYear=2023&teamName=RedDragons 
+   */
   @GetMapping("/search")
   public Result searchStudents(
       @RequestParam(value = "firstName", required = false) String firstName,
@@ -80,6 +83,9 @@ public class StudentController {
     return new Result(true, StatusCode.SUCCESS, "Search Success", studentDtos);
   }
 
+  /*
+   * returns a student based on their ID
+   */
   @GetMapping("/{studentId}")
   public Result findStudentById(@PathVariable Integer studentId) {
     Student foundStudent = this.studentService.findById(studentId);
@@ -87,6 +93,9 @@ public class StudentController {
     return new Result(true, StatusCode.SUCCESS, "Find One Success", studentDto);
   }
 
+  /*
+   * creates both a student object as well as the associated user object
+   */
   @PostMapping
   public Result addStudent(@Valid @RequestBody StudentUserCombined studentUserCombined) {
     Student newStudent = this.studentDtoToStudentConverter.convert(studentUserCombined.getStudentDto());
@@ -100,6 +109,9 @@ public class StudentController {
     return new Result(true, StatusCode.SUCCESS, "Add Success", savedStudentDto);
   }
 
+  /*
+   * updates the student object 
+   */
   @PutMapping("/{studentId}")
   public Result updateStudent(@PathVariable Integer studentId, @Valid @RequestBody StudentDto studentDto) {
     Student update = this.studentDtoToStudentConverter.convert(studentDto);
@@ -108,6 +120,9 @@ public class StudentController {
     return new Result(true, StatusCode.SUCCESS, "Update Success", updatedStudentDto);
   }
 
+  /*
+   * deletes the student object, as well as anything that relies on it
+   */
   @DeleteMapping("/{studentId}")
   public Result deleteStudent(@PathVariable Integer studentId) {
     this.studentService.delete(studentId);
