@@ -1,4 +1,4 @@
-package edu.tcu.cs.peerevaluation.student;
+package edu.tcu.cs.peerevaluation.Student;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -31,6 +31,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
 import edu.tcu.cs.peerevaluation.peerEvalUser.UserService;
 import edu.tcu.cs.peerevaluation.section.Section;
+import edu.tcu.cs.peerevaluation.student.Student;
+import edu.tcu.cs.peerevaluation.student.StudentService;
+import edu.tcu.cs.peerevaluation.student.StudentUserCombined;
 import edu.tcu.cs.peerevaluation.student.dto.StudentDto;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
 import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
