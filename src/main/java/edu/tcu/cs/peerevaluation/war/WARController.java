@@ -116,6 +116,11 @@ public class WARController {
     return new Result(true,StatusCode.SUCCESS,"Delete Success");
   }
 
+  /*
+   * Method that retrives the current logged in student 
+   * object regardless of the authentication method
+   * used.
+   */
   private Student getLoggedInStudent() throws UsernameNotFoundException{
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication instanceof UsernamePasswordAuthenticationToken) {
