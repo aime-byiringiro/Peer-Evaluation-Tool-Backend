@@ -26,6 +26,8 @@ public class Evaluation implements Serializable{
 
   private List<Integer> scores;
 
+  private Integer totalScore;
+
   private String privateComments;
 
   private String publicComments;
@@ -77,5 +79,14 @@ public class Evaluation implements Serializable{
   public void setPeerEvaluation(PeerEvaluation peerEvaluation) {
     this.peerEvaluation = peerEvaluation;
   }
+
+  public Integer getTotalScore() {
+    return this.totalScore;
+  }
+
+  public void setTotalScore(Integer totalScore) {
+    this.totalScore = totalScore;
+  }
+
 
 }
