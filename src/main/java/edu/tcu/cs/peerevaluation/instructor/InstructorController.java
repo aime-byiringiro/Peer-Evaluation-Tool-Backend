@@ -1,13 +1,17 @@
 package edu.tcu.cs.peerevaluation.instructor;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.tcu.cs.peerevaluation.instructor.converter.InstructorDtoToInstructorConverter;
 import edu.tcu.cs.peerevaluation.instructor.converter.InstructorToInstructorDtoConverter;
+import edu.tcu.cs.peerevaluation.instructor.dto.InstructorDto;
 import edu.tcu.cs.peerevaluation.system.Result;
+import edu.tcu.cs.peerevaluation.system.StatusCode;
 
 @RestController
 @RequestMapping("/instructor")
@@ -28,7 +32,10 @@ public class InstructorController {
   @GetMapping()
   public Result findAllInstructors() {
     List<Instructor> foundInstructors = this.instructorService.findAll();
-    return null;
+    List<InstructorDto> instructorDtos = foundInstructors.stream()
+        .map(foundInstructor -> this.instructorToInstructorDtoConverter.convert(foundInstructor))
+        .collect(Collectors.toList());
+    return new Result(true, StatusCode.SUCCESS, "Find All Success", instructorDtos);
   }
 
 

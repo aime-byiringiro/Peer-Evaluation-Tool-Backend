@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 public class Instructor implements Serializable {
@@ -14,10 +15,12 @@ public class Instructor implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotEmpty(message = "first name is required.")
     private String firstName;
 
     private String middleInitial;
 
+    @NotEmpty(message = "last name is required.")
     private String lastName;
 
     private String email;
