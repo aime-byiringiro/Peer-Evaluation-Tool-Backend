@@ -54,8 +54,8 @@ public class SectionServiceTest {
     @Mock
     SectionRepository sectionRepository;
 
-    @Mock
-    IdWorker idWorker;
+    // @Mock
+    // IdWorker idWorker;
 
     @InjectMocks
     SectionService sectionService;
@@ -136,6 +136,7 @@ public class SectionServiceTest {
     void testSaveSuccess(){
         //Given
         Section newSection = new Section();
+        newSection.setId(1);
         newSection.setSectionName("Section2025-2026");
         newSection.setAcademicYear("2025");
         newSection.setFirstDay("06/06/2025");
@@ -167,7 +168,7 @@ public class SectionServiceTest {
 
         newSection.setRubric(r1);
 
-        given(this.idWorker.nextId()).willReturn(123456L);
+        //given(this.idWorker.nextId()).willReturn(123456L);
         given(this.sectionRepository.save(newSection)).willReturn(newSection);
 
 
@@ -176,7 +177,7 @@ public class SectionServiceTest {
         Section savedSection = this.sectionService.save(newSection);
 
         //Then
-        assertThat(savedSection.getId()).isEqualTo(123456);
+        assertThat(savedSection.getId()).isEqualTo(1);
         assertThat(savedSection.getSectionName()).isEqualTo(newSection.getSectionName());
         assertThat(savedSection.getLastDay()).isEqualTo(newSection.getLastDay());
         assertThat(savedSection.getFirstDay()).isEqualTo(newSection.getFirstDay());

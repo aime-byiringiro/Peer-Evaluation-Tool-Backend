@@ -11,11 +11,9 @@ import org.springframework.stereotype.Service;
 public class SectionService {
 
     private final SectionRepository sectionRepository;
-    private final IdWorker idWorker;
 
-    public SectionService(SectionRepository sectionRepository, IdWorker idWorker) {
+    public SectionService(SectionRepository sectionRepository) {
         this.sectionRepository = sectionRepository;
-        this.idWorker = idWorker;
     }
 
 
@@ -26,7 +24,7 @@ public class SectionService {
     }
 
     public Section save(Section newSection){
-        newSection.setId((int)idWorker.nextId());
+        //newSection.setId((int)idWorker.nextId());
         return this.sectionRepository.save(newSection);
     }
 
