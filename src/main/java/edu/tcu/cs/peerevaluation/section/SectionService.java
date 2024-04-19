@@ -2,6 +2,7 @@ package edu.tcu.cs.peerevaluation.section;
 
 
 import edu.tcu.cs.peerevaluation.section.utils.IdWorker;
+import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -24,8 +25,12 @@ public class SectionService {
     }
 
     public Section save(Section newSection){
-        //newSection.setId((int)idWorker.nextId());
         return this.sectionRepository.save(newSection);
+    }
+
+    public Section viewBySectionName(String sectionName){
+        return this.sectionRepository.findBySectionName(sectionName)
+                .orElseThrow(() -> new ObjectNotFoundException("section", sectionName));
     }
 
 

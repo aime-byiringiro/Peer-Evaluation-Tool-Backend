@@ -34,6 +34,12 @@ public class SectionController {
         return new Result(true, StatusCode.SUCCESS, "Find Success", sectionDto);
 
     }
+    @GetMapping("/{sectionName}")
+    public Result viewSectionById(@PathVariable String sectionName){
+        Section foundSection = this.sectionService.viewBySectionName(sectionName);
+        SectionDto sectionDto = this.sectionToSectionDtoConverter.convert(foundSection);
+        return new Result(true, StatusCode.SUCCESS, "View One Success", sectionDto);
+    }
 
     @PostMapping
     public Result createNewSection(@RequestBody SectionDto sectionDto) {
