@@ -49,8 +49,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 public class SectionServiceTest {
-
-    List<Team> team = new ArrayList<>();
     @Mock
     SectionRepository sectionRepository;
 
@@ -60,7 +58,6 @@ public class SectionServiceTest {
     @InjectMocks
     SectionService sectionService;
 
-    List<Section> sections;
 
 
     @BeforeEach
@@ -68,7 +65,6 @@ public class SectionServiceTest {
 
 
     }
-
     @AfterEach
     void tearDown() {
     }
@@ -184,7 +180,5 @@ public class SectionServiceTest {
         assertThat(savedSection.getRubric()).isEqualTo(newSection.getRubric());
 
     }
-
-
 
 }

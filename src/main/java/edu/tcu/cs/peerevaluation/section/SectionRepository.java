@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface SectionRepository extends JpaRepository<Section, Integer>, JpaSpecificationExecutor<Section>{
 
 
+
+
 }
