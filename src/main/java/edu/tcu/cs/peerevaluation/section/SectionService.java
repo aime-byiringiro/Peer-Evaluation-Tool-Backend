@@ -48,7 +48,7 @@ public class SectionService {
         if (StringUtils.hasLength(searchCriteria.get("academicYear"))){
             spec    = spec.and(SectionSpecs.hasAcademicYear(searchCriteria.get("academicYear")));
         }
-        return this.sectionRepository.findAll(spec, pageable);
+        return this.sectionRepository.findAll(spec, pageable); //
     }
 
 

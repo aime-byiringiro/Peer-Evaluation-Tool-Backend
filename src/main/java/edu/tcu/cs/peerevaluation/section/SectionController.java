@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.sql.Statement;
+import java.util.List;
 import java.util.Map;
 
 
@@ -37,7 +38,16 @@ public class SectionController {
     public Result findSectionByCriteria(@RequestBody Map <String, String> searchCriteria , Pageable pageable) {
         Page<Section> sectionPage = this.sectionService.findByCriteria(searchCriteria, pageable);
         Page<SectionDto> sectionDtoPage = sectionPage.map(this.sectionToSectionDtoConverter::convert);
-        return new Result(true, StatusCode.SUCCESS, "Search Success", sectionDtoPage);
+
+        if (sectionPage.getContent().isEmpty()) {
+            return new Result(true, StatusCode.SUCCESS, " Couldn't find this section");
+        }
+        else {
+            return new Result(true, StatusCode.SUCCESS, "Search Success", sectionDtoPage.getContent());
+        }
+
+
+
     }
 
     @GetMapping("{sectionID}")

@@ -137,9 +137,7 @@ public class SectionControllerTest {
                     "08/21/2023",
                     "05/01/2024",
                     rubricDto);
-
             String json = this.objectMapper.writeValueAsString(sectionDto);
-
             Section foundSection = new Section();
             foundSection.setId(1);
             foundSection.setSectionName("Section2023-2024");
@@ -147,10 +145,8 @@ public class SectionControllerTest {
             foundSection.setFirstDay("08/21/2023");
             foundSection.setLastDay("05/01/2024");
             foundSection.setRubric(r1);
-
             given(this.sectionService.adminFindsSeniorDesignSectionsBySectionID(1)).willReturn(this.section1);
             System.out.print(this.section1);
-
             this.mockMvc.perform(get("/section/1").accept(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.flag").value(true))
                     .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
@@ -165,17 +161,12 @@ public class SectionControllerTest {
 
         @Test
         void testCreateNewSection () throws Exception {
-
             //Given
-
             Rubric rubric = new Rubric();
             rubric.setId(6);
             rubric.setRubricName("2025 Rubric");
             rubric.setCriterionList(criterionList);
-
-
             RubricDto rubricDtoData = new RubricDto(6, "2025 Rubric", criterionDtos);
-
             SectionDto sectionDto = new SectionDto(
                     5,
                     "Section2025-2026",
@@ -183,11 +174,8 @@ public class SectionControllerTest {
                     "06/06/2025",
                     "06/06/2026",
                     rubricDtoData);
-
             String json = this.objectMapper.writeValueAsString(sectionDto);
-
             Section savedSection = new Section();
-
             savedSection.setId(5);
             savedSection.setSectionName("Section2025-2026");
             savedSection.setAcademicYear("2025");
@@ -195,7 +183,6 @@ public class SectionControllerTest {
             savedSection.setLastDay("06/06/2026");
             savedSection.setRubric(rubric);
             given(this.sectionService.save(Mockito.any(Section.class))).willReturn(savedSection);
-
             // when and then
             this.mockMvc.perform(post("/section").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.flag").value(true))
@@ -208,13 +195,5 @@ public class SectionControllerTest {
                     .andExpect(jsonPath("$.data.lastDay").value(savedSection.getLastDay()));
 
         }
-
-
-
-
-
-
-
-
 
 }
