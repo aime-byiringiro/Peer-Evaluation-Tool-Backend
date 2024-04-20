@@ -27,7 +27,7 @@ public class SectionController {
         this.sectionDtoToSectionConverter = sectionDtoToSectionConverter;
         this.sectionToSectionDtoConverter = sectionToSectionDtoConverter;
     }
-    @PostMapping("/section")
+    @PostMapping("/section_search")
     public Result findSectionByCriteria(@RequestBody Map <String, String> searchCriteria , Pageable pageable){
       Page<Section> sectionPage = this.sectionService.findByCriteria(searchCriteria, pageable);
       Page<SectionDto> sectionDtoPage = sectionPage.map(this.sectionToSectionDtoConverter::convert);
