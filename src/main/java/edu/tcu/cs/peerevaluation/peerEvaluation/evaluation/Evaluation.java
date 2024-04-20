@@ -2,6 +2,8 @@ package edu.tcu.cs.peerevaluation.peerEvaluation.evaluation;
 
 import java.io.Serializable;
 import java.util.List;
+
+import edu.tcu.cs.peerevaluation.peerEvaluation.PeerEvaluation;
 import edu.tcu.cs.peerevaluation.student.Student;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,9 +21,12 @@ public class Evaluation implements Serializable{
   @ManyToOne
   private Student evaluated;
 
-  private Integer peerEvalId;
+  @ManyToOne
+  private PeerEvaluation peerEvaluation;
 
   private List<Integer> scores;
+
+  private Integer totalScore;
 
   private String privateComments;
 
@@ -67,12 +72,21 @@ public class Evaluation implements Serializable{
     this.publicComments = publicComments;
   }
 
-  public Integer getPeerEvalId() {
-    return this.peerEvalId;
+  public PeerEvaluation getPeerEvaluation() {
+    return this.peerEvaluation;
   }
 
-  public void setPeerEvalId(Integer peerEvalId) {
-    this.peerEvalId = peerEvalId;
+  public void setPeerEvaluation(PeerEvaluation peerEvaluation) {
+    this.peerEvaluation = peerEvaluation;
   }
+
+  public Integer getTotalScore() {
+    return this.totalScore;
+  }
+
+  public void setTotalScore(Integer totalScore) {
+    this.totalScore = totalScore;
+  }
+
 
 }

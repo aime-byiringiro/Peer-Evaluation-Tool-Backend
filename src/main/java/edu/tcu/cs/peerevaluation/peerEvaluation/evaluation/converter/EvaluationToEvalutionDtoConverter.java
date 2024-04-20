@@ -23,10 +23,14 @@ public class EvaluationToEvalutionDtoConverter implements Converter<Evaluation, 
                                               source.getEvaluated() != null
                                                       ? this.studentToStudentDtoConverter.convert(source.getEvaluated())
                                                       : null,
-                                              source.getPeerEvalId(),
+                                              source.getPeerEvaluation().getId(),
                                               source.getScores(),
+                                              source.getScores().stream().reduce(0, (a, b) -> a + b),
                                               source.getPrivateComments(),
-                                              source.getPublicComments());
+                                              source.getPublicComments(),
+                                              source.getPeerEvaluation() != null
+                                                      ? source.getPeerEvaluation().getEvaluator().getFirstAndLastName()
+                                                      : null);
     return evalDto;                                        
   }
 }

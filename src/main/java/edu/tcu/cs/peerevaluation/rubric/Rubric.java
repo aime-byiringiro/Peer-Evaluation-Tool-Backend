@@ -1,16 +1,18 @@
 package edu.tcu.cs.peerevaluation.rubric;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
-
 import edu.tcu.cs.peerevaluation.rubric.criterion.Criterion;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
 @Entity
-public class Rubric {
+public class Rubric implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,14 +20,7 @@ public class Rubric {
 
     private String rubricName;
     
-    /* TODO
-     * so in this case we have OneToMany, but he put ManyToMany,
-     * im not sure why, but to map them together and remove the extra
-     * table, assuming we leave it OneToMany, then we need to add an
-     * attribute to Criterion that will correspond to the rubric it is
-     * a part of, we could just use the rubric id
-     */
-    @OneToMany(mappedBy = "rubricId")
+    @OneToMany(mappedBy = "rubricId",fetch = FetchType.EAGER)
     private List<Criterion> criterionList;
 
     public List<Criterion> getCriterionList() {
@@ -34,6 +29,14 @@ public class Rubric {
 
     public void setCriterionList(List<Criterion> criterionList) {
         this.criterionList = criterionList;
+    }
+
+    public void addCriterion(Criterion criterion) {
+        if (criterionList == null) {
+            criterionList = new ArrayList<Criterion>();
+            } 
+            this.criterionList.add(criterion);
+
     }
 
     public String getRubricName() {

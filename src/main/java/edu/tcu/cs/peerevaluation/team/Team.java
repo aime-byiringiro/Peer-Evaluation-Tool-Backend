@@ -2,6 +2,7 @@ package edu.tcu.cs.peerevaluation.team;
 
 import edu.tcu.cs.peerevaluation.section.Section;
 import edu.tcu.cs.peerevaluation.student.Student;
+import edu.tcu.cs.peerevaluation.war.WAR;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -24,8 +25,11 @@ public class Team implements Serializable {
      private Section section;
 
     @JsonIgnoreProperties("team")
-    @OneToMany(mappedBy = "team")
+    @OneToMany(mappedBy = "team",fetch = FetchType.EAGER)
     private List<Student> students;
+
+    @OneToMany(mappedBy = "team")
+    private List<WAR> wars;
 
     public Team() {
     }
@@ -73,6 +77,21 @@ public class Team implements Serializable {
         if (students != null) {
             students.remove(student);
         }
+    }
+
+    public List<WAR> getWars() {
+        return this.wars;
+    }
+
+    public void setWars(List<WAR> wars) {
+        this.wars = wars;
+    }
+    
+    public void addWAR(WAR war) {
+        if (wars == null) {
+        wars = new ArrayList<WAR>();
+        } 
+        wars.add(war);
     }
     
 

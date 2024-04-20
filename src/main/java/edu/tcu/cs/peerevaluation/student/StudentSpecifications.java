@@ -50,14 +50,3 @@ public class StudentSpecifications {
   }
 
 }
-
-/*
-  public static Specification<Student> inSection(String sectionName) {
-    return (root, query, criteriaBuilder) -> {
-      // Perform a join with the Section entity
-      Join<Student, Section> sectionJoin = root.join("section");
-      // Specify the criteria to match the sectionName field within the Section entity
-      return criteriaBuilder.equal(sectionJoin.get("sectionName"), sectionName);
-    };
-  }
- */

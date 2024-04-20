@@ -1,6 +1,6 @@
 package edu.tcu.cs.peerevaluation.student;
 
-import edu.tcu.cs.peerevaluation.peerEvalUser.dto.UserDto;
+import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
 import edu.tcu.cs.peerevaluation.student.dto.StudentDto;
 import jakarta.validation.Valid;
 
@@ -9,15 +9,15 @@ public class StudentUserCombined {
   @Valid
   private StudentDto studentDto;
 
-  private UserDto userDto;
+  private PeerEvalUser user;
 
   public StudentUserCombined() {
 
   }
 
-  public StudentUserCombined(StudentDto studentDto, UserDto userDto) {
+  public StudentUserCombined(StudentDto studentDto, PeerEvalUser user) {
     this.studentDto = studentDto;
-    this.userDto = userDto;
+    this.user = user;
   }
 
   public StudentDto getStudentDto() {
@@ -28,12 +28,12 @@ public class StudentUserCombined {
     this.studentDto = studentDto;
   }
 
-  public UserDto getUserDto() {
-    return this.userDto;
+  public PeerEvalUser getUser() {
+    return this.user;
   }
 
-  public void setUserDto(UserDto userDto) {
-    this.userDto = userDto;
+  public void setUser(PeerEvalUser user) {
+    this.user = user;
   }
 
 }

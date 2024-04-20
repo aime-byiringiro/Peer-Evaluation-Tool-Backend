@@ -1,6 +1,8 @@
 package edu.tcu.cs.peerevaluation.section;
 
 
+import edu.tcu.cs.peerevaluation.section.utils.IdWorker;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,24 +16,22 @@ import java.util.Map;
 @Transactional
 public class SectionService {
 
-
-
     private final SectionRepository sectionRepository;
+
     public SectionService(SectionRepository sectionRepository) {
         this.sectionRepository = sectionRepository;
     }
 
-    public Section adminViewSeniorDesignSectionsById(String Id){
-        return null;
+    public Section adminFindsSeniorDesignSectionsBySectionID(Integer sectionID){
+        return this.sectionRepository
+                .findById(sectionID)
+                .orElseThrow( () -> new SectionNotFoundException(sectionID));
     }
 
-
-    public void adminCreatesSeniorDesignSections(){
+    public Section save(Section newSection){
+        return this.sectionRepository.save(newSection);
 
     }
-
-    public void adminEditsSeniorDesignSectionsById(){}
-
 
     public Page<Section> findAll(Pageable pageable){
         return this.sectionRepository.findAll(pageable);
@@ -50,4 +50,8 @@ public class SectionService {
         }
         return this.sectionRepository.findAll(spec, pageable);
     }
+
+
+
+
 }

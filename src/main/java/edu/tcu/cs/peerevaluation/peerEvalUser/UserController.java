@@ -29,6 +29,9 @@ public class UserController {
     this.userToUserDtoConverter = userToUserDtoConverter;
   }
 
+  /*
+   * returns a list of all users 
+   */
   @GetMapping
   public Result findAllUsers() {
     List<PeerEvalUser> foundPeerEvalUsers = this.userService.findAll();
@@ -42,6 +45,9 @@ public class UserController {
     return new Result(true, StatusCode.SUCCESS, "Find All Success", userDtos);
   }
 
+  /*
+   * returns a specific user based on ID
+   */
   @GetMapping("/{userId}")
   public Result findUserById(@PathVariable Integer userId) {
     PeerEvalUser foundPeerEvalUser = this.userService.findById(userId);
@@ -49,6 +55,9 @@ public class UserController {
     return new Result(true, StatusCode.SUCCESS, "Find One Success", userDto);
   }
 
+  /*
+   * adds a user, not used
+   */
   @PostMapping
   public Result addUser(@Valid @RequestBody PeerEvalUser newPeerEvalUser) {
     PeerEvalUser savedUser = this.userService.save(newPeerEvalUser);
@@ -56,8 +65,9 @@ public class UserController {
     return new Result(true, StatusCode.SUCCESS, "Add Success", savedUserDto);
   }
 
-  // We are not using this to update password, need another changePassword method
-  // in this class.
+  /*
+   * updates a user, not password
+   */
   @PutMapping("/{userId}")
   public Result updateUser(@PathVariable Integer userId, @Valid @RequestBody UserDto userDto) {
     PeerEvalUser update = this.userDtoToUserConverter.convert(userDto);
@@ -66,6 +76,9 @@ public class UserController {
     return new Result(true, StatusCode.SUCCESS, "Update Success", updatedUserDto);
   }
 
+  /*
+   * deletes a user, don't use, delete the associated object
+   */
   @DeleteMapping("/{userId}")
   public Result deleteUser(@PathVariable Integer userId) {
     this.userService.delete(userId);

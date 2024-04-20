@@ -11,7 +11,9 @@ public record EvaluationDto(Integer id,
                             Integer peerEvalId,
                             @NotEmpty(message = "scores is required.")
                             List<Integer> scores,
+                            Integer totalScore,
                             String privateComments,
-                            String publicComments) {
+                            String publicComments,
+                            String evaluator) {
 
 }

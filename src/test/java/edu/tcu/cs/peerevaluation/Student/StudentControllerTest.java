@@ -24,12 +24,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
 import edu.tcu.cs.peerevaluation.peerEvalUser.UserService;
-import edu.tcu.cs.peerevaluation.peerEvalUser.dto.UserDto;
 import edu.tcu.cs.peerevaluation.section.Section;
 import edu.tcu.cs.peerevaluation.student.dto.StudentDto;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
@@ -38,6 +38,7 @@ import edu.tcu.cs.peerevaluation.team.Team;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
+@ActiveProfiles("test")
 public class StudentControllerTest {
 
   @Autowired
@@ -230,13 +231,14 @@ public class StudentControllerTest {
         null,
         null);
 
-    UserDto userDto = new UserDto(7,
-        "Jsmith",
-        "password",
-        true,
-        "student");
+    PeerEvalUser user = new PeerEvalUser();
+        user.setId(7);
+        user.setUsername("Jsmith");
+        user.setPassword("password");
+        user.setEnabled(true);
+        user.setRoles("student");
 
-    StudentUserCombined studentUserCombined = new StudentUserCombined(studentDto, userDto);
+    StudentUserCombined studentUserCombined = new StudentUserCombined(studentDto, user);
     String json = this.objectMapper.writeValueAsString(studentUserCombined);
 
     Student savedStudent = new Student();

@@ -21,8 +21,8 @@ public class EvaluationDtoToEvaluationConverter implements Converter<EvaluationD
     Evaluation eval = new Evaluation();
     eval.setId(source.id());
     eval.setEvaluated(this.studentDtoToStudentConverter.convert(source.evaluated()));
-    eval.setPeerEvalId(source.peerEvalId());
     eval.setScores(source.scores());
+    eval.setTotalScore(source.scores().stream().reduce(0, (a, b) -> a + b));
     eval.setPrivateComments(source.privateComments());
     eval.setPublicComments(source.publicComments());
     return eval;

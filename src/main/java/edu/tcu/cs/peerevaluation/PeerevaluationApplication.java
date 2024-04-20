@@ -9,5 +9,4 @@ public class PeerevaluationApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PeerevaluationApplication.class, args);
 	}
-
 }

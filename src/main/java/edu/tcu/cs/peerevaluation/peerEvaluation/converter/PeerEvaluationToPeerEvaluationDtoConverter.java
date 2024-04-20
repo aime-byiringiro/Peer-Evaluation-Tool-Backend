@@ -1,10 +1,13 @@
 package edu.tcu.cs.peerevaluation.peerEvaluation.converter;
 
+import java.util.stream.Collectors;
+
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import edu.tcu.cs.peerevaluation.peerEvaluation.PeerEvaluation;
 import edu.tcu.cs.peerevaluation.peerEvaluation.dto.PeerEvaluationDto;
+import edu.tcu.cs.peerevaluation.peerEvaluation.evaluation.converter.EvaluationToEvalutionDtoConverter;
 import edu.tcu.cs.peerevaluation.student.converter.StudentToStudentDtoConverter;
 
 @Component
@@ -12,9 +15,11 @@ public class PeerEvaluationToPeerEvaluationDtoConverter implements Converter<Pee
 
   private final StudentToStudentDtoConverter studentToStudentDtoConverter;
 
+  private final EvaluationToEvalutionDtoConverter evalutionDtoConverter;
 
-  public PeerEvaluationToPeerEvaluationDtoConverter(StudentToStudentDtoConverter studentToStudentDtoConverter) {
+  public PeerEvaluationToPeerEvaluationDtoConverter(StudentToStudentDtoConverter studentToStudentDtoConverter, EvaluationToEvalutionDtoConverter evalutionDtoConverter) {
     this.studentToStudentDtoConverter = studentToStudentDtoConverter;
+    this.evalutionDtoConverter = evalutionDtoConverter;
   }
 
   @Override
@@ -23,7 +28,9 @@ public class PeerEvaluationToPeerEvaluationDtoConverter implements Converter<Pee
                                                             source.getEvaluator() != null
                                                                     ? this.studentToStudentDtoConverter.convert(source.getEvaluator())
                                                                     : null,
-                                                            source.getEvaluations(),
+                                                            source.getEvaluations().stream()
+                                                                .map(this.evalutionDtoConverter::convert)
+                                                                .collect(Collectors.toList()),
                                                             source.getWeek());
       return peerEvalDto;
   }
