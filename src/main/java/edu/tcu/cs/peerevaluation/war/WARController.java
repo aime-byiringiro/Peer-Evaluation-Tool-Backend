@@ -92,6 +92,7 @@ public class WARController {
   @PostMapping("/{week}")
   public Result newSubmission(@PathVariable Integer week, @Valid @RequestBody SubmissionDto submissionDto) {
     Student loggedInStudent = getLoggedInStudent();
+    System.out.println(submissionDto);
     Submission newSubmission = this.submissionDtoToSubmissionConverter.convert(submissionDto);
     newSubmission.setWar(this.warService.findByWeekAndTeam(loggedInStudent.getTeam().getId(), week));
     newSubmission.setTeamMember(loggedInStudent);
