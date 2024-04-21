@@ -2,10 +2,13 @@ package edu.tcu.cs.peerevaluation.instructor;
 
 import java.io.Serializable;
 
+import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotEmpty;
 
 @Entity
@@ -26,6 +29,10 @@ public class Instructor implements Serializable {
     private String email;
 
     private String password;
+
+    @OneToOne(mappedBy = "instructor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private PeerEvalUser user;
+
 
     // TODO assign istructor to section or team
 
@@ -78,6 +85,14 @@ public class Instructor implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public PeerEvalUser getUser() {
+        return user;
+    }
+
+    public void setUser(PeerEvalUser user) {
+        this.user = user;
     }
 
     

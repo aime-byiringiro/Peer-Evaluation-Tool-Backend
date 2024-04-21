@@ -2,6 +2,7 @@ package edu.tcu.cs.peerevaluation.instructor;
 
 import java.util.List;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -19,5 +20,6 @@ public class InstructorService {
   public List<Instructor> findAll() {
     return this.instructorRepository.findAll();
   }
+
 
 }
