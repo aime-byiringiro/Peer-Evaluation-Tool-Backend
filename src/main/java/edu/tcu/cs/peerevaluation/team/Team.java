@@ -1,5 +1,6 @@
 package edu.tcu.cs.peerevaluation.team;
 
+import edu.tcu.cs.peerevaluation.instructor.Instructor;
 import edu.tcu.cs.peerevaluation.section.Section;
 import edu.tcu.cs.peerevaluation.student.Student;
 import edu.tcu.cs.peerevaluation.war.WAR;
@@ -30,6 +31,11 @@ public class Team implements Serializable {
 
     @OneToMany(mappedBy = "team")
     private List<WAR> wars;
+
+    @ManyToOne
+    private Instructor instructor;
+
+    
 
     public Team() {
     }
@@ -92,6 +98,14 @@ public class Team implements Serializable {
         wars = new ArrayList<WAR>();
         } 
         wars.add(war);
+    }
+
+    public Instructor getInstructor() {
+        return instructor;
+    }
+
+    public void setInstructor(Instructor instructor) {
+        this.instructor = instructor;
     }
     
 

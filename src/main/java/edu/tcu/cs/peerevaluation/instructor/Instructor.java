@@ -1,13 +1,18 @@
 package edu.tcu.cs.peerevaluation.instructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
+import edu.tcu.cs.peerevaluation.section.Section;
+import edu.tcu.cs.peerevaluation.team.Team;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -33,8 +38,9 @@ public class Instructor implements Serializable {
     @OneToOne(mappedBy = "instructor", cascade = CascadeType.ALL, orphanRemoval = true)
     private PeerEvalUser user;
 
+    @OneToMany(mappedBy = "instructor",fetch = FetchType.EAGER)
+    private List<Team> teams;
 
-    // TODO assign istructor to section or team
 
     public Instructor() {
     }
@@ -93,6 +99,14 @@ public class Instructor implements Serializable {
 
     public void setUser(PeerEvalUser user) {
         this.user = user;
+    }
+
+    public List<Team> getTeams() {
+        return teams;
+    }
+
+    public void setTeams(List<Team> teams) {
+        this.teams = teams;
     }
 
     
