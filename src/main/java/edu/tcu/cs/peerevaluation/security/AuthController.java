@@ -25,7 +25,6 @@ public class AuthController {
   public Result getLoginInfo(Authentication authentication){
     LOGGER.debug("Authenticated user: '{}'", authentication.getName());
     System.out.println(authentication.toString());
-    System.out.println("peepeepoopoo");
     return new Result(true, StatusCode.SUCCESS, "User Info and JSON Web Token", this.authService.createLoginInfo(authentication));
   }
 }
