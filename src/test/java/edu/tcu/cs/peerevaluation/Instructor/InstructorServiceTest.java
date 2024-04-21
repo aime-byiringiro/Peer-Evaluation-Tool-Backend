@@ -166,48 +166,86 @@ public class InstructorServiceTest {
   }
 
   @SuppressWarnings("unchecked")
-    @Test
-    void testFindInstructorByTeamNameSuccess() {
-        // Given
-        String searchTeamName = "team2";
-        List<Instructor> expectedInstructors = instructors.stream()
-                .filter(i -> i.getTeams().stream()
-                    .anyMatch(t -> searchTeamName.equals(t.getTeamName())))
-                .collect(Collectors.toList());
+  @Test
+  void testFindInstructorByTeamNameSuccess() {
+    // Given
+    String searchTeamName = "team2";
+    List<Instructor> expectedInstructors = instructors.stream()
+        .filter(i -> i.getTeams().stream()
+            .anyMatch(t -> searchTeamName.equals(t.getTeamName())))
+        .collect(Collectors.toList());
 
-        given(instructorRepository.findAll((Specification<Instructor>) any())).willReturn(expectedInstructors);
+    given(instructorRepository.findAll((Specification<Instructor>) any())).willReturn(expectedInstructors);
 
-        // When
-        List<Instructor> result = instructorService.searchInstructors(null, null, null, searchTeamName, true);
+    // When
+    List<Instructor> result = instructorService.searchInstructors(null, null, null, searchTeamName, true);
 
-        // Then
-        assertThat(result).hasSize(expectedInstructors.size());
-        assertThat(result.get(0).getFirstName()).isEqualTo(expectedInstructors.get(0).getFirstName());
-        assertThat(result.get(0).getLastName()).isEqualTo(expectedInstructors.get(0).getLastName());
-        verify(instructorRepository, times(1)).findAll((Specification<Instructor>) any());
-    }
+    // Then
+    assertThat(result).hasSize(expectedInstructors.size());
+    assertThat(result.get(0).getFirstName()).isEqualTo(expectedInstructors.get(0).getFirstName());
+    assertThat(result.get(0).getLastName()).isEqualTo(expectedInstructors.get(0).getLastName());
+    verify(instructorRepository, times(1)).findAll((Specification<Instructor>) any());
+  }
 
-    @SuppressWarnings("unchecked")
-    @Test
-    void testFindInstructorByStatusSuccess() {
-        // Given
-        boolean searchStatus = false; // Change to false if you want to test for disabled instructors
-        List<Instructor> expectedInstructors = instructors.stream()
-                .filter(i -> i.getUser() != null && i.getUser().isEnabled() == searchStatus)
-                .collect(Collectors.toList());
+  @SuppressWarnings("unchecked")
+  @Test
+  void testFindInstructorByStatusSuccess() {
+    // Given
+    boolean searchStatus = true; // Change to false if you want to test for disabled instructors
+    List<Instructor> expectedInstructors = instructors.stream()
+        .filter(i -> i.getUser() != null && i.getUser().isEnabled() == searchStatus)
+        .collect(Collectors.toList());
 
-        given(instructorRepository.findAll((Specification<Instructor>) any())).willReturn(expectedInstructors);
+    given(instructorRepository.findAll((Specification<Instructor>) any())).willReturn(expectedInstructors);
 
-        // When
-        List<Instructor> result = instructorService.searchInstructors(null, null, null, null, searchStatus);
+    // When
+    List<Instructor> result = instructorService.searchInstructors(null, null, null, null, searchStatus);
 
-        // Then
-        assertThat(result).hasSize(expectedInstructors.size());
-        assertThat(result).allSatisfy(instructor -> {
-            assertThat(instructor.getUser()).isNotNull();
-            assertThat(instructor.getUser().isEnabled()).isEqualTo(searchStatus);
-        });
-        verify(instructorRepository, times(1)).findAll((Specification<Instructor>) any());
-    }
+    // Then
+    assertThat(result).hasSize(expectedInstructors.size());
+    assertThat(result).allSatisfy(instructor -> {
+      assertThat(instructor.getUser()).isNotNull();
+      assertThat(instructor.getUser().isEnabled()).isEqualTo(searchStatus);
+    });
+    verify(instructorRepository, times(1)).findAll((Specification<Instructor>) any());
+  }
+
+  @Test
+  void testFindInstructorByIdSuccess() {
+    // Given
+    Instructor i = new Instructor();
+    i.setId(132);
+    i.setFirstName("John");
+    i.setLastName("Doe");
+
+    given(instructorRepository.findById(132)).willReturn(Optional.of(i)); // Defines the behavior of mock object
+
+    // When
+    Instructor returnedInstructor = instructorService.findById(132);
+
+    // Then
+    assertThat(returnedInstructor.getId()).isEqualTo(i.getId());
+    assertThat(returnedInstructor.getFirstName()).isEqualTo(i.getFirstName());
+    assertThat(returnedInstructor.getLastName()).isEqualTo(i.getLastName());
+    verify(instructorRepository, times(1)).findById(132);
+  }
+
+  @Test
+  void testFindInstructorByIdNotFound() {
+    // Given
+    given(instructorRepository.findById(Mockito.any(Integer.class))).willReturn(Optional.empty());
+
+    // When
+    Throwable thrown = catchThrowable(() -> {
+      @SuppressWarnings("unused")
+      Instructor returnedInstructor = instructorService.findById(1);
+    });
+
+    // Then
+    assertThat(thrown)
+            .isInstanceOf(ObjectNotFoundException.class)
+            .hasMessage("Could not find instructor with Id 1 :(");
+    verify(instructorRepository, times(1)).findById(1);
+  }
 
 }

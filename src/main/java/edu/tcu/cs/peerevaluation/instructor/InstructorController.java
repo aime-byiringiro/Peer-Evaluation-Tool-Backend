@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +17,7 @@ import edu.tcu.cs.peerevaluation.system.Result;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
 
 @RestController
-@RequestMapping("/instructor")
+@RequestMapping("/instructors")
 public class InstructorController {
 
   public final InstructorService instructorService;
@@ -25,7 +26,9 @@ public class InstructorController {
 
   public final InstructorDtoToInstructorConverter instructorDtoToInstructorConverter;
 
-  public InstructorController(InstructorService instructorService, InstructorToInstructorDtoConverter instructorToInstructorDtoConverter, InstructorDtoToInstructorConverter instructorDtoToInstructorConverter) {
+  public InstructorController(InstructorService instructorService,
+      InstructorToInstructorDtoConverter instructorToInstructorDtoConverter,
+      InstructorDtoToInstructorConverter instructorDtoToInstructorConverter) {
     this.instructorService = instructorService;
     this.instructorToInstructorDtoConverter = instructorToInstructorDtoConverter;
     this.instructorDtoToInstructorConverter = instructorDtoToInstructorConverter;
@@ -41,36 +44,41 @@ public class InstructorController {
   }
 
   @GetMapping("/search")
-    public Result searchInstructors(
-        @RequestParam(value = "firstName", required = false) String firstName,
-        @RequestParam(value = "lastName", required = false) String lastName,
-        @RequestParam(value = "academicYear", required = false) String academicYear,
-        @RequestParam(value = "teamName", required = false) String teamName,
-        @RequestParam(value = "enabled", required = false) Boolean enabled) {
+  public Result searchInstructors(
+      @RequestParam(value = "firstName", required = false) String firstName,
+      @RequestParam(value = "lastName", required = false) String lastName,
+      @RequestParam(value = "academicYear", required = false) String academicYear,
+      @RequestParam(value = "teamName", required = false) String teamName,
+      @RequestParam(value = "enabled", required = false) Boolean enabled) {
 
-        List<Instructor> foundInstructors = this.instructorService.searchInstructors(firstName, lastName, academicYear,
-            teamName, enabled != null && enabled);
+    List<Instructor> foundInstructors = this.instructorService.searchInstructors(firstName, lastName, academicYear,
+        teamName, enabled != null && enabled);
 
-        if (foundInstructors.size() > 1) {
-            Comparator<Instructor> sortByAcademicYear = Comparator
-                .comparing(instructor -> instructor.getTeams().isEmpty() ? "" : instructor.getTeams().get(0).getSection().getAcademicYear(),
-                    Comparator.nullsLast(Comparator.reverseOrder()));
-            Comparator<Instructor> sortByLastName = Comparator.comparing(Instructor::getLastName);
+    if (foundInstructors.size() > 1) {
+      Comparator<Instructor> sortByAcademicYear = Comparator
+          .comparing(
+              instructor -> instructor.getTeams().isEmpty() ? ""
+                  : instructor.getTeams().get(0).getSection().getAcademicYear(),
+              Comparator.nullsLast(Comparator.reverseOrder()));
+      Comparator<Instructor> sortByLastName = Comparator.comparing(Instructor::getLastName);
 
-            Comparator<Instructor> sortByBoth = sortByAcademicYear.thenComparing(sortByLastName);
+      Comparator<Instructor> sortByBoth = sortByAcademicYear.thenComparing(sortByLastName);
 
-            foundInstructors.sort(sortByBoth);
-        }
-
-        List<InstructorDto> instructorDtos = foundInstructors.stream()
-            .map(foundInstructor -> this.instructorToInstructorDtoConverter.convert(foundInstructor))
-            .collect(Collectors.toList());
-
-        return new Result(true, StatusCode.SUCCESS, "Search Success", instructorDtos);
+      foundInstructors.sort(sortByBoth);
     }
 
+    List<InstructorDto> instructorDtos = foundInstructors.stream()
+        .map(foundInstructor -> this.instructorToInstructorDtoConverter.convert(foundInstructor))
+        .collect(Collectors.toList());
 
-  
+    return new Result(true, StatusCode.SUCCESS, "Search Success", instructorDtos);
+  }
 
+  @GetMapping("/{instructorId}")
+  public Result findInstructorById(@PathVariable Integer instructorId) {
+    Instructor foundInstructor = this.instructorService.findById(instructorId);
+    InstructorDto instructorDto = this.instructorToInstructorDtoConverter.convert(foundInstructor);
+    return new Result(true, StatusCode.SUCCESS, "Find One Success", instructorDto);
+  }
 
 }
