@@ -9,6 +9,7 @@ import edu.tcu.cs.peerevaluation.section.utils.IdWorker;
 import edu.tcu.cs.peerevaluation.section.SectionController;
 import edu.tcu.cs.peerevaluation.section.SectionRepository;
 import edu.tcu.cs.peerevaluation.section.SectionService;
+import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
 import edu.tcu.cs.peerevaluation.team.Team;
 import org.h2.command.dml.Update;
 import org.hamcrest.Matchers;
@@ -41,6 +42,7 @@ import java.util.Optional;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willReturn;
@@ -261,6 +263,52 @@ public class SectionServiceTest {
         assertThat(editedSection.getRubric()).isEqualTo(update.getRubric());
 
 
+    }
+
+    @Test
+    void testEditNotFound(){
+        //Given
+
+        Section edit = new Section();
+        edit.setSectionName("Section2024-2025");
+        edit.setAcademicYear("2024");
+        edit.setFirstDay("06/01/2024");
+        edit.setLastDay("01/06/2025");
+
+        List<Criterion> criterionList = new ArrayList<>();
+        Criterion c4 = new Criterion();
+        c4.setCriterionName("Manners");
+        c4.setDescription("Does this teammate treat others with respect? (1-10)");
+        c4.setMaxScore(10);
+
+        Criterion c5 = new Criterion();
+        c5.setCriterionName("Humbleness");
+        c5.setDescription("How well does this teammate handle criticism of their work? (1-10)");
+        c5.setMaxScore(10);
+
+        Criterion c6 = new Criterion();
+        c6.setCriterionName("Engagement in meetings");
+        c6.setDescription("How is this teammate's performance during meetings? (1-10)");
+        c6.setMaxScore(10);
+        criterionList.addAll(Arrays.asList( c4, c5, c6));
+
+
+
+        Rubric r1 = new Rubric();
+        r1.setRubricName("2025 Rubric");
+        r1.setCriterionList(criterionList);
+
+        edit.setRubric(r1);
+
+        given(this.sectionRepository.findById(10)).willReturn(Optional.empty());
+
+        //when
+        assertThrows(ObjectNotFoundException.class, () -> {
+            this.sectionService.edit(10, edit);
+        });
+
+        //Then
+        verify(this.sectionRepository, times(1)).findById(10);
     }
 
 }
