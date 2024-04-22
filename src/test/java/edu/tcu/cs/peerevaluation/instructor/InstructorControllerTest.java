@@ -161,6 +161,42 @@ public class InstructorControllerTest {
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 
+    @Test
+    void testSearchInstructorsSuccess() throws Exception {
+        // Given
+        given(instructorService.search(null, null, null, null)).willReturn(Arrays.asList(instructors.get(0)));
+
+        // When and then
+        mockMvc.perform(get("/instructors/search")
+                .param("firstName", "John")
+                .param("lastName", "Doe")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Search Success"))
+                .andExpect(jsonPath("$.data[0].id").value(1))
+                .andExpect(jsonPath("$.data[0].firstName").value("John"))
+                .andExpect(jsonPath("$.data[0].lastName").value("Doe"));
+    }
+
+    @Test
+    void testSearchInstructorsNotFound() throws Exception {
+        // Given
+        given(instructorService.search("Alice", "Wonderland", null, null)).willReturn(new ArrayList<>());
+
+        // When and then
+        mockMvc.perform(get("/instructors/search")
+                .param("firstName", "Alice")
+                .param("lastName", "Wonderland")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Search Success"))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
 
 
     
