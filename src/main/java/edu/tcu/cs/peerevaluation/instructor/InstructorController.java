@@ -39,6 +39,16 @@ public class InstructorController {
     return new Result(true, StatusCode.SUCCESS, "Find One Success", instructorDto);
   }
 
+  @GetMapping("/search")
+  public Result searchInstructors(@RequestParam(required = false) String firstName, 
+                                  @RequestParam(required = false) String lastName, 
+                                  @RequestParam(required = false) String academicYear, 
+                                  @RequestParam(required = false) String teamName) {
+    List<Instructor> instructors = instructorService.search(firstName, lastName, academicYear, teamName);
+    List<InstructorDto> instructorDtos = instructors.stream().map(instructorToInstructorDtoConverter::convert).collect(Collectors.toList());
+    return new Result(true, StatusCode.SUCCESS, "Search Success", instructorDtos);
+  }
+
   
 
 

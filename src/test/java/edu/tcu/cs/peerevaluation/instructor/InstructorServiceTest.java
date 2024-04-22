@@ -64,4 +64,33 @@ public class InstructorServiceTest {
         verify(instructorRepository, times(1)).findById(132);
     }
 
+    @Test
+    void testSearchInstructors() {
+        // Given
+        Instructor i1 = new Instructor();
+        i1.setId(1);
+        i1.setFirstName("Alice");
+        i1.setLastName("Smith");
+        
+        Instructor i2 = new Instructor();
+        i2.setId(2);
+        i2.setFirstName("Bob");
+        i2.setLastName("Jones");
+
+        List<Instructor> mockInstructors = Arrays.asList(i1, i2);
+        given(instructorRepository.findAll(any(Specification.class))).willReturn(mockInstructors);
+
+        // When
+        List<Instructor> foundInstructors = instructorService.search("Alice", "Smith", null, null);
+
+        // Then
+        assertThat(foundInstructors).isNotNull();
+        assertThat(foundInstructors.size()).isEqualTo(2);
+        assertThat(foundInstructors.get(0).getFirstName()).isEqualTo("Alice");
+        assertThat(foundInstructors.get(0).getLastName()).isEqualTo("Smith");
+
+        // Verify that the repository was called once with any specification
+        verify(instructorRepository, times(1)).findAll(any(Specification.class));
+    }
+
 }
