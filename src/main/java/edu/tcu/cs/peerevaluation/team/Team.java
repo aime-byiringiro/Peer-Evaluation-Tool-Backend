@@ -19,6 +19,8 @@ public class Team implements Serializable {
     @Column(name = "Team_ID", unique = true)
     private Integer id;
 
+
+    @Id
     private String teamName;
 
     @ManyToOne
