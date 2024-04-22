@@ -1,11 +1,17 @@
 package edu.tcu.cs.peerevaluation.instructor;
 
 import java.io.Serializable;
+import java.util.List;
 
+import edu.tcu.cs.peerevaluation.team.Team;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 public class Instructor implements Serializable {
@@ -14,15 +20,20 @@ public class Instructor implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotEmpty(message = "first name is required.")
     private String firstName;
 
     private String middleInitial;
 
+    @NotEmpty(message = "last name is required.")
     private String lastName;
 
     private String email;
 
     private String password;
+
+    @OneToMany(mappedBy = "instructor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Team> teams;
 
     // TODO assign istructor to section or team
 
@@ -75,6 +86,14 @@ public class Instructor implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Team> getTeams() {
+        return teams;
+    }
+
+    public void setTeams(List<Team> teams) {
+        this.teams = teams;
     }
 
     

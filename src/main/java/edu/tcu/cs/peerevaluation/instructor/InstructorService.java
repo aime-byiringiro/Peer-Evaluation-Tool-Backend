@@ -24,4 +24,31 @@ public class InstructorService {
         .orElseThrow(() -> new ObjectNotFoundException("instructor", instructorId));
   }
 
+  public List<Instructor> search(String firstName, String lastName, String academicYear, String teamName) {
+    return instructorRepository.findAll(Specification.where(hasFirstName(firstName))
+        .and(hasLastName(lastName))
+        .and(inAcademicYear(academicYear))
+        .and(inTeam(teamName)));
+  }
+
+  private Specification<Instructor> hasFirstName(String firstName) {
+    return (root, query, criteriaBuilder) -> 
+           criteriaBuilder.equal(root.get("firstName"), firstName);
+  }
+
+  private Specification<Instructor> hasLastName(String lastName) {
+    return (root, query, criteriaBuilder) -> 
+           criteriaBuilder.equal(root.get("lastName"), lastName);
+  }
+
+  private Specification<Instructor> inAcademicYear(String academicYear) {
+    return (root, query, criteriaBuilder) -> 
+           criteriaBuilder.equal(root.join("teams").join("section").get("academicYear"), academicYear);
+  }
+
+  private Specification<Instructor> inTeam(String teamName) {
+    return (root, query, criteriaBuilder) -> 
+           criteriaBuilder.equal(root.join("teams").get("teamName"), teamName);
+  }
+
 }
