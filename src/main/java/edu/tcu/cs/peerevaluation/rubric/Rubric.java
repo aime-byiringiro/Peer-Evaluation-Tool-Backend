@@ -24,10 +24,12 @@ public class Rubric implements Serializable {
     private List<Criterion> criterionList;
 
     public List<Criterion> getCriterionList() {
+
         return this.criterionList;
     }
 
     public void setCriterionList(List<Criterion> criterionList) {
+
         this.criterionList = criterionList;
     }
 
@@ -40,14 +42,17 @@ public class Rubric implements Serializable {
     }
 
     public String getRubricName() {
+
         return this.rubricName;
     }
 
     public void setRubricName(String rubricName) {
+
         this.rubricName = rubricName;
     }
 
     public Integer getId() {
+
         return this.id;
     }
 

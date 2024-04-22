@@ -67,10 +67,14 @@ public class SectionControllerTest {
     ObjectMapper objectMapper;
     Section section1 = new Section();
     Rubric r1 = new Rubric();
+
+
+
     RubricDto rubricDto;
 
     List<Criterion> criterionList = new ArrayList<>();
     List<CriterionDto> criterionDtos = new ArrayList<>();
+
 
 
 
@@ -167,7 +171,9 @@ public class SectionControllerTest {
             rubric.setId(6);
             rubric.setRubricName("2025 Rubric");
             rubric.setCriterionList(criterionList);
+
             RubricDto rubricDtoData = new RubricDto(6, "2025 Rubric", criterionDtos);
+
             SectionDto sectionDto = new SectionDto(
                     5,
                     "Section2025-2026",
@@ -197,7 +203,6 @@ public class SectionControllerTest {
 
         }
 
-
         @Test
         void testEditedSectionSuccess() throws Exception {
 
@@ -206,7 +211,18 @@ public class SectionControllerTest {
             rubric.setId(6);
             rubric.setRubricName("2025 Rubric");
             rubric.setCriterionList(criterionList);
+
+            CriterionDto r1Dto = new CriterionDto(6,
+                    "Description of r1Dto",
+                    "testing criterion",
+                    6
+                    );
+
+            Criterion criterion = new Criterion();
+            rubric.addCriterion(criterion);
+
             RubricDto rubricDtoData = new RubricDto(6, "2025 Rubric", criterionDtos);
+            //rubric.addCriterion(r1Dto);
 
             SectionDto sectionDto = new SectionDto(10,
                     "Section2026-2027",
