@@ -114,7 +114,7 @@ public class StudentController {
     savedUser.setStudent(savedStudent);
     savedStudent.setUser(savedUser);
     savedStudent = this.studentService.save(savedStudent);
-    savedUser = this.userService.save(savedUser);
+    savedUser = this.userService.update(savedUser.getId(),savedUser);
     StudentDto savedStudentDto = this.studentToStudentDtoConverter.convert(savedStudent);
     return new Result(true, StatusCode.SUCCESS, "Add Success", savedStudentDto);
   }
