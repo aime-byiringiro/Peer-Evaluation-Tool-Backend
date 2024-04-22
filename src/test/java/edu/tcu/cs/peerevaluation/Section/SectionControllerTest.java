@@ -28,6 +28,7 @@ import java.util.List;
 
 import edu.tcu.cs.peerevaluation.section.dto.SectionDto;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
+import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -240,6 +241,40 @@ public class SectionControllerTest {
 
 
         }
+
+
+        @Test
+        void testEditedSectionErrorWithNonExistentId() throws Exception{
+
+        //Given
+            Rubric rubric = new Rubric();
+            rubric.setId(6);
+            rubric.setRubricName("2025 Rubric");
+            rubric.setCriterionList(criterionList);
+            RubricDto rubricDtoData = new RubricDto(6, "2025 Rubric", criterionDtos);
+
+            SectionDto sectionDto = new SectionDto(10,
+                    "Section2024-2025",
+                    "2024",
+                    "01/06/2024",
+                    "01/06/2025",
+                    rubricDtoData );
+
+            String json = this.objectMapper.writeValueAsString(sectionDto);
+
+            given(this.sectionService.edit(eq(10), Mockito.any(Section.class))).willThrow(new ObjectNotFoundException("section", 10));
+
+            // when and then
+
+            this.mockMvc.perform(put("/section/10").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.flag").value(false))
+                    .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                    .andExpect(jsonPath("$.message").value("Could not find section with ID 10 :("))
+                    .andExpect(jsonPath("$.data").isEmpty());
+
+
+        }
+
 
 
 }
