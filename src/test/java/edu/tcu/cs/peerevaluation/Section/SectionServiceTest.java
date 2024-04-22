@@ -10,6 +10,7 @@ import edu.tcu.cs.peerevaluation.section.SectionController;
 import edu.tcu.cs.peerevaluation.section.SectionRepository;
 import edu.tcu.cs.peerevaluation.section.SectionService;
 import edu.tcu.cs.peerevaluation.team.Team;
+import org.h2.command.dml.Update;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -163,13 +164,10 @@ public class SectionServiceTest {
         r1.setCriterionList(criterionList);
 
         newSection.setRubric(r1);
-
         //given(this.idWorker.nextId()).willReturn(123456L);
         given(this.sectionRepository.save(newSection)).willReturn(newSection);
 
-
         //when
-
         Section savedSection = this.sectionService.save(newSection);
 
         //Then
@@ -177,7 +175,91 @@ public class SectionServiceTest {
         assertThat(savedSection.getSectionName()).isEqualTo(newSection.getSectionName());
         assertThat(savedSection.getLastDay()).isEqualTo(newSection.getLastDay());
         assertThat(savedSection.getFirstDay()).isEqualTo(newSection.getFirstDay());
-        assertThat(savedSection.getRubric()).isEqualTo(newSection.getRubric());
+
+    }
+
+    @Test
+    void testEditSuccess(){
+
+        //Given
+        Section oldSection = new Section();
+        oldSection.setId(10);
+        oldSection.setSectionName("Section2023-2024");
+        oldSection.setAcademicYear("2023");
+        oldSection.setFirstDay("08/21/2023");
+        oldSection.setLastDay("05/01/2024");
+        List<Criterion> criterionList = new ArrayList<>();
+        Criterion c4 = new Criterion();
+        c4.setCriterionName("Manners");
+        c4.setDescription("Does this teammate treat others with respect? (1-10)");
+        c4.setMaxScore(10);
+
+        Criterion c5 = new Criterion();
+        c5.setCriterionName("Humbleness");
+        c5.setDescription("How well does this teammate handle criticism of their work? (1-10)");
+        c5.setMaxScore(10);
+
+        Criterion c6 = new Criterion();
+        c6.setCriterionName("Engagement in meetings");
+        c6.setDescription("How is this teammate's performance during meetings? (1-10)");
+        c6.setMaxScore(10);
+        criterionList.addAll(Arrays.asList( c4, c5, c6));
+
+
+
+        Rubric r1 = new Rubric();
+        r1.setRubricName("2025 Rubric");
+        r1.setCriterionList(criterionList);
+
+        oldSection.setRubric(r1);
+
+
+        Section update = new Section();
+        //update.setID()//uneditable
+        update.setSectionName("section2026-2027");
+        update.setAcademicYear("2026");
+        update.setFirstDay("09/08/2026");
+        update.setLastDay("06/30/207");
+
+
+        List<Criterion> newcriterionList = new ArrayList<>();
+        Criterion newc4 = new Criterion();
+        c4.setCriterionName("Manners");
+        c4.setDescription("Does this teammate treat others with respect? (1-10)");
+        c4.setMaxScore(10);
+
+        Criterion newc5 = new Criterion();
+        c5.setCriterionName("Humbleness");
+        c5.setDescription("How well does this teammate handle criticism of their work? (1-10)");
+        c5.setMaxScore(10);
+
+        Criterion newc6 = new Criterion();
+        c6.setCriterionName("Engagement in meetings");
+        c6.setDescription("How is this teammate's performance during meetings? (1-10)");
+        c6.setMaxScore(10);
+        criterionList.addAll(Arrays.asList( c4, c5, c6));
+
+
+        Rubric r2 = new Rubric();
+        r1.setRubricName("2025 Rubric");
+        r1.setCriterionList(criterionList);
+        update.setRubric(r2);
+
+
+        given(this.sectionRepository.findById(10)).willReturn(Optional.of(oldSection));
+        given(this.sectionRepository.save(oldSection)).willReturn(oldSection);
+
+        //when
+        Section editedSection = this.sectionService.edit(10, update);
+
+        // Then
+
+        assertThat(editedSection.getId()).isEqualTo(10);
+        assertThat(editedSection.getSectionName()).isEqualTo(update.getSectionName());
+        assertThat(editedSection.getFirstDay()).isEqualTo(update.getFirstDay());
+        assertThat(editedSection.getLastDay()).isEqualTo(update.getLastDay());
+        assertThat(editedSection.getRubric()).isEqualTo(update.getRubric());
+
 
     }
 

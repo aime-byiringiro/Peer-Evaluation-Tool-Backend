@@ -196,4 +196,50 @@ public class SectionControllerTest {
 
         }
 
+
+        @Test
+        void testEditedSectionSuccess() throws Exception {
+
+        //Given
+            Rubric rubric = new Rubric();
+            rubric.setId(6);
+            rubric.setRubricName("2025 Rubric");
+            rubric.setCriterionList(criterionList);
+            RubricDto rubricDtoData = new RubricDto(6, "2025 Rubric", criterionDtos);
+
+            SectionDto sectionDto = new SectionDto(10,
+                    "Section2026-2027",
+                    "2026",
+                    "06/01/2026",
+                    "06/01/2027",
+                    rubricDtoData);
+
+            String json = this.objectMapper.writeValueAsString(sectionDto);
+
+            Section editedSection = new Section();
+            editedSection.setId(10);
+            editedSection.setSectionName("Section2026-2027");
+            editedSection.setAcademicYear("2026");
+            editedSection.setFirstDay("06/01/2026");
+            editedSection.setLastDay("06/01/2027");
+            editedSection.setRubric(rubric);
+            given(this.sectionService.edit(eq(10), Mockito.any(Section.class))).willReturn(editedSection);
+
+
+            //when adn then
+            this.mockMvc.perform(put("/section/10").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.flag").value(true))
+                    .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                    .andExpect(jsonPath("$.message").value("Edit Success"))
+                    .andExpect(jsonPath("$.data.id").isNotEmpty())
+                    .andExpect(jsonPath("$.data.sectionName").value(editedSection.getSectionName()))
+                    .andExpect(jsonPath("$.data.academicYear").value(editedSection.getAcademicYear()))
+                    .andExpect(jsonPath("$.data.firstDay").value(editedSection.getFirstDay()))
+                    .andExpect(jsonPath("$.data.lastDay").value(editedSection.getLastDay()));
+
+
+
+        }
+
+
 }
