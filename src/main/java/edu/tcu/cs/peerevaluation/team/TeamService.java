@@ -1,7 +1,6 @@
 package edu.tcu.cs.peerevaluation.team;
 
 
-
 import edu.tcu.cs.peerevaluation.section.utils.IdWorker;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
@@ -16,7 +15,6 @@ import java.util.Map;
 @Service
 @Transactional
 public class TeamService {
-
 
     private final TeamRepository teamRepository;
 
