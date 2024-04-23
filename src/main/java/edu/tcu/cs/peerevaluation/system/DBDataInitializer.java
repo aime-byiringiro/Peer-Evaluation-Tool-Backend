@@ -268,22 +268,10 @@ public class DBDataInitializer implements CommandLineRunner {
     i1u.setEnabled(true);
     i1u.setRoles("instructor user");
 
-    System.out.println(i1u.getPassword());
     userService.save(i1u);
-    System.out.println(i1u.getPassword());
     i1u.setInstructor(i1);
-    System.out.println(i1u.getPassword());
     userService.update(i1u.getId(),i1u);
-    System.out.println(i1u.getPassword());
-
     i1.setUser(i1u);
-    System.out.println(i1u.getPassword());
-   
-    System.out.println(i1u.getPassword());
-
-    
-    
-    //instructorRepository.save(i1);
     
 
     // --------------------------//
