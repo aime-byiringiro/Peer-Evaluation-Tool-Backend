@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tcu.cs.peerevaluation.instructor.Instructor;
 import edu.tcu.cs.peerevaluation.instructor.InstructorService;
+import edu.tcu.cs.peerevaluation.instructor.dto.InstructorDto;
 import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
 import edu.tcu.cs.peerevaluation.peerEvalUser.UserService;
 import edu.tcu.cs.peerevaluation.section.Section;
@@ -37,7 +38,7 @@ import edu.tcu.cs.peerevaluation.student.dto.StudentDto;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
 import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
 import edu.tcu.cs.peerevaluation.team.Team;
-
+import static org.hamcrest.Matchers.hasItems;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
@@ -94,7 +95,8 @@ public class InstructorControllerTest {
         i1.setId(1);
         i1.setFirstName("John");
         i1.setLastName("Doe");
-        // i1.setTeams(new ArrayList<>(team1List)); // Set team list with initialized list
+        // i1.setTeams(new ArrayList<>(team1List)); // Set team list with initialized
+        // list
 
         Instructor i2 = new Instructor();
         i2.setId(2);
@@ -106,7 +108,8 @@ public class InstructorControllerTest {
         i3.setId(3);
         i3.setFirstName("Robert");
         i3.setLastName("Jones");
-        // i3.setTeams(new ArrayList<>(team2List)); // Set team list with initialized list
+        // i3.setTeams(new ArrayList<>(team2List)); // Set team list with initialized
+        // list
 
         // Initialize PeerEvalUsers and associate with Instructors
         PeerEvalUser user1 = new PeerEvalUser();
@@ -164,7 +167,7 @@ public class InstructorControllerTest {
     @Test
     void testSearchInstructorsSuccess() throws Exception {
         // Given
-        given(instructorService.search(null, null, null, null)).willReturn(Arrays.asList(instructors.get(0)));
+        given(instructorService.search("John", "Doe", null, null)).willReturn(Arrays.asList(instructors.get(0)));
 
         // When and then
         mockMvc.perform(get("/instructors/search")
@@ -197,7 +200,60 @@ public class InstructorControllerTest {
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 
+    @Test
+    void testAddInstructorSuccess() throws Exception {
+        // Given
+        InstructorDto instructorDto = new InstructorDto(
+                1, // Assuming the instructor ID is set here for simplicity; might be null in real
+                   // scenarios
+                "Jane",
+                "M",
+                "Doe",
+                "jane.doe@example.com",
+                List.of("Team Alpha", "Team Beta") // Example team names
+        );
 
+        PeerEvalUser user = new PeerEvalUser();
+        user.setId(1);
+        user.setUsername("janedoe");
+        user.setPassword("securepassword");
+        user.setEnabled(true);
 
-    
+        InstructorUserCombined instructorUserCombined = new InstructorUserCombined(instructorDto, user);
+        String json = this.objectMapper.writeValueAsString(instructorUserCombined);
+
+        Instructor savedInstructor = new Instructor();
+        savedInstructor.setId(1);
+        savedInstructor.setFirstName("Jane");
+        savedInstructor.setMiddleInitial("M");
+        savedInstructor.setLastName("Doe");
+        savedInstructor.setEmail("jane.doe@example.com");
+        savedInstructor.setTeams(List.of("Team Alpha", "Team Beta"));
+
+        PeerEvalUser savedUser = new PeerEvalUser();
+        savedUser.setUsername("janedoe");
+        savedUser.setPassword("securepassword");
+        savedUser.setEnabled(true);
+
+        given(this.instructorService.save(Mockito.any(Instructor.class))).willReturn(savedInstructor);
+        given(this.userService.save(Mockito.any(PeerEvalUser.class))).willReturn(savedUser);
+
+        // ...
+
+            this.mockMvc.perform(
+                post("/instructors")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(json)
+                    .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Instructor added successfully"))
+                .andExpect(jsonPath("$.data.id").value(1))
+                .andExpect(jsonPath("$.data.firstName").value("Jane"))
+                .andExpect(jsonPath("$.data.middleInitial").value("M"))
+                .andExpect(jsonPath("$.data.lastName").value("Doe"))
+                .andExpect(jsonPath("$.data.email").value("jane.doe@example.com"))
+                .andExpect(jsonPath("$.data.teams", hasItems("Team Alpha", "Team Beta")));
+    }
+
 }
