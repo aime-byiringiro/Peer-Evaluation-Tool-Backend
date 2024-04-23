@@ -1,6 +1,7 @@
 package edu.tcu.cs.peerevaluation.team.converter;
 
 
+import edu.tcu.cs.peerevaluation.instructor.converter.InstructorToInstructorDtoConverter;
 import edu.tcu.cs.peerevaluation.section.converter.SectionToSectionDtoConverter;
 import edu.tcu.cs.peerevaluation.student.Student;
 import edu.tcu.cs.peerevaluation.student.converter.StudentToStudentDtoConverter;
@@ -18,8 +19,11 @@ public class TeamToTeamDtoConverter implements Converter<Team, TeamDto> {
 
     private final SectionToSectionDtoConverter sectionToSectionDtoConverter;
 
-    public TeamToTeamDtoConverter(SectionToSectionDtoConverter sectionToSectionDtoConverter, StudentToStudentDtoConverter studentToStudentDtoConverter) {
+    private final InstructorToInstructorDtoConverter instructorToInstructorDtoConverter;
+
+    public TeamToTeamDtoConverter(SectionToSectionDtoConverter sectionToSectionDtoConverter, StudentToStudentDtoConverter studentToStudentDtoConverter, InstructorToInstructorDtoConverter instructorToInstructorDtoConverter) {
         this.sectionToSectionDtoConverter = sectionToSectionDtoConverter;
+        this.instructorToInstructorDtoConverter = instructorToInstructorDtoConverter;
     }
 
     @Override
@@ -34,8 +38,10 @@ public class TeamToTeamDtoConverter implements Converter<Team, TeamDto> {
         TeamDto teamDto = new TeamDto(
                 source.getId(),
                 source.getTeamName(),
+                source.getAcademicYear(),
                 this.sectionToSectionDtoConverter.convert(source.getSection()),
-                studentIds);
+                studentIds,
+                this.instructorToInstructorDtoConverter.convert(source.getInstructor()));
         return teamDto;
     }
 }

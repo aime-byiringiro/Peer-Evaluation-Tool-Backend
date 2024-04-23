@@ -1,6 +1,7 @@
 package edu.tcu.cs.peerevaluation.team;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import edu.tcu.cs.peerevaluation.instructor.Instructor;
 import edu.tcu.cs.peerevaluation.section.Section;
 import edu.tcu.cs.peerevaluation.student.Student;
 import edu.tcu.cs.peerevaluation.war.WAR;
@@ -11,26 +12,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@JsonIgnoreProperties("team")
 public class Team implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Team_ID", unique = true)
     private Integer id;
 
+    @Column(unique = true)
     private String teamName;
+
+    private String academicYear;
 
     @ManyToOne
     private Section section;
 
-    @JsonIgnoreProperties("team")
     @OneToMany
     private List<Student> students;
 
+    @ManyToOne
+    private Instructor instructor;
+
+    // JSON ignore this property for now
     @OneToMany(mappedBy = "team")
     private List<WAR> wars;
 
     public Team() {
+    }
+
+    public Instructor getInstructor() {
+        return instructor;
+    }
+
+    public void setInstructor(Instructor instructor) {
+        this.instructor = instructor;
     }
 
     public Integer getId() {
@@ -39,6 +54,14 @@ public class Team implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getAcademicYear() {
+        return academicYear;
+    }
+
+    public void setAcademicYear(String academicYear) {
+        this.academicYear = academicYear;
     }
 
     public Section getSection() {

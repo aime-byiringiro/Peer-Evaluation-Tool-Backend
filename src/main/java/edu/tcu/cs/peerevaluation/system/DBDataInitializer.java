@@ -226,14 +226,18 @@ public class DBDataInitializer implements CommandLineRunner {
 
     Team team1 = new Team();
     team1.setTeamName("PeerEvaluation");
+    team1.setAcademicYear("Fall 2022");
+
     teamRepository.save(team1);
 
     Team team2 = new Team();
     team2.setTeamName("SuperfrogScheduler");
+    team2.setAcademicYear("Spring 2023");
     teamRepository.save(team2);
 
     Team team3 = new Team();
     team3.setTeamName("MoningMeteorite");
+    team3.setAcademicYear("Fall 2024");
     teamRepository.save(team3);
 
     // -------------------//
@@ -320,6 +324,12 @@ public class DBDataInitializer implements CommandLineRunner {
     team3.setStudents(Arrays.asList(s5, s6));
     sec1.setTeams(Arrays.asList(team1, team2));
     sec2.setTeams(Arrays.asList(team3));
+    team1.setInstructor(i1);
+    team2.setInstructor(i1);
+    team3.setInstructor(i1);
+    // TODO: UC19, only team has instructor ID, instructor obj does not link to team
+//    i1.setTeams();
+//    i1.addTeam();
 
     studentRepository.saveAll(Arrays.asList(s1, s2, s3, s4, s5, s6));
     teamRepository.saveAll(Arrays.asList(team1, team2, team3));

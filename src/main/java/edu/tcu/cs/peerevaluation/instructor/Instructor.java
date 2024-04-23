@@ -24,7 +24,7 @@ public class Instructor implements Serializable {
 
     private String password;
 
-    // TODO assign istructor to section or team
+    // TODO assign instructor to section or team
 
     public Instructor() {
     }
