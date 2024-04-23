@@ -19,7 +19,7 @@ public interface EvaluationRepository extends JpaRepository<Evaluation, Integer>
   List<Evaluation> findByWeekAndEvaluated(Integer studentId, Integer week);
 
   // Query to fetch all evaluations for a specific week and section
-  @Query("SELECT e FROM Evaluation e WHERE e.evaluated.team.section.name = :sectionName AND e.peerEvaluation.week = :week")
+  @Query("SELECT e FROM Evaluation e WHERE e.evaluated.team.section.sectionName = :sectionName AND e.peerEvaluation.week = :week")
   List<Evaluation> findByWeekAndSection(@Param("week") Integer week, @Param("sectionName") String sectionName);
   
 }
