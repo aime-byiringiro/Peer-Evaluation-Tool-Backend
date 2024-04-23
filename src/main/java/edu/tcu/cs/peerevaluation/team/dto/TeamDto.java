@@ -7,10 +7,10 @@ import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
 
 public record TeamDto(Integer id,
-                      @NotEmpty(message = "Team Name is required.")
+                      //@NotEmpty(message = "Team Name is required.")
                       String teamName,
-                      @NotEmpty(message = "Section is required.")
+                     // @NotEmpty(message = "Section is required.")
                       SectionDto section,
-                      @NotEmpty(message = "Students are required.")
+                     // @NotEmpty(message = "Students are required.")
                       List<Student> students) {
 }
