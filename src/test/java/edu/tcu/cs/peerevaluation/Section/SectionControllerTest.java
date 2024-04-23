@@ -297,21 +297,49 @@ public class SectionControllerTest {
         @Test
         void testEditedSectionErrorWithNonExistentId() throws Exception{
 
-        //Given
-            Rubric rubric = new Rubric();
-            rubric.setId(6);
-            rubric.setRubricName("2025 Rubric");
-            rubric.setCriterionList(criterionList);
-            RubricDto rubricDtoData = new RubricDto(6, "2025 Rubric", criterionDtos);
+            List<CriterionDto> criteriaList = new ArrayList<>();
+
+            criteriaList.add(new CriterionDto(1,
+                    "How do you rate the quality",
+                    "Quality of work",
+                    10));
+            criteriaList.add(new CriterionDto(2,
+                    "How productive is this teammate?",
+                    "Productivity", 10));
+
+            RubricDto rubricDto = new RubricDto(1,
+                    "2024 Rubric",
+                    criteriaList);
 
             SectionDto sectionDto = new SectionDto(10,
-                    "Section2024-2025",
-                    "2024",
-                    "01/06/2024",
+                    "Section2025-2026",
+                    "2025",
                     "01/06/2025",
-                    rubricDtoData );
+                    "02/06/2026",
+                    rubricDto);
 
             String json = this.objectMapper.writeValueAsString(sectionDto);
+            List<Criterion> newCriterionList = new ArrayList<>();
+            Criterion c1 = new Criterion();
+            c1.setId(1); c1.setDescription("How do you rate the quality"); c1.setMaxScore(10);
+            Criterion c2 = new Criterion();
+            c2.setId(2); c2.setDescription("How productive is this teammate?"); c2.setMaxScore(10);
+            newCriterionList.add(c1);
+            newCriterionList.add(c2);
+            // Create Rubric object
+            Rubric newRubric = new Rubric();
+            newRubric.setRubricName("2024 Rubric");
+            newRubric.setId(1);
+            newRubric.setCriterionList(newCriterionList);
+
+            // Create Section object
+            Section editedSection = new Section();
+            editedSection.setId(10);
+            editedSection.setAcademicYear("2025");
+            editedSection.setFirstDay("01/06/2025");
+            editedSection.setLastDay("01/06/2026");
+            editedSection.setRubric(newRubric);
+
 
             given(this.sectionService.edit(eq(10), Mockito.any(Section.class))).willThrow(new ObjectNotFoundException("section", 10));
 
@@ -320,7 +348,7 @@ public class SectionControllerTest {
             this.mockMvc.perform(put("/section/10").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.flag").value(false))
                     .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
-                    .andExpect(jsonPath("$.message").value("Could not find section with ID 10 :("))
+                    .andExpect(jsonPath("$.message").value("Could not find section with Id 10 :("))
                     .andExpect(jsonPath("$.data").isEmpty());
 
 
