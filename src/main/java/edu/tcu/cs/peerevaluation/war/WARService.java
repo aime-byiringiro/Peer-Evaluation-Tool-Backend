@@ -22,12 +22,17 @@ public class WARService {
     this.submissionRepository = submissionRepository;
   }
 
-  public WAR saveWar(WAR war){
-    war.getSubmissions().forEach((submission) -> {
-      submission.setWar(war);
-    });
-    return this.warRepository.save(war);
+
+
+
+
+  public WAR saveWar(WAR newWar){
+//    war.getSubmissions().forEach((submission) -> {
+//      submission.setWar(war);
+//    });
+    return this.warRepository.save(newWar);
   }
+
 
   public List<Submission> findByWeekAndStudent(Integer studentId, String week){
     return this.submissionRepository.findByWeekAndStudent(studentId, week);

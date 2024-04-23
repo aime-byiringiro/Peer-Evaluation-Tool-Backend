@@ -1,5 +1,6 @@
 package edu.tcu.cs.peerevaluation.war;
 
+import edu.tcu.cs.peerevaluation.war.dto.WARDto;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -59,6 +60,19 @@ public class WARController {
     this.submissionDtoToSubmissionConverter = submissionDtoToSubmissionConverter;
     this.submissionToSubmissionDtoConverter = submissionToSubmissionDtoConverter;
   }
+
+
+
+
+  //Admin set up active week for a senior design section
+  @PostMapping
+  public Result setUpWAR(@Valid @RequestBody WARDto warDto) {
+    WAR newWar = this.warDtoToWARConverter.convert(warDto);
+    WAR savedWar = this.warService.saveWar(newWar);
+    WARDto savedWarDto = this.warToWARDtoConverter.convert(savedWar);
+    return new Result(true, StatusCode.SUCCESS, "Set Up Success", savedWarDto);
+  }
+
 
   //find submission by ID
   @GetMapping("/id/{submissionId}")
