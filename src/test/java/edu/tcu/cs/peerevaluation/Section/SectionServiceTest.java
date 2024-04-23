@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.tcu.cs.peerevaluation.rubric.Rubric;
 import edu.tcu.cs.peerevaluation.rubric.criterion.Criterion;
 import edu.tcu.cs.peerevaluation.section.Section;
-import edu.tcu.cs.peerevaluation.section.utils.IdWorker;
 import edu.tcu.cs.peerevaluation.section.SectionController;
 import edu.tcu.cs.peerevaluation.section.SectionRepository;
 import edu.tcu.cs.peerevaluation.section.SectionService;

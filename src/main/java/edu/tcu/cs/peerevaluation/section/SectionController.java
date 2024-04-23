@@ -73,7 +73,20 @@ public class SectionController {
         Section  editedSection = this.sectionService.edit(sectionID, edit);
         SectionDto editSectionDto = this.sectionToSectionDtoConverter.convert(editedSection);
         return new Result(true, StatusCode.SUCCESS, "Edit Success", editSectionDto);
+    }
 
+
+    //current week method
+    @GetMapping("/week/{sectionID}")
+    public Result getCurrentWeekById(@PathVariable Integer sectionID){
+        Section foundSection = this.sectionService.adminFindsSeniorDesignSectionsBySectionID(sectionID);
+        Integer currentWeek = foundSection.getCurrentWeek() + 1;
+        /*
+         * TODO
+         * if say 5 weeks and 4 days have passed, this will return
+         * a 5, so im adding 1 to get the current week
+         */
+        return new Result(true, StatusCode.SUCCESS, "Edit Success", currentWeek);
     }
 
 

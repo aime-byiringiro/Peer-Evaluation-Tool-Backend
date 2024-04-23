@@ -42,7 +42,7 @@ public class Instructor implements Serializable {
     @Column(name = "team_name") // Specifies the column that will store the team names
     private List<String> teams;
 
-    @OneToOne(mappedBy = "instructor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "instructor", fetch = FetchType.EAGER)
     private PeerEvalUser user;
 
 
