@@ -51,4 +51,7 @@ public class InstructorService {
            criteriaBuilder.equal(root.join("teams").get("teamName"), teamName);
   }
 
+  public Instructor save(Instructor instructor) {
+    return this.instructorRepository.save(instructor);
+}
 }

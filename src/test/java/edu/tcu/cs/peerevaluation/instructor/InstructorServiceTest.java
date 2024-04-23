@@ -93,4 +93,27 @@ public class InstructorServiceTest {
         verify(instructorRepository, times(1)).findAll(any(Specification.class));
     }
 
+    @Test
+    void testSaveSuccess() {
+        // Given
+        Instructor newInstructor = new Instructor();
+        newInstructor.setFirstName("John");
+        newInstructor.setLastName("Doe");
+        newInstructor.setMiddleInitial("M");
+        newInstructor.setId(123);
+
+        given(instructorRepository.save(newInstructor)).willReturn(newInstructor);
+
+        // When
+        Instructor savedInstructor = instructorService.save(newInstructor);
+
+        // Then
+        assertThat(savedInstructor.getId()).isEqualTo(123);
+        assertThat(savedInstructor.getFirstName()).isEqualTo("John");
+        assertThat(savedInstructor.getLastName()).isEqualTo("Doe");
+        assertThat(savedInstructor.getMiddleInitial()).isEqualTo("M");
+
+        verify(instructorRepository, times(1)).save(newInstructor);
+    }
+
 }

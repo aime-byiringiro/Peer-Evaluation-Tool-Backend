@@ -3,14 +3,19 @@ package edu.tcu.cs.peerevaluation.instructor;
 import java.io.Serializable;
 import java.util.List;
 
+import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
 import edu.tcu.cs.peerevaluation.team.Team;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotEmpty;
 
 @Entity
@@ -32,10 +37,14 @@ public class Instructor implements Serializable {
 
     private String password;
 
-    @OneToMany(mappedBy = "instructor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Team> teams;
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "instructor_teams") // Specifies the table that stores the team names
+    @Column(name = "team_name") // Specifies the column that will store the team names
+    private List<String> teams;
 
-    // TODO assign istructor to section or team
+    @OneToOne(mappedBy = "instructor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private PeerEvalUser user;
+
 
     public Instructor() {
     }
@@ -88,12 +97,20 @@ public class Instructor implements Serializable {
         this.password = password;
     }
 
-    public List<Team> getTeams() {
+    public List<String> getTeams() {
         return teams;
     }
 
-    public void setTeams(List<Team> teams) {
-        this.teams = teams;
+    public void setTeams(List<String> list) {
+        this.teams = list;
+    }
+
+    public PeerEvalUser getUser() {
+        return user;
+    }
+
+    public void setUser(PeerEvalUser user) {
+        this.user = user;
     }
 
     
