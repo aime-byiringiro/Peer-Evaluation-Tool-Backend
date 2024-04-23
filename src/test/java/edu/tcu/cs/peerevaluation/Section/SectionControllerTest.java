@@ -166,35 +166,57 @@ public class SectionControllerTest {
         @Test
         void testCreateNewSection () throws Exception {
 
-            //Given
 
-            Rubric rubric = new Rubric();
-            rubric.setId(6);
-            rubric.setRubricName("2025 Rubric");
-            rubric.setCriterionList(criterionList);
+            List<CriterionDto> criteriaList = new ArrayList<>();
 
+            criteriaList.add(new CriterionDto(1,
+                    "How do you rate the quality",
+                    "Quality of work",
+                    10));
+            criteriaList.add(new CriterionDto(2,
+                    "How productive is this teammate?",
+                    "Productivity", 10));
 
-            RubricDto rubricDtoData = new RubricDto(6, "2025 Rubric", criterionDtos);
+            RubricDto rubricDto = new RubricDto(1,
+                    "2024 Rubric",
+                    criteriaList);
 
-            SectionDto sectionDto = new SectionDto(
-                    5,
-                    "Section2025-2026",
-                    "2025",
-                    "06/06/2025",
-                    "06/06/2026",
-                    rubricDtoData);
+            SectionDto sectionDto = new SectionDto(10,
+                  "Section2025-2026",
+                  "2025",
+                  "01/06/2025",
+                  "02/06/2026",
+                  rubricDto);
 
-            String json = this.objectMapper.writeValueAsString(sectionDto);
+          String json = this.objectMapper.writeValueAsString(sectionDto);
 
+            List<Criterion> newCriterionList = new ArrayList<>();
+            Criterion c1 = new Criterion();
+            c1.setId(1); c1.setDescription("How do you rate the quality"); c1.setMaxScore(10);
+            Criterion c2 = new Criterion();
+            c2.setId(2); c2.setDescription("How productive is this teammate?"); c2.setMaxScore(10);
+            newCriterionList.add(c1);
+            newCriterionList.add(c2);
+
+            // Create Rubric object
+            Rubric newRubric = new Rubric();
+            newRubric.setRubricName("2024 Rubric");
+            newRubric.setId(1);
+            newRubric.setCriterionList(newCriterionList);
+
+            // Create Section object
             Section savedSection = new Section();
-
-            savedSection.setId(5);
-            savedSection.setSectionName("Section2025-2026");
+            savedSection.setId(10);
             savedSection.setAcademicYear("2025");
-            savedSection.setFirstDay("06/06/2025");
-            savedSection.setLastDay("06/06/2026");
-            savedSection.setRubric(rubric);
+            savedSection.setFirstDay("01/06/2025");
+            savedSection.setLastDay("01/06/2026");
+            savedSection.setRubric(newRubric);
+
+
             given(this.sectionService.save(Mockito.any(Section.class))).willReturn(savedSection);
+
+            // when and then
+
 
             // when and then
             this.mockMvc.perform(post("/section").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
@@ -206,6 +228,7 @@ public class SectionControllerTest {
                     .andExpect(jsonPath("$.data.academicYear").value(savedSection.getAcademicYear()))
                     .andExpect(jsonPath("$.data.firstDay").value(savedSection.getFirstDay()))
                     .andExpect(jsonPath("$.data.lastDay").value(savedSection.getLastDay()));
+                    //andExpect(jsonPath("$.data."))
 
         }
 
