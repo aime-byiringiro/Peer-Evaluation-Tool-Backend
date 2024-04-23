@@ -2,41 +2,31 @@ package edu.tcu.cs.peerevaluation.Team;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.tcu.cs.peerevaluation.rubric.Rubric;
-import edu.tcu.cs.peerevaluation.rubric.converter.RubricToRubricDtoConverter;
 import edu.tcu.cs.peerevaluation.rubric.criterion.Criterion;
-import edu.tcu.cs.peerevaluation.rubric.criterion.converter.CriterionToCriterionDtoConverter;
 import edu.tcu.cs.peerevaluation.rubric.criterion.dto.CriterionDto;
 import edu.tcu.cs.peerevaluation.rubric.dto.RubricDto;
 import edu.tcu.cs.peerevaluation.section.Section;
-import edu.tcu.cs.peerevaluation.section.SectionService;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import edu.tcu.cs.peerevaluation.section.dto.SectionDto;
 import edu.tcu.cs.peerevaluation.student.Student;
 import edu.tcu.cs.peerevaluation.student.converter.StudentToStudentDtoConverter;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
-import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
 import edu.tcu.cs.peerevaluation.team.Team;
 import edu.tcu.cs.peerevaluation.team.TeamService;
 import edu.tcu.cs.peerevaluation.team.converter.TeamToTeamDtoConverter;
 import edu.tcu.cs.peerevaluation.team.dto.TeamDto;
-import edu.tcu.cs.peerevaluation.war.WAR;
-import jakarta.validation.constraints.NotEmpty;
-import org.aspectj.lang.annotation.After;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,15 +39,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import javax.print.attribute.standard.Media;
 
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles(value = "dev")
-public class SectionControllerTest {
+public class TeamControllerTest {
+
+    Team team = new Team();
 
     @Autowired
     MockMvc mockMvc;
@@ -79,6 +68,7 @@ public class SectionControllerTest {
     @BeforeEach
     void setUp(){
 
+
     }
 
     @AfterEach
@@ -96,6 +86,7 @@ public class SectionControllerTest {
         "hello hello",
         "criterionName",
         10);
+        newCriterionDtolist.add(criterionDto1);
 
         RubricDto newRubriDto = new RubricDto(10,
                 "rubricName",
@@ -114,13 +105,16 @@ public class SectionControllerTest {
         aime.setLastName("Byiringiro");
         aime.setMiddleInitial("I");
         aime.setEmail("aime@");
+        Team team = new Team();
+
+        aime.setTeam(team);
+
+        studentList.add(aime);
 
         TeamDto teamDto = new TeamDto(10,
                 "teamName",
                 newSectionDto,
                 studentList);
-
-
 
         String json = this.objectMapper.writeValueAsString(teamDto);
 
@@ -130,6 +124,8 @@ public class SectionControllerTest {
         Section newSection = new Section();
         newSection.setId(10);
         newSection.setFirstDay("01/06");
+        newSection.setSectionName("sectionName");
+        newSection.setAcademicYear("2025");
         newSection.setLastDay("01/06");
         Rubric newRubric = new Rubric();
         newRubric.setId(10);
@@ -142,8 +138,26 @@ public class SectionControllerTest {
         newCriterionlist.add(criterion1);
         newRubric.setCriterionList(newCriterionlist);
         newSection.setRubric(newRubric);
+
+
         savedTeam.setSection(newSection);
-        savedTeam.setStudents(studentList);
+
+
+
+
+        List<Student> studentList2= new ArrayList<>();
+        Student byiringiro = new Student();
+        byiringiro.setId(10);
+        byiringiro.setFirstName("aime");
+        byiringiro.setLastName("Byiringiro");
+        byiringiro.setMiddleInitial("I");
+        byiringiro.setEmail("aime@");
+        byiringiro.setTeam(savedTeam);
+        studentList2.add(byiringiro);
+
+        savedTeam.setStudents(studentList2);
+
+
 
         //savedTeam.setWars(null);
 
@@ -159,11 +173,6 @@ public class SectionControllerTest {
                 .andExpect(jsonPath("$.data.teamName").value(savedTeam.getTeamName()))
                 .andExpect(jsonPath("$.data.section").value(savedTeam.getSection()))
                 .andExpect(jsonPath("$.data.students").value(savedTeam.getStudents()));
-
-
-
-
-
 
 
     }
