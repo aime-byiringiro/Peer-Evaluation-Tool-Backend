@@ -40,7 +40,7 @@ public class DBDataInitializer implements CommandLineRunner {
   private final RubricRepository rubricRepository;
   private final CriterionRepository criterionRepository;
   private final SectionRepository sectionRepository;
-  private final TeamRepository teamRepository;
+  private final TeamRepository  teamRepository;
   private final UserService userService;
   private final WARService warService;
 
@@ -227,6 +227,7 @@ public class DBDataInitializer implements CommandLineRunner {
     Team team1 = new Team();
     team1.setTeamName("PeerEvaluation");
     teamRepository.save(team1);
+
     Team team2 = new Team();
     team2.setTeamName("SuperfrogScheduler");
     teamRepository.save(team2);
@@ -305,22 +306,22 @@ public class DBDataInitializer implements CommandLineRunner {
     // -----------------------//
     // Foreign Key Assignment //
     // -----------------------//
-
     s1.setTeam(team1);
     s2.setTeam(team1);
     s3.setTeam(team2);
     s4.setTeam(team2);
     s5.setTeam(team3);
+    s6.setTeam(team3);
     team1.setSection(sec1);
     team2.setSection(sec1);
     team3.setSection(sec2);
     team1.setStudents(Arrays.asList(s1, s2));
     team2.setStudents(Arrays.asList(s3, s4));
-    team3.setStudents(Arrays.asList(s5));
+    team3.setStudents(Arrays.asList(s5, s6));
     sec1.setTeams(Arrays.asList(team1, team2));
     sec2.setTeams(Arrays.asList(team3));
 
-    studentRepository.saveAll(Arrays.asList(s1, s2, s3, s4, s5));
+    studentRepository.saveAll(Arrays.asList(s1, s2, s3, s4, s5, s6));
     teamRepository.saveAll(Arrays.asList(team1, team2, team3));
     sectionRepository.saveAll(Arrays.asList(sec1, sec2));
 

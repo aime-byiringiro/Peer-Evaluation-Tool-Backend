@@ -12,5 +12,5 @@ public record TeamDto(Integer id,
                       @NotEmpty(message = "Section is required.")
                       SectionDto section,
                       @NotEmpty(message = "Students are required.")
-                      List<Student> students) {
+                      List<Integer> studentIds) {
 }
