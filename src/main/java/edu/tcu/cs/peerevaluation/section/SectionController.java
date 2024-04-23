@@ -6,6 +6,7 @@ import edu.tcu.cs.peerevaluation.section.converter.SectionDtoToSectionConverter;
 import edu.tcu.cs.peerevaluation.section.converter.SectionToSectionDtoConverter;
 import edu.tcu.cs.peerevaluation.section.dto.SectionDto;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.sql.Statement;
+import java.util.List;
 import java.util.Map;
 
 
@@ -37,7 +39,16 @@ public class SectionController {
     public Result findSectionByCriteria(@RequestBody Map <String, String> searchCriteria , Pageable pageable) {
         Page<Section> sectionPage = this.sectionService.findByCriteria(searchCriteria, pageable);
         Page<SectionDto> sectionDtoPage = sectionPage.map(this.sectionToSectionDtoConverter::convert);
-        return new Result(true, StatusCode.SUCCESS, "Search Success", sectionDtoPage);
+
+        if (sectionPage.getContent().isEmpty()) {
+            return new Result(true, StatusCode.SUCCESS, " Couldn't find this section");
+        }
+        else {
+            return new Result(true, StatusCode.SUCCESS, "Search Success", sectionDtoPage.getContent());
+        }
+
+
+
     }
 
     @GetMapping("{sectionID}")
@@ -56,5 +67,16 @@ public class SectionController {
         return new Result(true, StatusCode.SUCCESS, "Add Success", savedSectionDto);
 
     }
+    @PutMapping("{sectionID}")
+    public Result editSection(@PathVariable Integer sectionID, @Valid @RequestBody SectionDto sectionDto){
+        Section edit = this.sectionDtoToSectionConverter.convert(sectionDto);
+        Section  editedSection = this.sectionService.edit(sectionID, edit);
+        SectionDto editSectionDto = this.sectionToSectionDtoConverter.convert(editedSection);
+        return new Result(true, StatusCode.SUCCESS, "Edit Success", editSectionDto);
+
+    }
+
+
+
 
 }

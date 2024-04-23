@@ -12,7 +12,7 @@ public record SectionDto(Integer id,
                          String firstDay,
                          @NotEmpty(message = "Last Day is required")
                          String lastDay,
-                         @NotEmpty(message = "Rubric is required")
+                        // @NotEmpty(message = "Rubric is required")
                          RubricDto rubricDto)
                          {
 }
