@@ -100,14 +100,15 @@ public class PeerEvaluationController {
    * based on the week
    */
 
-  @GetMapping("/peerEvalReportStudent/{week}")
-  public Result generatePeerEvalReportStudent(@PathVariable Integer week) {
+  @GetMapping("/peerEvalReportStudent/{month}/{day}/{year}")
+  public Result generatePeerEvalReportStudent(@PathVariable String month, @PathVariable String day, @PathVariable String year) {
+    String week = month + "/" + day + "/" + year;
     // Retrieve the currently logged in user
     Student loggedInStudent = getLoggedInStudent();
     // Retrieve the rubric for that student
     RubricDto rubric = this.rubricToRubricDtoConverter.convert(loggedInStudent.getTeam().getSection().getRubric());
     // Get a list of evals from {week} and for loggedInStudent
-    List<Evaluation> evals = this.peerEvalService.findByEvaluatedAndWeek(4, loggedInStudent);
+    List<Evaluation> evals = this.peerEvalService.findByEvaluatedAndWeek(week, loggedInStudent);
     // Convert Evaluations to EvaluationDtos
     List<EvaluationDto> evalDtos = evals.stream()
         .map(foundEval -> this.evalutionDtoConverter.convert(foundEval))
@@ -164,7 +165,7 @@ public class PeerEvaluationController {
           rubric = this.rubricToRubricDtoConverter.convert(student.getTeam().getSection().getRubric());
         }
 
-        List<Evaluation> evals = this.peerEvalService.findByEvaluatedAndWeek(weekNum, student);
+        List<Evaluation> evals = this.peerEvalService.findByEvaluatedAndWeek("weekNum", student);
         List<EvaluationDto> evalDtos = evals.stream()
             .map(this.evalutionDtoConverter::convert)
             .collect(Collectors.toList());

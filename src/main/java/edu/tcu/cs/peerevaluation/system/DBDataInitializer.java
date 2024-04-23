@@ -271,35 +271,35 @@ public class DBDataInitializer implements CommandLineRunner {
     peerEvalRepository.save(peerEval1);
     peerEval1.setEvaluator(s1);
     peerEval1.setEvaluations(generateEvals(s2, s3, s4, s5, peerEval1));
-    peerEval1.setWeek(4);
+    peerEval1.setWeek("04/22/2024");
     peerEvalRepository.save(peerEval1);
 
     PeerEvaluation peerEval2 = new PeerEvaluation();
     peerEvalRepository.save(peerEval2);
     peerEval2.setEvaluator(s2);
     peerEval2.setEvaluations(generateEvals(s1, s3, s4, s5, peerEval2));
-    peerEval2.setWeek(4);
+    peerEval2.setWeek("04/22/2024");
     peerEvalRepository.save(peerEval2);
 
     PeerEvaluation peerEval3 = new PeerEvaluation();
     peerEvalRepository.save(peerEval3);
     peerEval3.setEvaluator(s3);
     peerEval3.setEvaluations(generateEvals(s2, s1, s4, s5, peerEval3));
-    peerEval3.setWeek(4);
+    peerEval3.setWeek("04/22/2024");
     peerEvalRepository.save(peerEval3);
 
     PeerEvaluation peerEval4 = new PeerEvaluation();
     peerEvalRepository.save(peerEval4);
     peerEval4.setEvaluator(s4);
     peerEval4.setEvaluations(generateEvals(s2, s3, s1, s5, peerEval4));
-    peerEval4.setWeek(4);
+    peerEval4.setWeek("04/22/2024");
     peerEvalRepository.save(peerEval4);
 
     PeerEvaluation peerEval5 = new PeerEvaluation();
     peerEvalRepository.save(peerEval5);
     peerEval5.setEvaluator(s5);
     peerEval5.setEvaluations(generateEvals(s2, s3, s4, s1, peerEval5));
-    peerEval5.setWeek(4);
+    peerEval5.setWeek("04/22/2024");
     peerEvalRepository.save(peerEval5);
 
     // -----------------------//
