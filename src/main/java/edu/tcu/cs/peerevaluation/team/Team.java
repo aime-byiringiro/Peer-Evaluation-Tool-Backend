@@ -90,15 +90,32 @@ public class Team implements Serializable {
 
     public void addStudentToTeam(Student student) {
         if (students == null) {
-            students = new ArrayList<Student>();
+            students = new ArrayList<>();
         }
-        students.add(student);
+        this.students.add(student);
     }
 
     public void removeStudentFromTeam(Student student) {
         if (students != null) {
-            students.remove(student);
+            this.students.remove(student);
         }
+    }
+
+    public void removeAllStudentsFromTeam() {
+        for (Student student : students) {
+            student.setTeam(null);
+        }
+        this.students.clear();
+    }
+
+    public void removeSectionFromTeam() {
+//        this.section.removeTeam()
+        this.section = null;
+    }
+
+    public void removeInstructorFromTeam() {
+//        this.instructor.removeTeam()
+        this.instructor = null;
     }
 
     public List<WAR> getWars() {

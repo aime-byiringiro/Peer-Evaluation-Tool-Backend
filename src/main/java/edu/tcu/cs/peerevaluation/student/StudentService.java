@@ -35,7 +35,7 @@ public class StudentService {
   }
 
   public List<Student> searchStudents(String firstName, String lastName, String section, String academicYear,
-      String teamName) {
+      String teamName)  {
     Specification<Student> spec = Specification.where(null);
 
     if (firstName != null && !firstName.isEmpty()) {
