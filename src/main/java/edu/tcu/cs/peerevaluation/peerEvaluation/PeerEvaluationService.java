@@ -51,5 +51,12 @@ public class PeerEvaluationService {
     
   } 
 
+  public List<Evaluation> getEvaluationsForReport(Integer week, String sectionName) {
+    if (week == null || sectionName == null || sectionName.isEmpty()) {
+        throw new IllegalArgumentException("Week and section name must not be null or empty.");
+    }
+    return evalRepository.findByWeekAndSection(week, sectionName);
+}
+
 
 }
