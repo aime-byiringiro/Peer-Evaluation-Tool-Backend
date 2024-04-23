@@ -26,6 +26,7 @@ import java.util.Map;
 
 
 @RestController
+@RequestMapping("/team")
 public class TeamController {
 
 
@@ -44,6 +45,7 @@ public class TeamController {
 
 
 
+    @PostMapping
     public Result addTeam(@Valid @RequestBody TeamDto teamDto){
         Team newTeam = this.teamDtoToTeamConverter.convert(teamDto);
         Team savedTeam = this.teamService.save(newTeam);
