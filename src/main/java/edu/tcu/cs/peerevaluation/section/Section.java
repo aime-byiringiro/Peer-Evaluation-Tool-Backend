@@ -12,11 +12,10 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
+import java.time.temporal.TemporalAdjusters;
+import java.time.DayOfWeek;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -111,9 +110,10 @@ public class Section implements Serializable {
         this.rubric = rubric;
     }
 
-    public int getCurrentWeek() {
+    public String getCurrentWeek() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         LocalDate today = LocalDate.now();
-        long weeksLong = ChronoUnit.WEEKS.between(this.firstDay, today);
-        return (int) weeksLong;
+        LocalDate pastMonday = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        return pastMonday.format(formatter);
     }
 }
