@@ -28,6 +28,7 @@ import java.util.List;
 
 import edu.tcu.cs.peerevaluation.section.dto.SectionDto;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
+import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -66,10 +67,14 @@ public class SectionControllerTest {
     ObjectMapper objectMapper;
     Section section1 = new Section();
     Rubric r1 = new Rubric();
+
+
+
     RubricDto rubricDto;
 
     List<Criterion> criterionList = new ArrayList<>();
     List<CriterionDto> criterionDtos = new ArrayList<>();
+
 
 
 
@@ -125,8 +130,6 @@ public class SectionControllerTest {
         void tearDown () {
 
         }
-
-
         @Test
         void testFindSectionBySectionID () throws Exception {
             rubricDto = this.rubricToRubricDtoConverter.convert(r1);
@@ -137,9 +140,7 @@ public class SectionControllerTest {
                     "08/21/2023",
                     "05/01/2024",
                     rubricDto);
-
             String json = this.objectMapper.writeValueAsString(sectionDto);
-
             Section foundSection = new Section();
             foundSection.setId(1);
             foundSection.setSectionName("Section2023-2024");
@@ -147,10 +148,8 @@ public class SectionControllerTest {
             foundSection.setFirstDay("08/21/2023");
             foundSection.setLastDay("05/01/2024");
             foundSection.setRubric(r1);
-
             given(this.sectionService.adminFindsSeniorDesignSectionsBySectionID(1)).willReturn(this.section1);
             System.out.print(this.section1);
-
             this.mockMvc.perform(get("/section/1").accept(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.flag").value(true))
                     .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
@@ -165,8 +164,6 @@ public class SectionControllerTest {
 
         @Test
         void testCreateNewSection () throws Exception {
-
-
             List<CriterionDto> criteriaList = new ArrayList<>();
 
             criteriaList.add(new CriterionDto(1,
@@ -207,6 +204,7 @@ public class SectionControllerTest {
             // Create Section object
             Section savedSection = new Section();
             savedSection.setId(10);
+
             savedSection.setAcademicYear("2025");
             savedSection.setFirstDay("01/06/2025");
             savedSection.setLastDay("01/06/2026");
@@ -214,7 +212,6 @@ public class SectionControllerTest {
 
 
             given(this.sectionService.save(Mockito.any(Section.class))).willReturn(savedSection);
-
             // when and then
 
 
@@ -232,11 +229,130 @@ public class SectionControllerTest {
 
         }
 
+        @Test
+        void testEditedSectionSuccess() throws Exception {
+
+            List<CriterionDto> criteriaList = new ArrayList<>();
+
+            criteriaList.add(new CriterionDto(1,
+                    "How do you rate the quality",
+                    "Quality of work",
+                    10));
+            criteriaList.add(new CriterionDto(2,
+                    "How productive is this teammate?",
+                    "Productivity", 10));
+
+            RubricDto rubricDto = new RubricDto(1,
+                    "2024 Rubric",
+                    criteriaList);
+
+            SectionDto sectionDto = new SectionDto(10,
+                    "Section2025-2026",
+                    "2025",
+                    "01/06/2025",
+                    "02/06/2026",
+                    rubricDto);
+
+            String json = this.objectMapper.writeValueAsString(sectionDto);
+            List<Criterion> newCriterionList = new ArrayList<>();
+            Criterion c1 = new Criterion();
+            c1.setId(1); c1.setDescription("How do you rate the quality"); c1.setMaxScore(10);
+            Criterion c2 = new Criterion();
+            c2.setId(2); c2.setDescription("How productive is this teammate?"); c2.setMaxScore(10);
+            newCriterionList.add(c1);
+            newCriterionList.add(c2);
+            // Create Rubric object
+            Rubric newRubric = new Rubric();
+            newRubric.setRubricName("2024 Rubric");
+            newRubric.setId(1);
+            newRubric.setCriterionList(newCriterionList);
+
+            // Create Section object
+            Section editedSection = new Section();
+            editedSection.setId(10);
+            editedSection.setAcademicYear("2025");
+            editedSection.setFirstDay("01/06/2025");
+            editedSection.setLastDay("01/06/2026");
+            editedSection.setRubric(newRubric);
+
+
+            given(this.sectionService.edit(eq(10), Mockito.any(Section.class))).willReturn(editedSection);
+
+            //when adn then
+            this.mockMvc.perform(put("/section/10").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.flag").value(true))
+                    .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                    .andExpect(jsonPath("$.message").value("Edit Success"))
+                    .andExpect(jsonPath("$.data.id").value(10))
+                    .andExpect(jsonPath("$.data.sectionName").value(editedSection.getSectionName()))
+                    .andExpect(jsonPath("$.data.academicYear").value(editedSection.getAcademicYear()))
+                    .andExpect(jsonPath("$.data.firstDay").value(editedSection.getFirstDay()))
+                    .andExpect(jsonPath("$.data.lastDay").value(editedSection.getLastDay()));
 
 
 
+        }
 
 
+        @Test
+        void testEditedSectionErrorWithNonExistentId() throws Exception{
+
+            List<CriterionDto> criteriaList = new ArrayList<>();
+
+            criteriaList.add(new CriterionDto(1,
+                    "How do you rate the quality",
+                    "Quality of work",
+                    10));
+            criteriaList.add(new CriterionDto(2,
+                    "How productive is this teammate?",
+                    "Productivity", 10));
+
+            RubricDto rubricDto = new RubricDto(1,
+                    "2024 Rubric",
+                    criteriaList);
+
+            SectionDto sectionDto = new SectionDto(10,
+                    "Section2025-2026",
+                    "2025",
+                    "01/06/2025",
+                    "02/06/2026",
+                    rubricDto);
+
+            String json = this.objectMapper.writeValueAsString(sectionDto);
+            List<Criterion> newCriterionList = new ArrayList<>();
+            Criterion c1 = new Criterion();
+            c1.setId(1); c1.setDescription("How do you rate the quality"); c1.setMaxScore(10);
+            Criterion c2 = new Criterion();
+            c2.setId(2); c2.setDescription("How productive is this teammate?"); c2.setMaxScore(10);
+            newCriterionList.add(c1);
+            newCriterionList.add(c2);
+            // Create Rubric object
+            Rubric newRubric = new Rubric();
+            newRubric.setRubricName("2024 Rubric");
+            newRubric.setId(1);
+            newRubric.setCriterionList(newCriterionList);
+
+            // Create Section object
+            Section editedSection = new Section();
+            editedSection.setId(10);
+            editedSection.setAcademicYear("2025");
+            editedSection.setFirstDay("01/06/2025");
+            editedSection.setLastDay("01/06/2026");
+            editedSection.setRubric(newRubric);
+
+
+            given(this.sectionService.edit(eq(10), Mockito.any(Section.class))).willThrow(new ObjectNotFoundException("section", 10));
+
+            // when and then
+
+            this.mockMvc.perform(put("/section/10").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.flag").value(false))
+                    .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                    .andExpect(jsonPath("$.message").value("Could not find section with Id 10 :("))
+                    .andExpect(jsonPath("$.data").isEmpty());
+
+
+        }
 
 
 

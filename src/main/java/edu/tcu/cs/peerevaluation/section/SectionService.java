@@ -2,6 +2,7 @@ package edu.tcu.cs.peerevaluation.section;
 
 
 import edu.tcu.cs.peerevaluation.section.utils.IdWorker;
+import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -48,7 +49,24 @@ public class SectionService {
         if (StringUtils.hasLength(searchCriteria.get("academicYear"))){
             spec    = spec.and(SectionSpecs.hasAcademicYear(searchCriteria.get("academicYear")));
         }
-        return this.sectionRepository.findAll(spec, pageable);
+        return this.sectionRepository.findAll(spec, pageable); //
+    }
+
+    /*
+    Tne Admin wants to change the details of an existing senior design section, so that the
+    section information is correct and up-to-date
+     */
+    public Section edit(Integer sectionID, Section edit){
+        return this.sectionRepository.findById(sectionID)
+                .map(oldSection -> {
+                    oldSection.setSectionName(edit.getSectionName());
+                    oldSection.setAcademicYear(edit.getAcademicYear());
+                    oldSection.setFirstDay(edit.getFirstDay());
+                    oldSection.setLastDay(edit.getLastDay());
+                    oldSection.setRubric(edit.getRubric());
+                    return this.sectionRepository.save(oldSection);
+                })
+                .orElseThrow(() -> new ObjectNotFoundException("section", sectionID));
     }
 
 
