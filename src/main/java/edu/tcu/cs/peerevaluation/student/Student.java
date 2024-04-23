@@ -72,10 +72,12 @@ public class Student implements Serializable {
   }
 
   public String getMiddleInitial() {
-    return this.middleInitial;
+    return
+            this.middleInitial;
   }
 
   public void setMiddleInitial(String middleInitial) {
+
     this.middleInitial = middleInitial;
   }
 
