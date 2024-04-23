@@ -80,7 +80,7 @@ public class SectionController {
     @GetMapping("/week/{sectionID}")
     public Result getCurrentWeekById(@PathVariable Integer sectionID){
         Section foundSection = this.sectionService.adminFindsSeniorDesignSectionsBySectionID(sectionID);
-        Integer currentWeek = foundSection.getCurrentWeek() + 1;
+        String currentWeek = foundSection.getCurrentWeek();
         /*
          * TODO
          * if say 5 weeks and 4 days have passed, this will return
