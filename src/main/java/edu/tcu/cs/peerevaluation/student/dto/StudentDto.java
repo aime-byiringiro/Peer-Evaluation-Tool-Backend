@@ -10,5 +10,7 @@ public record StudentDto(Integer id,
                          String lastName,
                          //@NotEmpty(message = "email is required.")
                          String email,
-                         String teamName) {
+                         String teamName,
+                         String section,
+                         String academicYear) {
 }

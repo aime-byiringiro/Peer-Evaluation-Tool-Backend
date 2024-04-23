@@ -1,6 +1,8 @@
 package edu.tcu.cs.peerevaluation.student;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
 import edu.tcu.cs.peerevaluation.team.Team;
@@ -113,6 +115,10 @@ public class Student implements Serializable {
 
   public String getFirstAndLastName() {
     return (this.firstName + " " + this.lastName);
+  }
+
+  public List<Student> getTeammates() {
+    return this.team.getStudents();
   }
 
 }

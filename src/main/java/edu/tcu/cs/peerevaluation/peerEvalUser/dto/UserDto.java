@@ -1,5 +1,6 @@
 package edu.tcu.cs.peerevaluation.peerEvalUser.dto;
 
+import edu.tcu.cs.peerevaluation.student.dto.StudentDto;
 import jakarta.validation.constraints.NotEmpty;
 
 public record UserDto(Integer id,
@@ -7,5 +8,6 @@ public record UserDto(Integer id,
                       String username,
                       boolean enabled,
                       @NotEmpty(message = "roles are required.")
-                      String roles) {
+                      String roles,
+                      StudentDto student) {
 }

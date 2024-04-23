@@ -68,6 +68,7 @@ public class PeerEvaluationController {
   @PostMapping
   public Result newPeerEvaluation(@Valid @RequestBody PeerEvaluationDto peerEvalDto) {
     PeerEvaluation newPeerEval = this.dtoToPeerEvalConverter.convert(peerEvalDto);
+    newPeerEval.setEvaluator(getLoggedInStudent());
     PeerEvaluation savedPeerEval = this.peerEvalService.save(newPeerEval);
     savedPeerEval.getEvaluations().forEach(eval -> {
       eval.setPeerEvaluation(newPeerEval);
@@ -121,6 +122,15 @@ public class PeerEvaluationController {
          .map(foundEval -> this.evalutionDtoConverter.convert(foundEval))
          .collect(Collectors.toList());
     return new Result(true,StatusCode.SUCCESS,"generate success", evalDtos);
+  }
+
+  @GetMapping("/getEvals/{studentId}")
+  public Result getAllByStudent(@PathVariable Integer studentId){
+    List<PeerEvaluation> peerEvals = this.peerEvalService.findAllByStudentId(studentId);
+    List<PeerEvaluationDto> peerEvalDtos = peerEvals.stream()
+        .map(found -> this.peerEvalToDtoConverter.convert(found))
+        .collect(Collectors.toList());
+    return new Result(true,StatusCode.SUCCESS,"generate success", peerEvalDtos);
   }
 
   /*

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import edu.tcu.cs.peerevaluation.peerEvaluation.evaluation.Evaluation;
 import edu.tcu.cs.peerevaluation.peerEvaluation.evaluation.EvaluationRepository;
 import edu.tcu.cs.peerevaluation.student.Student;
+import edu.tcu.cs.peerevaluation.student.StudentRepository;
 import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 
@@ -18,9 +19,12 @@ public class PeerEvaluationService {
 
   private final EvaluationRepository evalRepository;
 
-  public PeerEvaluationService(PeerEvaluationRepostitory peerEvalRepository, EvaluationRepository evalRepository) {
+  private final StudentRepository studentRepository;
+
+  public PeerEvaluationService(PeerEvaluationRepostitory peerEvalRepository, EvaluationRepository evalRepository, StudentRepository studentRepository) {
     this.peerEvalRepository = peerEvalRepository;
     this.evalRepository = evalRepository;
+    this.studentRepository = studentRepository;
   }
 
   public PeerEvaluation save(PeerEvaluation newPeerEval) {
@@ -38,6 +42,13 @@ public class PeerEvaluationService {
 
   public List<Evaluation> getEvaluationsById(Student student) {
     return this.evalRepository.findByEvaluated(student);
+  }
+
+  public List<PeerEvaluation> findAllByStudentId(Integer studentId) {
+    Student evaluator = this.studentRepository.findById(studentId)
+        .orElseThrow(() -> new ObjectNotFoundException("student", studentId));
+    return this.peerEvalRepository.findByEvaluator(evaluator);
+    
   } 
 
 

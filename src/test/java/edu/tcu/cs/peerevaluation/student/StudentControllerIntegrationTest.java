@@ -156,6 +156,8 @@ public class StudentControllerIntegrationTest {
         "S",
         "Badbarz",
         null,
+        null,
+        null,
         null);
     PeerEvalUser user = new PeerEvalUser();
         user.setId(7);
@@ -193,6 +195,8 @@ public class StudentControllerIntegrationTest {
         "S",
         "",
         null,
+        null,
+        null,
         null);
 
     PeerEvalUser user = new PeerEvalUser();
@@ -229,6 +233,8 @@ public class StudentControllerIntegrationTest {
         "S",
         "Badbarz",
         null,
+        null,
+        null,
         null);
 
     String json = this.objectMapper.writeValueAsString(studentDto);
@@ -252,6 +258,8 @@ public class StudentControllerIntegrationTest {
         "S",
         "Badbarz",
         null,
+        null,
+        null,
         null);
 
     String json = this.objectMapper.writeValueAsString(studentDto);
@@ -271,6 +279,8 @@ public class StudentControllerIntegrationTest {
         "",
         "S",
         "",
+        null,
+        null,
         null,
         null);
 
