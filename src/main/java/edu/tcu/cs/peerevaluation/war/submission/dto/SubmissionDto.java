@@ -7,7 +7,6 @@ public record SubmissionDto(Integer id,
                             String description,
                             Double plannedHours,
                             Double actualHours,
-                            Boolean status) {
-                              //TODO, should the boolean of status be turned into a string value
+                            String status) {
 
 }

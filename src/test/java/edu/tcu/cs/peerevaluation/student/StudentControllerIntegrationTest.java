@@ -166,7 +166,6 @@ public class StudentControllerIntegrationTest {
 
     StudentUserCombined studentUserCombined = new StudentUserCombined(studentDto,user);
     String json = this.objectMapper.writeValueAsString(studentUserCombined);
-    System.out.println(json);
 
     this.mockMvc
         .perform(post("/students").contentType(MediaType.APPLICATION_JSON).content(json)

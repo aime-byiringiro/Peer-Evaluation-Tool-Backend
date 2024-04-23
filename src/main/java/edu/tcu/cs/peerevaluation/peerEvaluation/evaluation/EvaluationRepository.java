@@ -15,6 +15,6 @@ public interface EvaluationRepository extends JpaRepository<Evaluation, Integer>
   List<Evaluation> findByEvaluated(Student student);
 
   @Query("SELECT e FROM Evaluation e WHERE e.evaluated.id = :studentId AND e.peerEvaluation.week = :week")
-  List<Evaluation> findByWeekAndEvaluated(Integer studentId, String week);
+  List<Evaluation> findByWeekAndEvaluated(Integer studentId, Integer week);
   
 }

@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.tcu.cs.peerevaluation.peerEvalUser.MyUserPrincipal;
+import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
+import edu.tcu.cs.peerevaluation.peerEvalUser.UserRepository;
 import edu.tcu.cs.peerevaluation.peerEvaluation.converter.PeerEvaluationDtoToPeerEvaluationConverter;
 import edu.tcu.cs.peerevaluation.peerEvaluation.converter.PeerEvaluationToPeerEvaluationDtoConverter;
 import edu.tcu.cs.peerevaluation.peerEvaluation.dto.PeerEvaluationDto;
@@ -21,8 +23,12 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,14 +51,20 @@ public class PeerEvaluationController {
 
   private final RubricToRubricDtoConverter rubricToRubricDtoConverter;
 
-  public PeerEvaluationController(PeerEvaluationService peerEvalService, PeerEvaluationToPeerEvaluationDtoConverter peerEvalToDtoConverter, PeerEvaluationDtoToPeerEvaluationConverter dtoToPeerEvalConverter, EvaluationToEvalutionDtoConverter evalutionDtoConverter, RubricToRubricDtoConverter rubricToRubricDtoConverter) {
+  private final UserRepository userRepository;
+
+  public PeerEvaluationController(PeerEvaluationService peerEvalService, PeerEvaluationToPeerEvaluationDtoConverter peerEvalToDtoConverter, PeerEvaluationDtoToPeerEvaluationConverter dtoToPeerEvalConverter, EvaluationToEvalutionDtoConverter evalutionDtoConverter, RubricToRubricDtoConverter rubricToRubricDtoConverter, UserRepository userRepository) {
     this.peerEvalService = peerEvalService;
     this.peerEvalToDtoConverter = peerEvalToDtoConverter;
     this.dtoToPeerEvalConverter = dtoToPeerEvalConverter;
     this.evalutionDtoConverter = evalutionDtoConverter;
     this.rubricToRubricDtoConverter = rubricToRubricDtoConverter;
+    this.userRepository = userRepository;
   }
 
+  /*
+   * this method creates new peer evaluation objects
+   */
   @PostMapping
   public Result newPeerEvaluation(@Valid @RequestBody PeerEvaluationDto peerEvalDto) {
     PeerEvaluation newPeerEval = this.dtoToPeerEvalConverter.convert(peerEvalDto);
@@ -65,6 +77,9 @@ public class PeerEvaluationController {
     return new Result(true,StatusCode.SUCCESS,"add success", savedDto);
   }
 
+  /*
+   * return a peerEvaluaiton based on its ID
+   */
   @GetMapping("/{peerEvalId}")
   public Result getPeerEvalById(@PathVariable Integer peerEvalId) {
     PeerEvaluation peerEval = this.peerEvalService.findById(peerEvalId);
@@ -72,72 +87,84 @@ public class PeerEvaluationController {
     return new Result(true,StatusCode.SUCCESS,"find success", peerEvalDto);
   }
 
-  @GetMapping("/peerEvalReportStudent")
-  public Result generatePeerEvalReportStudent() {
+  /*
+   * Returns the rubric and evals of a the current student 
+   * based on the week
+   */
 
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    MyUserPrincipal principal = (MyUserPrincipal) authentication.getPrincipal();
-    Student loggedInStudent = principal.getPeerEvalUser().getStudent();
-
-
-    /*
-     * TODO, how does the program know what week it is perhaps,
-     * like how the baseUrl is set in the hogwarts program, we
-     * could set a currentWeek variable, and then have a endpoint 
-     * to change the currentWeek, and here i can just retreive 
-     * that variable and subract one
-     * 
-     */
-
-     /*TODO,
-      * would it be valid to create a evalReportDto object, that is used
-      * to build to object sent to the frontend 
-      */
-
-
-    return new Result(true,StatusCode.SUCCESS,"generate success",loggedInStudent.getFirstName());
-  }
-
-  @GetMapping("/byWeek")
-  public Result getEvalsOfByWeek() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    MyUserPrincipal principal = (MyUserPrincipal) authentication.getPrincipal();
-    Student loggedInStudent = principal.getPeerEvalUser().getStudent();
-    Rubric rubric = loggedInStudent.getTeam().getSection().getRubric();
-    List<Evaluation> evals = this.peerEvalService.findByEvaluatedAndWeek("week 4",loggedInStudent);
-
+  @GetMapping("/peerEvalReportStudent/{week}")
+  public Result generatePeerEvalReportStudent(@PathVariable Integer week) {
+    // Retrieve the currently logged in user
+    Student loggedInStudent = getLoggedInStudent();
+    // Retrieve the rubric for that student
+    RubricDto rubric = this.rubricToRubricDtoConverter.convert(loggedInStudent.getTeam().getSection().getRubric());
+    // Get a list of evals from {week} and for loggedInStudent
+    List<Evaluation> evals = this.peerEvalService.findByEvaluatedAndWeek(4,loggedInStudent);
+    // Convert Evaluations to EvaluationDtos
     List<EvaluationDto> evalDtos = evals.stream()
         .map(foundEval -> this.evalutionDtoConverter.convert(foundEval))
         .collect(Collectors.toList());
-    Report newReport = new Report(evalDtos,this.rubricToRubricDtoConverter.convert(rubric));
-
-    return new Result(true,StatusCode.SUCCESS,"generate success",newReport);
+    // Combine it all into a report object to send to the front end
+    Report report = new Report(evalDtos, rubric);
+    return new Result(true,StatusCode.SUCCESS,"generate success",report);
   }
 
+  /*
+   * this method return a list of all evaluations of
+   * the current logged in user
+   */
   @GetMapping("/getEvals")
   public Result getEvalsByEvaluated(){
-
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    MyUserPrincipal principal = (MyUserPrincipal) authentication.getPrincipal();
-    Student loggedInStudent = principal.getPeerEvalUser().getStudent();
-    Rubric rubric = loggedInStudent.getTeam().getSection().getRubric();
+    Student loggedInStudent = getLoggedInStudent();
     List<Evaluation> evals = this.peerEvalService.getEvaluationsById(loggedInStudent);
     List<EvaluationDto> evalDtos = evals.stream()
          .map(foundEval -> this.evalutionDtoConverter.convert(foundEval))
          .collect(Collectors.toList());
-    Report newReport = new Report(evalDtos,this.rubricToRubricDtoConverter.convert(rubric));
-    return new Result(true,StatusCode.SUCCESS,"generate success",newReport);
+    return new Result(true,StatusCode.SUCCESS,"generate success", evalDtos);
+  }
+
+  /*
+   * Method that retrives the current logged in student 
+   * object regardless of the authentication method
+   * used.
+   */
+  private Student getLoggedInStudent() throws UsernameNotFoundException{
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication instanceof UsernamePasswordAuthenticationToken) {
+      MyUserPrincipal principal = (MyUserPrincipal) authentication.getPrincipal();
+      return principal.getPeerEvalUser().getStudent();
+    } else {
+      JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+      Jwt jwt = (Jwt) authenticationToken.getCredentials();
+      PeerEvalUser user =this.userRepository.findByUsername(jwt.getSubject())
+            .orElseThrow(() -> new UsernameNotFoundException("username " + jwt.getSubject() + " is not found."));
+      return user.getStudent();
+    } 
   }
   
 }
 
 class Report {
   List<EvaluationDto> evals;
-  RubricDto rubricDto;
+  RubricDto rubric;
+  Integer totalMaxScore;
 
-  public Report(List<EvaluationDto> evals, RubricDto rubricDto) {
+  public Report(List<EvaluationDto> evals, RubricDto rubric) {
     this.evals = evals;
-    this.rubricDto = rubricDto;
+    this.rubric = rubric;
+    this.totalMaxScore = calculateMaxPossibleScore();
+  }
+
+  /*
+   * calculating the max possbile score here, is becuase it requires 
+   * adding values from multiple lists, the reason this isn't done for 
+   * the actual scores is that they all exist within the same method, so 
+   * its much easier to calculate the sum, but also you need the individual scores 
+   */
+  private Integer calculateMaxPossibleScore(){
+    return this.rubric.criterion().stream()
+                        .mapToInt(crit -> crit.maxScore())
+                        .sum();
   }
   
   public List<EvaluationDto> getEvals() {
@@ -149,11 +176,20 @@ class Report {
   }
 
   public RubricDto getRubric() {
-    return this.rubricDto;
+    return this.rubric;
   }
 
   public void setRubric(RubricDto rubricDto) {
-    this.rubricDto = rubricDto;
+    this.rubric = rubricDto;
   }
+
+  public Integer getTotalMaxScore() {
+    return this.totalMaxScore;
+  }
+
+  public void setTotalMaxScore(Integer totalMaxScore) {
+    this.totalMaxScore = totalMaxScore;
+  }
+
 
 }

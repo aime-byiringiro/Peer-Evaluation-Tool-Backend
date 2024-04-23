@@ -5,11 +5,13 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotEmpty;
 
 import java.io.Serializable;
 
+import edu.tcu.cs.peerevaluation.instructor.Instructor;
 import edu.tcu.cs.peerevaluation.student.Student;
 
 @Entity
@@ -32,6 +34,10 @@ public class PeerEvalUser implements Serializable {
 
     @OneToOne(fetch = FetchType.EAGER) // mappedBy = "user")
     private Student student;
+
+    @OneToOne
+    @JoinColumn(name = "instructor_id", referencedColumnName = "id")
+    private Instructor instructor;
 
     public PeerEvalUser() {
 
@@ -87,6 +93,14 @@ public class PeerEvalUser implements Serializable {
 
     public void setStudent(Student student) {
         this.student = student;
+    }
+
+    public Instructor getInstructor() {
+        return instructor;
+    }
+
+    public void setInstructor(Instructor instructor) {
+        this.instructor = instructor;
     }
 
 }

@@ -1,5 +1,8 @@
 package edu.tcu.cs.peerevaluation.instructor.dto;
 
+import java.util.List;
+
+import edu.tcu.cs.peerevaluation.team.Team;
 import jakarta.validation.constraints.NotEmpty;
 
 public record InstructorDto(Integer id,
@@ -8,5 +11,8 @@ public record InstructorDto(Integer id,
                             String middleInitial,
                             @NotEmpty(message = "last name is required.")
                             String lastName,
-                            String email) {
+                            String email,
+                            List<String> teams) {
+
+
 }

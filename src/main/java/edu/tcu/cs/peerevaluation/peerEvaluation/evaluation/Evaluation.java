@@ -3,7 +3,6 @@ package edu.tcu.cs.peerevaluation.peerEvaluation.evaluation;
 import java.io.Serializable;
 import java.util.List;
 
-import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
 import edu.tcu.cs.peerevaluation.peerEvaluation.PeerEvaluation;
 import edu.tcu.cs.peerevaluation.student.Student;
 import jakarta.persistence.Entity;
@@ -26,6 +25,8 @@ public class Evaluation implements Serializable{
   private PeerEvaluation peerEvaluation;
 
   private List<Integer> scores;
+
+  private Integer totalScore;
 
   private String privateComments;
 
@@ -78,5 +79,14 @@ public class Evaluation implements Serializable{
   public void setPeerEvaluation(PeerEvaluation peerEvaluation) {
     this.peerEvaluation = peerEvaluation;
   }
+
+  public Integer getTotalScore() {
+    return this.totalScore;
+  }
+
+  public void setTotalScore(Integer totalScore) {
+    this.totalScore = totalScore;
+  }
+
 
 }
