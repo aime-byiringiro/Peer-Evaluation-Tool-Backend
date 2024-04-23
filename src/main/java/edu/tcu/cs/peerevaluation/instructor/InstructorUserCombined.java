@@ -28,7 +28,7 @@ public class InstructorUserCombined {
     }
 
     public PeerEvalUser getUser() {
-        return user;
+        return this.user;
     }
 
     public void setUser(PeerEvalUser user) {
