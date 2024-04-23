@@ -293,7 +293,6 @@ public class SectionControllerTest {
 
         }
 
-
         @Test
         void testEditedSectionErrorWithNonExistentId() throws Exception{
 
@@ -350,7 +349,6 @@ public class SectionControllerTest {
                     .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
                     .andExpect(jsonPath("$.message").value("Could not find section with Id 10 :("))
                     .andExpect(jsonPath("$.data").isEmpty());
-
 
         }
 
