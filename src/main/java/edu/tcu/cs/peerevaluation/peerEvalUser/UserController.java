@@ -85,4 +85,16 @@ public class UserController {
     return new Result(true, StatusCode.SUCCESS, "Delete Success");
   }
 
+  @PutMapping("/deactivate/{instructorId}")
+  public Result deactivateUser(@PathVariable Integer instructorId) {
+    this.userService.deactivate(instructorId);
+    return new Result(true, StatusCode.SUCCESS, "Deactivate Success");
+  }
+
+  @PutMapping("/activate/{instructorId}")
+  public Result activateUser(@PathVariable Integer instructorId) {
+    this.userService.activate(instructorId);
+    return new Result(true, StatusCode.SUCCESS, "Activate Success");
+  }
+
 }

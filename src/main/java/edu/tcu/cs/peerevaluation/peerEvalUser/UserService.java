@@ -33,6 +33,7 @@ public class UserService implements UserDetailsService {
   }
 
   public PeerEvalUser save(PeerEvalUser newPeerEvalUser) {
+    //System.out.println(newPeerEvalUser.getPassword());
     newPeerEvalUser.setPassword(this.passwordEncoder.encode(newPeerEvalUser.getPassword()));
     return this.userRepository.save(newPeerEvalUser);
   }
@@ -65,5 +66,17 @@ public class UserService implements UserDetailsService {
   public PeerEvalUser updatePass(PeerEvalUser currentUser) {
     currentUser.setPassword(this.passwordEncoder.encode(currentUser.getPassword()));
     return this.userRepository.save(currentUser);
+  }
+
+  public void deactivate(Integer instructorId) {
+    PeerEvalUser foundInstructor = this.userRepository.findById(instructorId)
+        .orElseThrow(() -> new ObjectNotFoundException("instructor", instructorId));
+    foundInstructor.setEnabled(false);
+  }
+
+  public void activate(Integer instructorId) {
+    PeerEvalUser foundInstructor = this.userRepository.findById(instructorId)
+        .orElseThrow(() -> new ObjectNotFoundException("instructor", instructorId));
+    foundInstructor.setEnabled(true);
   }
 }
