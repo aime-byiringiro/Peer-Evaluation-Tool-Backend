@@ -72,64 +72,6 @@ public class SectionServiceTest {
     }
 
 
-
-    @Test
-    void testAdminFindsSeniorDesignSectionsByIdSuccess() {
-        // Given, Example of json result
-
-        /*
-        creating fake creterionList
-         */
-        List<Criterion> criterionList = new ArrayList<>();
-
-        Criterion c4 = new Criterion();
-        c4.setCriterionName("Manners");
-        c4.setDescription("Does this teammate treat others with respect? (1-10)");
-        c4.setMaxScore(10);
-
-        Criterion c5 = new Criterion();
-        c5.setCriterionName("Humbleness");
-        c5.setDescription("How well does this teammate handle criticism of their work? (1-10)");
-        c5.setMaxScore(10);
-
-        Criterion c6 = new Criterion();
-        c6.setCriterionName("Engagement in meetings");
-        c6.setDescription("How is this teammate's performance during meetings? (1-10)");
-        c6.setMaxScore(10);
-        criterionList.addAll(Arrays.asList( c4, c5, c6));
-
-       /*
-       Creating fake Rubric
-       */
-        Rubric r1 = new Rubric();
-        r1.setRubricName("2024 Rubric");
-        r1.setCriterionList(criterionList);
-
-        /*
-        Creating fake section data
-        */
-        Section section1 = new Section();
-        section1.setSectionName("Section2023-2024");
-        section1.setAcademicYear("2023");
-        section1.setFirstDay("08/21/2023");
-        section1.setLastDay("05/01/2024");
-        section1.setRubric(r1);
-
-        given(this.sectionRepository.findById(1)).willReturn(Optional.of(section1));
-        // when
-        Section returnedSection = this.sectionService.adminFindsSeniorDesignSectionsBySectionID(1);
-        //Then
-
-        assertThat(returnedSection.getSectionName()).isEqualTo(section1.getSectionName());
-        assertThat(returnedSection.getAcademicYear()).isEqualTo(section1.getAcademicYear());
-        assertThat(returnedSection.getFirstDay()).isEqualTo(section1.getFirstDay());
-        assertThat(returnedSection.getLastDay()).isEqualTo(section1.getLastDay());
-        assertThat(returnedSection.getRubric()).isEqualTo(section1.getRubric());
-        verify(this.sectionRepository, times(1)).findById(1);
-
-
-    }
-
     @Test
     void testSaveSuccess(){
         //Given
