@@ -98,7 +98,7 @@ public class SectionController {
          * if say 5 weeks and 4 days have passed, this will return
          * a 5, so im adding 1 to get the current week
          */
-        return new Result(true, StatusCode.SUCCESS, "Edit Success", currentWeek);
+        return new Result(true, StatusCode.SUCCESS, "Get Week Success", currentWeek);
     }
 
     /*
