@@ -130,37 +130,6 @@ public class SectionControllerTest {
         void tearDown () {
 
         }
-        @Test
-        void testFindSectionBySectionID () throws Exception {
-            rubricDto = this.rubricToRubricDtoConverter.convert(r1);
-            //Given
-            SectionDto sectionDto = new SectionDto(1,
-                    "Section2023-2024",
-                    "2023",
-                    "08/21/2023",
-                    "05/01/2024",
-                    rubricDto);
-            String json = this.objectMapper.writeValueAsString(sectionDto);
-            Section foundSection = new Section();
-            foundSection.setId(1);
-            foundSection.setSectionName("Section2023-2024");
-            foundSection.setAcademicYear("2023");
-            foundSection.setFirstDay("08/21/2023");
-            foundSection.setLastDay("05/01/2024");
-            foundSection.setRubric(r1);
-            given(this.sectionService.adminFindsSeniorDesignSectionsBySectionID(1)).willReturn(this.section1);
-            System.out.print(this.section1);
-            this.mockMvc.perform(get("/section/1").accept(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$.flag").value(true))
-                    .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                    .andExpect(jsonPath("$.message").value("Find Success"))
-                    .andExpect(jsonPath("$.data.id").value(foundSection.getId()))
-                    .andExpect(jsonPath("$.data.sectionName").value(foundSection.getSectionName()))
-                    .andExpect(jsonPath("$.data.firstDay").value(foundSection.getFirstDay()))
-                    .andExpect(jsonPath("$.data.lastDay").value(foundSection.getLastDay()))
-                    .andExpect(jsonPath("$.data.academicYear").value(foundSection.getAcademicYear()));
-            // when and then
-        }
 
         @Test
         void testCreateNewSection () throws Exception {
@@ -293,7 +262,6 @@ public class SectionControllerTest {
 
         }
 
-
         @Test
         void testEditedSectionErrorWithNonExistentId() throws Exception{
 
@@ -340,7 +308,6 @@ public class SectionControllerTest {
             editedSection.setLastDay("01/06/2026");
             editedSection.setRubric(newRubric);
 
-
             given(this.sectionService.edit(eq(10), Mockito.any(Section.class))).willThrow(new ObjectNotFoundException("section", 10));
 
             // when and then
@@ -350,7 +317,6 @@ public class SectionControllerTest {
                     .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
                     .andExpect(jsonPath("$.message").value("Could not find section with Id 10 :("))
                     .andExpect(jsonPath("$.data").isEmpty());
-
 
         }
 

@@ -12,6 +12,10 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
+import java.time.DayOfWeek;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -28,9 +32,11 @@ public class Section implements Serializable {
 
     private String academicYear;
 
-    private String firstDay;
+    //08/21/2023
+    private LocalDate firstDay;
 
-    private String lastDay;
+    //05/01/2024
+    private LocalDate lastDay;
 
     @ManyToOne
     private Rubric rubric;
@@ -38,6 +44,8 @@ public class Section implements Serializable {
     @JsonIgnoreProperties("section")
     @OneToMany(mappedBy = "section", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Team> teams;
+
+
 
     public Section() {
     }
@@ -75,19 +83,23 @@ public class Section implements Serializable {
     }
 
     public String getFirstDay() {
-        return this.firstDay;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        return this.firstDay.format(formatter);
     }
 
     public void setFirstDay(String firstDay) {
-        this.firstDay = firstDay;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        this.firstDay = LocalDate.parse(firstDay, formatter);
     }
 
     public String getLastDay() {
-        return this.lastDay;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        return this.lastDay.format(formatter);
     }
 
     public void setLastDay(String lastDay) {
-        this.lastDay = lastDay;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        this.lastDay = LocalDate.parse(lastDay, formatter);
     }
 
     public Rubric getRubric() {
@@ -96,5 +108,12 @@ public class Section implements Serializable {
 
     public void setRubric(Rubric rubric) {
         this.rubric = rubric;
+    }
+
+    public String getCurrentWeek() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        LocalDate today = LocalDate.now();
+        LocalDate pastMonday = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        return pastMonday.format(formatter);
     }
 }

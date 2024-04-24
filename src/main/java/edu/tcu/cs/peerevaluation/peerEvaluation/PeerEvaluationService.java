@@ -27,6 +27,10 @@ public class PeerEvaluationService {
     this.studentRepository = studentRepository;
   }
 
+  public List<PeerEvaluation> findAll() {
+    return this.peerEvalRepository.findAll();
+  }
+
   public PeerEvaluation save(PeerEvaluation newPeerEval) {
     return this.peerEvalRepository.save(newPeerEval);
   }
@@ -36,7 +40,7 @@ public class PeerEvaluationService {
     .orElseThrow(() -> new ObjectNotFoundException("peer evaluation", peerEvalId));
   }
 
-  public List<Evaluation> findByEvaluatedAndWeek(Integer week, Student evaluated) {
+  public List<Evaluation> findByEvaluatedAndWeek(String week, Student evaluated) {
     return this.evalRepository.findByWeekAndEvaluated(evaluated.getId(), week);
   }
 
@@ -51,7 +55,7 @@ public class PeerEvaluationService {
     
   } 
 
-  public List<Evaluation> getEvaluationsForReport(Integer week, String sectionName) {
+  public List<Evaluation> findByWeekAndSection(String week, String sectionName) {
     if (week == null || sectionName == null || sectionName.isEmpty()) {
         throw new IllegalArgumentException("Week and section name must not be null or empty.");
     }

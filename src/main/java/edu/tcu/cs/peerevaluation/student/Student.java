@@ -8,6 +8,7 @@ import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
 import edu.tcu.cs.peerevaluation.team.Team;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,7 +36,7 @@ public class Student implements Serializable {
   @ManyToOne
   private Team team;
 
-  @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToOne(mappedBy = "student",fetch = FetchType.EAGER)
   private PeerEvalUser user;
 
   public Student() {
@@ -74,10 +75,12 @@ public class Student implements Serializable {
   }
 
   public String getMiddleInitial() {
-    return this.middleInitial;
+    return
+            this.middleInitial;
   }
 
   public void setMiddleInitial(String middleInitial) {
+
     this.middleInitial = middleInitial;
   }
 

@@ -34,29 +34,22 @@ public class SectionController {
         this.sectionToSectionDtoConverter = sectionToSectionDtoConverter;
     }
 
-
     @PostMapping("/section_search")
     public Result findSectionByCriteria(@RequestBody Map <String, String> searchCriteria , Pageable pageable) {
         Page<Section> sectionPage = this.sectionService.findByCriteria(searchCriteria, pageable);
         Page<SectionDto> sectionDtoPage = sectionPage.map(this.sectionToSectionDtoConverter::convert);
-
         if (sectionPage.getContent().isEmpty()) {
             return new Result(true, StatusCode.SUCCESS, " Couldn't find this section");
-        }
-        else {
+        } else {
             return new Result(true, StatusCode.SUCCESS, "Search Success", sectionDtoPage.getContent());
         }
 
-
-
     }
-
-    @GetMapping("{sectionID}")
-    public Result findSectionBySectionID(@PathVariable Integer sectionID) {
-        Section foundSection = this.sectionService.adminFindsSeniorDesignSectionsBySectionID(sectionID);
-        SectionDto sectionDto = this.sectionToSectionDtoConverter.convert(foundSection); // convert the json section into section object
-        return new Result(true, StatusCode.SUCCESS, "Find Success", sectionDto);
-
+    @GetMapping("/{sectionName}")
+    public Result viewSectionById(@PathVariable String sectionName){
+        Section foundSection = this.sectionService.viewBySectionName(sectionName);
+        SectionDto sectionDto = this.sectionToSectionDtoConverter.convert(foundSection);
+        return new Result(true, StatusCode.SUCCESS, "View One Success", sectionDto);
     }
 
     @PostMapping
@@ -73,9 +66,20 @@ public class SectionController {
         Section  editedSection = this.sectionService.edit(sectionID, edit);
         SectionDto editSectionDto = this.sectionToSectionDtoConverter.convert(editedSection);
         return new Result(true, StatusCode.SUCCESS, "Edit Success", editSectionDto);
-
     }
 
+    //current week method
+    @GetMapping("/week/{sectionID}")
+    public Result getCurrentWeekById(@PathVariable Integer sectionID){
+        Section foundSection = this.sectionService.adminFindsSeniorDesignSectionsBySectionID(sectionID);
+        String currentWeek = foundSection.getCurrentWeek();
+        /*
+         * TODO
+         * if say 5 weeks and 4 days have passed, this will return
+         * a 5, so im adding 1 to get the current week
+         */
+        return new Result(true, StatusCode.SUCCESS, "Edit Success", currentWeek);
+    }
 
 
 
