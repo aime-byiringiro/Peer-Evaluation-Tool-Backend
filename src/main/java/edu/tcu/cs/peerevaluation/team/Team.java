@@ -29,10 +29,7 @@ public class Team implements Serializable {
 
     @OneToMany
     private List<Student> students;
-
-    @ManyToOne
-    private Instructor instructor;
-
+    
     // JSON ignore this property for now
     @OneToMany(mappedBy = "team")
     private List<WAR> wars;
@@ -137,14 +134,6 @@ public class Team implements Serializable {
             wars = new ArrayList<WAR>();
         }
         wars.add(war);
-    }
-  
-    public Instructor getInstructor() {
-        return instructor;
-    }
-
-    public void setInstructor(Instructor instructor) {
-        this.instructor = instructor;
     }
 
 }
