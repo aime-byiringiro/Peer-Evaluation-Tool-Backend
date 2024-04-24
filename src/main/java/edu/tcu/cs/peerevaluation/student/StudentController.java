@@ -6,6 +6,7 @@ import edu.tcu.cs.peerevaluation.peerEvalUser.MyUserPrincipal;
 import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
 import edu.tcu.cs.peerevaluation.peerEvalUser.UserRepository;
 import edu.tcu.cs.peerevaluation.peerEvalUser.UserService;
+import edu.tcu.cs.peerevaluation.security.AuthService;
 import edu.tcu.cs.peerevaluation.student.converter.StudentDtoToStudentConverter;
 import edu.tcu.cs.peerevaluation.student.converter.StudentToStudentDtoConverter;
 import edu.tcu.cs.peerevaluation.student.dto.StudentDto;
@@ -45,14 +46,17 @@ public class StudentController {
 
   private final UserRepository userRepository;
 
-  public StudentController(StudentService studentService, StudentToStudentDtoConverter studentToStudentDtoConverter, StudentDtoToStudentConverter studentDtoToStudentConverter, UserService userService, UserRepository userRepository) {
+  private final AuthService authService;
+
+  public StudentController(StudentService studentService, StudentToStudentDtoConverter studentToStudentDtoConverter, StudentDtoToStudentConverter studentDtoToStudentConverter, UserService userService, UserRepository userRepository, AuthService authService) {
     this.studentService = studentService;
     this.studentToStudentDtoConverter = studentToStudentDtoConverter;
     this.studentDtoToStudentConverter = studentDtoToStudentConverter;
     this.userService = userService;
     this.userRepository = userRepository;
+    this.authService = authService;
   }
-
+  
   @GetMapping
   public Result findAllStudents() {
     List<Student> foundStudents = this.studentService.findAll();
@@ -144,7 +148,7 @@ public class StudentController {
    */
   @PutMapping("/changePassword")
   public Result changePassword(@Valid @RequestBody String newPass){
-    PeerEvalUser currentUser = getLoggedInStudent().getUser();
+    PeerEvalUser currentUser = this.authService.getLoggedInStudent().getUser();
     currentUser.setPassword(newPass);
     this.userService.updatePass(currentUser);
     return new Result(true, StatusCode.SUCCESS, "Change Password Success",newPass);
@@ -152,30 +156,11 @@ public class StudentController {
 
   @GetMapping("/teammates")
   public Result getTeammates(){
-    Student currentStudent = getLoggedInStudent();
+    Student currentStudent = this.authService.getLoggedInStudent();
     List<Student> teammates = currentStudent.getTeammates();
     List<StudentDto> studentDtos = teammates.stream()
         .map(foundStudent -> this.studentToStudentDtoConverter.convert(foundStudent))
         .collect(Collectors.toList());
     return new Result(true, StatusCode.SUCCESS, "Get Teammate Success", studentDtos);
-  }
-
-  /*
-   * Method that retrives the current logged in student 
-   * object regardless of the authentication method
-   * used.
-   */
-  private Student getLoggedInStudent() throws UsernameNotFoundException{
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication instanceof UsernamePasswordAuthenticationToken) {
-      MyUserPrincipal principal = (MyUserPrincipal) authentication.getPrincipal();
-      return principal.getPeerEvalUser().getStudent();
-    } else {
-      JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-      Jwt jwt = (Jwt) authenticationToken.getCredentials();
-      PeerEvalUser user =this.userRepository.findByUsername(jwt.getSubject())
-            .orElseThrow(() -> new UsernameNotFoundException("username " + jwt.getSubject() + " is not found."));
-      return user.getStudent();
-    } 
   }
 }

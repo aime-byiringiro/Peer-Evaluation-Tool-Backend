@@ -9,6 +9,7 @@ import edu.tcu.cs.peerevaluation.peerEvalUser.UserRepository;
 import edu.tcu.cs.peerevaluation.rubric.converter.RubricDtoToRubricConverter;
 import edu.tcu.cs.peerevaluation.rubric.converter.RubricToRubricDtoConverter;
 import edu.tcu.cs.peerevaluation.rubric.dto.RubricDto;
+import edu.tcu.cs.peerevaluation.security.AuthService;
 import edu.tcu.cs.peerevaluation.student.Student;
 import edu.tcu.cs.peerevaluation.system.Result;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
@@ -36,12 +37,14 @@ public class RubricController {
 
   private final UserRepository userRepository;
 
-  public RubricController(RubricService rubricService, RubricToRubricDtoConverter rubricToRubricDtoConverter,
-      RubricDtoToRubricConverter rubricDtoToRubricConverter, UserRepository userRepository) {
+  private final AuthService authService;
+
+  public RubricController(RubricService rubricService, RubricToRubricDtoConverter rubricToRubricDtoConverter, RubricDtoToRubricConverter rubricDtoToRubricConverter, UserRepository userRepository, AuthService authService) {
     this.rubricService = rubricService;
     this.rubricToRubricDtoConverter = rubricToRubricDtoConverter;
     this.rubricDtoToRubricConverter = rubricDtoToRubricConverter;
     this.userRepository = userRepository;
+    this.authService = authService;
   }
 
   /*
@@ -49,24 +52,9 @@ public class RubricController {
    */
   @GetMapping()
   public Result getRubricName() {
-    Rubric rubric = getLoggedInStudent().getTeam().getSection().getRubric();
+    Rubric rubric = this.authService.getLoggedInStudent().getTeam().getSection().getRubric();
     RubricDto rubricDto = this.rubricToRubricDtoConverter.convert(rubric);
     return new Result(true, StatusCode.SUCCESS, "rubric success", rubricDto);
-  }
-
-  private Student getLoggedInStudent() throws UsernameNotFoundException {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication instanceof UsernamePasswordAuthenticationToken) {
-      MyUserPrincipal principal = (MyUserPrincipal) authentication.getPrincipal();
-      return principal.getPeerEvalUser().getStudent();
-    } else {
-      JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) SecurityContextHolder.getContext()
-          .getAuthentication();
-      Jwt jwt = (Jwt) authenticationToken.getCredentials();
-      PeerEvalUser user = this.userRepository.findByUsername(jwt.getSubject())
-          .orElseThrow(() -> new UsernameNotFoundException("username " + jwt.getSubject() + " is not found."));
-      return user.getStudent();
-    }
   }
 
   @PostMapping

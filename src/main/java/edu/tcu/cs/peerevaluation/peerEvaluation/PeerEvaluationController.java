@@ -15,6 +15,7 @@ import edu.tcu.cs.peerevaluation.peerEvaluation.evaluation.dto.EvaluationDto;
 import edu.tcu.cs.peerevaluation.rubric.Rubric;
 import edu.tcu.cs.peerevaluation.rubric.converter.RubricToRubricDtoConverter;
 import edu.tcu.cs.peerevaluation.rubric.dto.RubricDto;
+import edu.tcu.cs.peerevaluation.security.AuthService;
 import edu.tcu.cs.peerevaluation.student.Student;
 import edu.tcu.cs.peerevaluation.student.StudentRepository;
 import edu.tcu.cs.peerevaluation.system.Result;
@@ -55,11 +56,9 @@ public class PeerEvaluationController {
 
   private final StudentRepository studentRepository;
 
-  public PeerEvaluationController(PeerEvaluationService peerEvalService,
-      PeerEvaluationToPeerEvaluationDtoConverter peerEvalToDtoConverter,
-      PeerEvaluationDtoToPeerEvaluationConverter dtoToPeerEvalConverter,
-      EvaluationToEvalutionDtoConverter evalutionDtoConverter, RubricToRubricDtoConverter rubricToRubricDtoConverter,
-      UserRepository userRepository, StudentRepository studentRepository) {
+  private final AuthService authService;
+
+  public PeerEvaluationController(PeerEvaluationService peerEvalService, PeerEvaluationToPeerEvaluationDtoConverter peerEvalToDtoConverter, PeerEvaluationDtoToPeerEvaluationConverter dtoToPeerEvalConverter, EvaluationToEvalutionDtoConverter evalutionDtoConverter, RubricToRubricDtoConverter rubricToRubricDtoConverter, UserRepository userRepository, StudentRepository studentRepository, AuthService authService) {
     this.peerEvalService = peerEvalService;
     this.peerEvalToDtoConverter = peerEvalToDtoConverter;
     this.dtoToPeerEvalConverter = dtoToPeerEvalConverter;
@@ -67,9 +66,10 @@ public class PeerEvaluationController {
     this.rubricToRubricDtoConverter = rubricToRubricDtoConverter;
     this.userRepository = userRepository;
     this.studentRepository = studentRepository;
+    this.authService = authService;
   }
 
-    /*
+  /*
    * Returns all peer evaluations
    */
   @GetMapping
@@ -87,7 +87,7 @@ public class PeerEvaluationController {
   @PostMapping
   public Result newPeerEvaluation(@Valid @RequestBody PeerEvaluationDto peerEvalDto) {
     PeerEvaluation newPeerEval = this.dtoToPeerEvalConverter.convert(peerEvalDto);
-    newPeerEval.setEvaluator(getLoggedInStudent());
+    newPeerEval.setEvaluator(this.authService.getLoggedInStudent());
     PeerEvaluation savedPeerEval = this.peerEvalService.save(newPeerEval);
     savedPeerEval.getEvaluations().forEach(eval -> {
       eval.setPeerEvaluation(newPeerEval);
@@ -116,7 +116,7 @@ public class PeerEvaluationController {
   public Result generatePeerEvalReportStudent(@PathVariable String month, @PathVariable String day, @PathVariable String year) {
     String week = month + "/" + day + "/" + year;
     // Retrieve the currently logged in user
-    Student loggedInStudent = getLoggedInStudent();
+    Student loggedInStudent = this.authService.getLoggedInStudent();
     // Retrieve the rubric for that student
     RubricDto rubric = this.rubricToRubricDtoConverter.convert(loggedInStudent.getTeam().getSection().getRubric());
     // Get a list of evals from {week} and for loggedInStudent
@@ -136,7 +136,7 @@ public class PeerEvaluationController {
    */
   @GetMapping("/getEvals")
   public Result getEvalsByEvaluated() {
-    Student loggedInStudent = getLoggedInStudent();
+    Student loggedInStudent = this.authService.getLoggedInStudent();
     List<Evaluation> evals = this.peerEvalService.getEvaluationsById(loggedInStudent);
     List<EvaluationDto> evalDtos = evals.stream()
         .map(foundEval -> this.evalutionDtoConverter.convert(foundEval))
@@ -178,27 +178,6 @@ public class PeerEvaluationController {
       return new Result(false, StatusCode.INVALID_ARGUMENT, "Week parameter must be a number.", null);
     }
   }
-
-  /*
-   * Method that retrives the current logged in student
-   * object regardless of the authentication method
-   * used.
-   */
-  private Student getLoggedInStudent() throws UsernameNotFoundException {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication instanceof UsernamePasswordAuthenticationToken) {
-      MyUserPrincipal principal = (MyUserPrincipal) authentication.getPrincipal();
-      return principal.getPeerEvalUser().getStudent();
-    } else {
-      JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) SecurityContextHolder.getContext()
-          .getAuthentication();
-      Jwt jwt = (Jwt) authenticationToken.getCredentials();
-      PeerEvalUser user = this.userRepository.findByUsername(jwt.getSubject())
-          .orElseThrow(() -> new UsernameNotFoundException("username " + jwt.getSubject() + " is not found."));
-      return user.getStudent();
-    }
-  }
-
 }
 
 class Report {
