@@ -67,9 +67,9 @@ public class SectionService {
                 .orElseThrow(() -> new ObjectNotFoundException("section", sectionID));
     }
 
-    public Section viewBySectionName(String sectionName) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'viewBySectionName'");
+    public Section viewBySectionName(String sectionName){
+        return this.sectionRepository.findBySectionName(sectionName)
+                .orElseThrow(() -> new ObjectNotFoundException("section", sectionName));
     }
 
 }
