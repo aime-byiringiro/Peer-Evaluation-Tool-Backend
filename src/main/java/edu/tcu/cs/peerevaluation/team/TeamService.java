@@ -59,7 +59,6 @@ public class TeamService {
         teamToBeDeleted.removeAllStudentsFromTeam();
         teamToBeDeleted.removeInstructorFromTeam();
         teamToBeDeleted.removeSectionFromTeam();
-        this.teamRepository.delete(teamToBeDeleted);
-
+        this.teamRepository.deleteById(teamToBeDeleted.getId());
     }
 }

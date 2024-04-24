@@ -182,4 +182,86 @@ public class TeamServiceTest {
         verify(this.teamRepository, times(1)).findById(Mockito.any(Integer.class));
     }
 
+    @Test
+    void testSaveSuccess() {
+        Team newTeam = new Team();
+        newTeam.setTeamName("SuperfrogScheduler");
+        newTeam.setAcademicYear("2023");
+
+        given(this.teamRepository.save(newTeam)).willReturn(newTeam);
+
+        Team savedTeam = this.teamService.save(newTeam);
+
+        assertThat(savedTeam.getId()).isEqualTo(newTeam.getId());
+        assertThat(savedTeam.getTeamName()).isEqualTo(newTeam.getTeamName());
+        assertThat(savedTeam.getAcademicYear()).isEqualTo(newTeam.getAcademicYear());
+
+        verify(this.teamRepository, times(1)).save(newTeam);
+    }
+
+    @Test
+    void testUpdateSuccess() {
+        Team oldTeam = new Team();
+        oldTeam.setTeamName("SuperfrogScheduler");
+        oldTeam.setAcademicYear("2023");
+        oldTeam.setId(123);
+
+        Team newTeam = new Team();
+        newTeam.setTeamName("PeerEvaluation");
+        newTeam.setAcademicYear("2024");
+        newTeam.setId(123);
+
+        given(this.teamRepository.findById(123)).willReturn(Optional.of(oldTeam));
+        given(this.teamRepository.save(oldTeam)).willReturn(oldTeam);
+
+        Team updatedTeam = this.teamService.update(123, newTeam);
+
+        assertThat(updatedTeam.getId()).isEqualTo(123);
+        assertThat(updatedTeam.getTeamName()).isEqualTo(newTeam.getTeamName());
+        assertThat(updatedTeam.getAcademicYear()).isEqualTo(newTeam.getAcademicYear());
+        verify(this.teamRepository, times(1)).findById(oldTeam.getId());
+    }
+
+    @Test
+    void testUpdateNotFound() {
+        Team update = new Team();
+        update.setTeamName("SuperfrogScheduler");
+        update.setAcademicYear("2023");
+        update.setId(123);
+
+        given(this.teamRepository.findById(123)).willReturn(Optional.empty());
+
+        assertThrows(ObjectNotFoundException.class, () -> {
+            this.teamService.update(123, update);
+        });
+
+        verify(this.teamRepository, times(1)).findById(123);
+    }
+
+    @Test
+    void testDeleteSuccess() {
+        Team team = new Team();
+        team.setTeamName("SuperfrogScheduler");
+        team.setAcademicYear("2023");
+        team.setId(123);
+
+        given(this.teamRepository.findById(123)).willReturn(Optional.of(team));
+        doNothing().when(this.teamRepository).deleteById(123);
+
+        this.teamService.delete(123);
+
+        verify(this.teamRepository, times(1)).deleteById(123);
+    }
+
+    @Test
+    void testDeleteNotFound() {
+        given(this.teamRepository.findById(123)).willReturn(Optional.empty());
+
+        assertThrows(ObjectNotFoundException.class, () -> {
+            this.teamService.delete(123);
+        });
+
+        verify(this.teamRepository, times(1)).findById(123);
+    }
+
 }

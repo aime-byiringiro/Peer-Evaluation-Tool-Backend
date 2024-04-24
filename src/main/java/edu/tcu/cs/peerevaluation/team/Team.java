@@ -102,10 +102,12 @@ public class Team implements Serializable {
     }
 
     public void removeAllStudentsFromTeam() {
-        for (Student student : students) {
-            student.setTeam(null);
+        if (this.students != null) {
+            for (Student student : students) {
+                student.setTeam(null);
+            }
+            this.students.clear();
         }
-        this.students.clear();
     }
 
     public void removeSectionFromTeam() {
