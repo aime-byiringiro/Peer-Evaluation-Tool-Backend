@@ -150,6 +150,16 @@ public class StudentController {
     return new Result(true, StatusCode.SUCCESS, "Change Password Success",newPass);
   }
 
+  @GetMapping("/teammates")
+  public Result getTeammates(){
+    Student currentStudent = getLoggedInStudent();
+    List<Student> teammates = currentStudent.getTeammates();
+    List<StudentDto> studentDtos = teammates.stream()
+        .map(foundStudent -> this.studentToStudentDtoConverter.convert(foundStudent))
+        .collect(Collectors.toList());
+    return new Result(true, StatusCode.SUCCESS, "Get Teammate Success", studentDtos);
+  }
+
   /*
    * Method that retrives the current logged in student 
    * object regardless of the authentication method

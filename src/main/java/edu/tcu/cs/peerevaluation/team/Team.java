@@ -37,6 +37,10 @@ public class Team implements Serializable {
     @OneToMany(mappedBy = "team")
     private List<WAR> wars;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "instructor_id")
+    private Instructor instructor;
+
     public Team() {
     }
 
@@ -134,6 +138,13 @@ public class Team implements Serializable {
         }
         wars.add(war);
     }
+  
+    public Instructor getInstructor() {
+        return instructor;
+    }
 
+    public void setInstructor(Instructor instructor) {
+        this.instructor = instructor;
+    }
 
 }

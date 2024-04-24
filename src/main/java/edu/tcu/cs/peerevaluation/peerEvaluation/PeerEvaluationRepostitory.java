@@ -11,5 +11,6 @@ import edu.tcu.cs.peerevaluation.student.Student;
 public interface PeerEvaluationRepostitory extends JpaRepository<PeerEvaluation, Integer> {
 
   List<PeerEvaluation> findByEvaluator(Student student);
+  
 
 }

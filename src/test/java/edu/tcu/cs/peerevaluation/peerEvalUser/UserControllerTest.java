@@ -150,7 +150,7 @@ class UserControllerTest {
 
     @Test
     void testUpdateUserSuccess() throws Exception {
-        UserDto userDto = new UserDto(3, "tom123", false, "user");
+        UserDto userDto = new UserDto(3, "tom123", false, "user",null);
 
         PeerEvalUser updatedUser = new PeerEvalUser();
         updatedUser.setId(3);
@@ -184,7 +184,7 @@ class UserControllerTest {
         given(this.userService.update(eq(5), Mockito.any(PeerEvalUser.class)))
                 .willThrow(new ObjectNotFoundException("user", 5));
 
-        UserDto userDto = new UserDto(5, "tom123", false, "user");
+        UserDto userDto = new UserDto(5, "tom123", false, "user",null);
 
         String json = this.objectMapper.writeValueAsString(userDto);
 

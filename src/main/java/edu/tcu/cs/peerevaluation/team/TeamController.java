@@ -60,6 +60,4 @@ public class TeamController {
         TeamDto updatedTeamDto = this.teamToTeamDtoConverter.convert(updatedTeam);
         return new Result(true, StatusCode.SUCCESS, "Update Success", updatedTeamDto);
     }
-
-
 }

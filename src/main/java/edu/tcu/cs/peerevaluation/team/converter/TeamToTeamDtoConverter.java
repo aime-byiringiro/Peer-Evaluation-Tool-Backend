@@ -30,7 +30,6 @@ public class TeamToTeamDtoConverter implements Converter<Team, TeamDto> {
 
     @Override
     public TeamDto convert(Team source) {
-
         // student array -> array of student ids
         List<Integer> studentIds = new ArrayList<>();
 

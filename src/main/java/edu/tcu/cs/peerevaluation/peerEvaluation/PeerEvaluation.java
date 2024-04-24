@@ -26,7 +26,7 @@ public class PeerEvaluation implements Serializable{
   @OneToMany(mappedBy = "peerEvaluation", cascade = CascadeType.ALL)
   private List<Evaluation> evaluations;
 
-  private Integer week;
+  private String week;
 
   public PeerEvaluation() {
   }
@@ -55,11 +55,11 @@ public class PeerEvaluation implements Serializable{
     this.evaluations = evaluations;
   }
 
-  public Integer getWeek() {
+  public String getWeek() {
     return this.week;
   }
 
-  public void setWeek(Integer week) {
+  public void setWeek(String week) {
     this.week = week;
   }
 

@@ -1,11 +1,22 @@
 package edu.tcu.cs.peerevaluation.instructor;
 
 import java.io.Serializable;
+import java.util.List;
 
+import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
+import edu.tcu.cs.peerevaluation.team.Team;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 public class Instructor implements Serializable {
@@ -14,17 +25,25 @@ public class Instructor implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotEmpty(message = "first name is required.")
     private String firstName;
 
     private String middleInitial;
 
+    @NotEmpty(message = "last name is required.")
     private String lastName;
 
     private String email;
 
     private String password;
 
-    // TODO assign instructor to section or team
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "instructor_teams") // Specifies the table that stores the team names
+    @Column(name = "team_name") // Specifies the column that will store the team names
+    private List<String> teams;
+
+    @OneToOne(mappedBy = "instructor", fetch = FetchType.EAGER)
+    private PeerEvalUser user;
 
     public Instructor() {
     }
@@ -75,6 +94,22 @@ public class Instructor implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<String> getTeams() {
+        return teams;
+    }
+
+    public void setTeams(List<String> list) {
+        this.teams = list;
+    }
+
+    public PeerEvalUser getUser() {
+        return user;
+    }
+
+    public void setUser(PeerEvalUser user) {
+        this.user = user;
     }
 
     

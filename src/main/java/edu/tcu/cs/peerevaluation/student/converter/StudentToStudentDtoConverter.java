@@ -18,7 +18,13 @@ public class StudentToStudentDtoConverter implements Converter<Student, StudentD
                                            source.getEmail(),
                                            source.getTeam() != null
                                                     ? source.getTeam().getTeamName()
-                                                    : null );
+                                                    : null,
+                                           source.getTeam() != null
+                                                    ? source.getTeam().getSection().getSectionName()
+                                                    : null,
+                                           source.getTeam() != null
+                                                    ? source.getTeam().getSection().getAcademicYear()
+                                                    : null);
     return studentDto;
     
   }
