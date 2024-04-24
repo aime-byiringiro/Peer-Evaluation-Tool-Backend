@@ -69,6 +69,18 @@ public class PeerEvaluationController {
     this.studentRepository = studentRepository;
   }
 
+    /*
+   * Returns all peer evaluations
+   */
+  @GetMapping
+  public Result getAllPeerEvaluations() {
+    List<PeerEvaluation> peerEvals = this.peerEvalService.findAll();
+    List<PeerEvaluationDto> peerEvalDtos = peerEvals.stream()
+        .map(this.peerEvalToDtoConverter::convert)
+        .collect(Collectors.toList());
+    return new Result(true, StatusCode.SUCCESS, "find all success", peerEvalDtos);
+  }
+
   /*
    * this method creates new peer evaluation objects
    */

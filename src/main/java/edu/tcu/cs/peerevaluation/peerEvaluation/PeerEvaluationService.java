@@ -27,6 +27,10 @@ public class PeerEvaluationService {
     this.studentRepository = studentRepository;
   }
 
+  public List<PeerEvaluation> findAll() {
+    return this.peerEvalRepository.findAll();
+  }
+
   public PeerEvaluation save(PeerEvaluation newPeerEval) {
     return this.peerEvalRepository.save(newPeerEval);
   }
