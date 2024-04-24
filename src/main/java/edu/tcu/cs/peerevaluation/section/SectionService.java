@@ -1,12 +1,7 @@
 package edu.tcu.cs.peerevaluation.section;
 
-<<<<<<< HEAD
-=======
 
-import edu.tcu.cs.peerevaluation.section.utils.IdWorker;
->>>>>>> db4a80a56292e6ba6481619f0d7200e6a19fa1ed
 import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,18 +29,6 @@ public class SectionService {
 
     public Section save(Section newSection){
         return this.sectionRepository.save(newSection);
-<<<<<<< HEAD
-=======
-    }
-
-    public Section viewBySectionName(String sectionName){
-        return this.sectionRepository.findBySectionName(sectionName)
-                .orElseThrow(() -> new ObjectNotFoundException("section", sectionName));
-    }
-
-
-    public void adminCreatesSeniorDesignSections(){
->>>>>>> db4a80a56292e6ba6481619f0d7200e6a19fa1ed
 
     }
 
@@ -84,7 +67,9 @@ public class SectionService {
                 .orElseThrow(() -> new ObjectNotFoundException("section", sectionID));
     }
 
-
-
+    public Section viewBySectionName(String sectionName) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'viewBySectionName'");
+    }
 
 }
