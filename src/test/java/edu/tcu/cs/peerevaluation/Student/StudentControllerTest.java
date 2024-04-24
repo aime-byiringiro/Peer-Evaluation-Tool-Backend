@@ -229,6 +229,8 @@ public class StudentControllerTest {
         "R",
         "Smith",
         null,
+        null,
+        null,
         null);
 
     PeerEvalUser user = new PeerEvalUser();
@@ -277,6 +279,8 @@ public class StudentControllerTest {
         "R",
         "Smith",
         null,
+        null,
+        null,
         null);
 
     String json = this.objectMapper.writeValueAsString(studentDto);
@@ -308,6 +312,8 @@ public class StudentControllerTest {
         "John",
         "R",
         "Smith",
+        null,
+        null,
         null,
         null);
 

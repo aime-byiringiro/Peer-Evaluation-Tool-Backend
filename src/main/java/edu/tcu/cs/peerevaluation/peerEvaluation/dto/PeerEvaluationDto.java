@@ -8,5 +8,5 @@ import edu.tcu.cs.peerevaluation.student.dto.StudentDto;
 public record PeerEvaluationDto(Integer id,
                                 StudentDto evaluator,
                                 List<EvaluationDto> evaluations,
-                                Integer week) {
+                                String week) {
 }

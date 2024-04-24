@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import edu.tcu.cs.peerevaluation.peerEvaluation.evaluation.Evaluation;
 import edu.tcu.cs.peerevaluation.peerEvaluation.evaluation.EvaluationRepository;
 import edu.tcu.cs.peerevaluation.student.Student;
+import edu.tcu.cs.peerevaluation.student.StudentRepository;
 import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 
@@ -18,9 +19,16 @@ public class PeerEvaluationService {
 
   private final EvaluationRepository evalRepository;
 
-  public PeerEvaluationService(PeerEvaluationRepostitory peerEvalRepository, EvaluationRepository evalRepository) {
+  private final StudentRepository studentRepository;
+
+  public PeerEvaluationService(PeerEvaluationRepostitory peerEvalRepository, EvaluationRepository evalRepository, StudentRepository studentRepository) {
     this.peerEvalRepository = peerEvalRepository;
     this.evalRepository = evalRepository;
+    this.studentRepository = studentRepository;
+  }
+
+  public List<PeerEvaluation> findAll() {
+    return this.peerEvalRepository.findAll();
   }
 
   public PeerEvaluation save(PeerEvaluation newPeerEval) {
@@ -32,13 +40,27 @@ public class PeerEvaluationService {
     .orElseThrow(() -> new ObjectNotFoundException("peer evaluation", peerEvalId));
   }
 
-  public List<Evaluation> findByEvaluatedAndWeek(Integer week, Student evaluated) {
+  public List<Evaluation> findByEvaluatedAndWeek(String week, Student evaluated) {
     return this.evalRepository.findByWeekAndEvaluated(evaluated.getId(), week);
   }
 
   public List<Evaluation> getEvaluationsById(Student student) {
     return this.evalRepository.findByEvaluated(student);
+  }
+
+  public List<PeerEvaluation> findAllByStudentId(Integer studentId) {
+    Student evaluator = this.studentRepository.findById(studentId)
+        .orElseThrow(() -> new ObjectNotFoundException("student", studentId));
+    return this.peerEvalRepository.findByEvaluator(evaluator);
+    
   } 
+
+  public List<Evaluation> findByWeekAndSection(String week, String sectionName) {
+    if (week == null || sectionName == null || sectionName.isEmpty()) {
+        throw new IllegalArgumentException("Week and section name must not be null or empty.");
+    }
+    return evalRepository.findByWeekAndSection(week, sectionName);
+}
 
 
 }

@@ -1,7 +1,5 @@
 package edu.tcu.cs.peerevaluation.section;
 
-
-import edu.tcu.cs.peerevaluation.section.utils.IdWorker;
 import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;

@@ -68,21 +68,16 @@ public class InstructorController {
   }
 
   @PostMapping
-  public ResponseEntity<Result> addInstructor(@Valid @RequestBody InstructorUserCombined instructorUserCombined) {
-    Instructor newInstructor = instructorDtoToInstructorConverter.convert(instructorUserCombined.getInstructorDto());
-    Instructor savedInstructor = instructorService.save(newInstructor);
-
-    PeerEvalUser newUser = new PeerEvalUser(); // Assuming you have similar setup or manually set properties
-    newUser.setUsername(instructorUserCombined.getUser().getUsername());
-    newUser.setPassword(instructorUserCombined.getUser().getPassword()); // Consider hashing the password
-    newUser.setInstructor(savedInstructor); // Link user to the newly created instructor
-
-    PeerEvalUser savedUser = userService.save(newUser);
-    savedInstructor.setUser(savedUser); // Link instructor back to the newly created user
-    savedInstructor = instructorService.save(savedInstructor); // Save the instructor again if necessary
-
-    InstructorDto savedInstructorDto = instructorToInstructorDtoConverter.convert(savedInstructor);
-    return ResponseEntity.ok(new Result(true, StatusCode.SUCCESS, "Instructor added successfully", savedInstructorDto));
+  public Result addInstructor(@Valid @RequestBody InstructorUserCombined instructorUserCombined) {
+    Instructor newInstructor = this.instructorDtoToInstructorConverter.convert(instructorUserCombined.getInstructorDto());
+    Instructor savedInstructor = this.instructorService.save(newInstructor);
+    PeerEvalUser savedUser = this.userService.save(instructorUserCombined.getUser());
+    savedUser.setInstructor(savedInstructor);
+    savedInstructor.setUser(savedUser);
+    savedInstructor = this.instructorService.save(savedInstructor);
+    savedUser = this.userService.update(savedUser.getId(),savedUser);
+    InstructorDto savedInstructorDto = this.instructorToInstructorDtoConverter.convert(savedInstructor);
+    return new Result(true, StatusCode.SUCCESS, "Add Success", savedInstructorDto);
   }
 
 }
