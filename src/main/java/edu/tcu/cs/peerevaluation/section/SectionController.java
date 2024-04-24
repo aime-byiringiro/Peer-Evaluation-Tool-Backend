@@ -69,9 +69,9 @@ public class SectionController {
     }
 
     //current week method
-    @GetMapping("/week/{sectionID}")
-    public Result getCurrentWeekById(@PathVariable Integer sectionID){
-        Section foundSection = this.sectionService.adminFindsSeniorDesignSectionsBySectionID(sectionID);
+    @GetMapping("/week/{sectionName}")
+    public Result getCurrentWeekById(@PathVariable String sectionName){
+        Section foundSection = this.sectionService.viewBySectionName(sectionName);
         String currentWeek = foundSection.getCurrentWeek();
         /*
          * TODO
