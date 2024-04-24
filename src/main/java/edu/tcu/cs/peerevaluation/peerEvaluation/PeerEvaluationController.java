@@ -150,7 +150,7 @@ public class PeerEvaluationController {
     try {
       Integer weekNum = Integer.parseInt(week);
       // Update the repository call to the new method name
-      List<Student> students = this.studentRepository.findAllBySectionName("Senior Design");
+      List<Student> students = this.studentRepository.findAllBySectionName("Section2023-2024");
       if (students.isEmpty()) {
         return ResponseEntity
             .ok(new Result(false, StatusCode.INVALID_ARGUMENT, "No students found in the specified section.", null));
