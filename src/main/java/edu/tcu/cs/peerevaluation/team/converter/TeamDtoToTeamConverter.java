@@ -32,11 +32,11 @@ public class TeamDtoToTeamConverter implements Converter<TeamDto, Team> {
 
         // convert ids to Students
         List<Student> students = new ArrayList<>();
-        for (Integer id : source.studentIds()) {
-            Student s = studentService.findById(id);
-            System.out.println(s.getFirstAndLastName());
 
-            students.add(studentService.findById(id));
+        if (source.studentIds() != null) {
+            for (Integer id : source.studentIds()) {
+                students.add(studentService.findById(id));
+            }
         }
 
         Team team = new Team();

@@ -10,12 +10,8 @@ import java.util.List;
 public record TeamDto(Integer id,
                       @NotEmpty(message = "Team Name is required.")
                       String teamName,
-                      @NotEmpty(message = "Academic Year is required.")
                       String academicYear,
-                      @NotEmpty(message = "Section is required.")
                       SectionDto section,
-                      @NotEmpty(message = "Students are required.")
                       List<Integer> studentIds,
-                      @NotEmpty(message = "Instructor is required.")
                       InstructorDto instructor) {
 }
