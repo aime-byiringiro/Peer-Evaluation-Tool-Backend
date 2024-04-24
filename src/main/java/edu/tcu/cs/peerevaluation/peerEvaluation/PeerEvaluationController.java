@@ -153,50 +153,29 @@ public class PeerEvaluationController {
     return new Result(true, StatusCode.SUCCESS, "generate success", peerEvalDtos);
   }
 
-  @GetMapping("/peerEvalReportSection/{week}")
-  public ResponseEntity<Result> generatePeerEvalReportSection(@PathVariable String week) {
-    if (week == null || week.trim().isEmpty()) {
-      return ResponseEntity.badRequest()
-          .body(new Result(false, StatusCode.INVALID_ARGUMENT, "Week parameter is required.", null));
+   /*
+   * Returns all evaluations for the given week and section
+   */
+  @GetMapping("/evaluations/{month}/{day}/{year}/{sectionName}")
+  public Result getEvaluationsByWeekAndSection(@PathVariable String month, @PathVariable String day, @PathVariable String year, @PathVariable String sectionName) {
+    String week = month + "/" + day + "/" + year;
+    if (week.trim().isEmpty() || sectionName == null || sectionName.trim().isEmpty()) {
+      return new Result(false, StatusCode.INVALID_ARGUMENT, "Week and section name parameters are required.", null);
     }
 
     try {
-      Integer weekNum = Integer.parseInt(week);
-      // Update the repository call to the new method name
-      List<Student> students = this.studentRepository.findAllBySectionName("Section2023-2024");
-      if (students.isEmpty()) {
-        return ResponseEntity
-            .ok(new Result(false, StatusCode.INVALID_ARGUMENT, "No students found in the specified section.", null));
+      List<Evaluation> evals = this.peerEvalService.findByWeekAndSection(week, sectionName);
+      if (evals.isEmpty()) {
+        return new Result(false, StatusCode.INVALID_ARGUMENT, "No evaluations found for the given week and section.", null);
       }
 
-      RubricDto rubric = null;
-      List<EvaluationDto> allEvalDtos = new ArrayList<>();
+      List<EvaluationDto> evalDtos = evals.stream()
+          .map(this.evalutionDtoConverter::convert)
+          .collect(Collectors.toList());
 
-      for (Student student : students) {
-        if (rubric == null) {
-          rubric = this.rubricToRubricDtoConverter.convert(student.getTeam().getSection().getRubric());
-        }
-
-        List<Evaluation> evals = this.peerEvalService.findByEvaluatedAndWeek("weekNum", student);
-        List<EvaluationDto> evalDtos = evals.stream()
-            .map(this.evalutionDtoConverter::convert)
-            .collect(Collectors.toList());
-
-        allEvalDtos.addAll(evalDtos);
-      }
-
-      if (allEvalDtos.isEmpty()) {
-        return ResponseEntity
-            .ok(new Result(false, StatusCode.INVALID_ARGUMENT, "No evaluations available for the given week.", null));
-      }
-
-      Report report = new Report(allEvalDtos, rubric);
-      return ResponseEntity
-          .ok(new Result(true, StatusCode.SUCCESS, "Peer evaluation report generated successfully.", report));
-
+      return new Result(true, StatusCode.SUCCESS, "Evaluations retrieved successfully.", evalDtos);
     } catch (NumberFormatException e) {
-      return ResponseEntity.badRequest()
-          .body(new Result(false, StatusCode.INVALID_ARGUMENT, "Invalid week format.", null));
+      return new Result(false, StatusCode.INVALID_ARGUMENT, "Week parameter must be a number.", null);
     }
   }
 

@@ -55,7 +55,7 @@ public class PeerEvaluationService {
     
   } 
 
-  public List<Evaluation> getEvaluationsForReport(Integer week, String sectionName) {
+  public List<Evaluation> findByWeekAndSection(String week, String sectionName) {
     if (week == null || sectionName == null || sectionName.isEmpty()) {
         throw new IllegalArgumentException("Week and section name must not be null or empty.");
     }
