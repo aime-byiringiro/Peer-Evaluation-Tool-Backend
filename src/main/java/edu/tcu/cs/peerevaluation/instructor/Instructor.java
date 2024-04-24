@@ -45,7 +45,6 @@ public class Instructor implements Serializable {
     @OneToOne(mappedBy = "instructor", fetch = FetchType.EAGER)
     private PeerEvalUser user;
 
-
     public Instructor() {
     }
 
