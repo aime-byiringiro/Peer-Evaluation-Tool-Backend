@@ -19,11 +19,10 @@ public class TeamToTeamDtoConverter implements Converter<Team, TeamDto> {
 
     @Override
     public TeamDto convert(Team source) {
-        TeamDto teamDto = new TeamDto(
+        return new TeamDto(
                 source.getId(),
                 source.getTeamName(),
                 this.sectionToSectionDtoConverter.convert(source.getSection()),
                 source.getStudents());
-        return teamDto;
     }
 }
