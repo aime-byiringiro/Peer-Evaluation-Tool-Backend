@@ -2,14 +2,22 @@ package edu.tcu.cs.peerevaluation.section;
 
 import edu.tcu.cs.peerevaluation.system.Result;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
+import edu.tcu.cs.peerevaluation.peerEvalUser.MyUserPrincipal;
+import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
+import edu.tcu.cs.peerevaluation.peerEvalUser.UserRepository;
 import edu.tcu.cs.peerevaluation.section.converter.SectionDtoToSectionConverter;
 import edu.tcu.cs.peerevaluation.section.converter.SectionToSectionDtoConverter;
 import edu.tcu.cs.peerevaluation.section.dto.SectionDto;
-
+import edu.tcu.cs.peerevaluation.student.Student;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.security.oauth2.jwt.Jwt;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
@@ -26,13 +34,18 @@ public class SectionController {
     private final SectionService sectionService;
     private final SectionDtoToSectionConverter sectionDtoToSectionConverter;
     private final SectionToSectionDtoConverter  sectionToSectionDtoConverter;
+    private final UserRepository userRepository;
 
 
-    public SectionController(SectionService sectionService, SectionDtoToSectionConverter sectionDtoToSectionConverter, SectionToSectionDtoConverter sectionToSectionDtoConverter) {
+
+    public SectionController(SectionService sectionService, SectionDtoToSectionConverter sectionDtoToSectionConverter, SectionToSectionDtoConverter sectionToSectionDtoConverter, UserRepository userRepository) {
         this.sectionService = sectionService;
         this.sectionDtoToSectionConverter = sectionDtoToSectionConverter;
         this.sectionToSectionDtoConverter = sectionToSectionDtoConverter;
+        this.userRepository = userRepository;
     }
+
+
 
 
     @PostMapping("/section_search")
@@ -53,7 +66,7 @@ public class SectionController {
 
     @GetMapping("{sectionID}")
     public Result findSectionBySectionID(@PathVariable Integer sectionID) {
-        Section foundSection = this.sectionService.adminFindsSeniorDesignSectionsBySectionID(sectionID);
+        Section foundSection = this.sectionService.findBySectionId(sectionID);
         SectionDto sectionDto = this.sectionToSectionDtoConverter.convert(foundSection); // convert the json section into section object
         return new Result(true, StatusCode.SUCCESS, "Find Success", sectionDto);
 
@@ -75,12 +88,11 @@ public class SectionController {
         return new Result(true, StatusCode.SUCCESS, "Edit Success", editSectionDto);
     }
 
-
     //current week method
-    @GetMapping("/week/{sectionID}")
-    public Result getCurrentWeekById(@PathVariable Integer sectionID){
-        Section foundSection = this.sectionService.adminFindsSeniorDesignSectionsBySectionID(sectionID);
-        String currentWeek = foundSection.getCurrentWeek();
+    @GetMapping("/week")
+    public Result getCurrentWeekById(){
+        Section currentSection = getLoggedInStudent().getTeam().getSection();
+        String currentWeek = currentSection.getCurrentWeek();
         /*
          * TODO
          * if say 5 weeks and 4 days have passed, this will return
@@ -89,7 +101,23 @@ public class SectionController {
         return new Result(true, StatusCode.SUCCESS, "Edit Success", currentWeek);
     }
 
-
-
-
+    /*
+    * Method that retrives the current logged in student
+    * object regardless of the authentication method
+    * used.
+    */
+    private Student getLoggedInStudent() throws UsernameNotFoundException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof UsernamePasswordAuthenticationToken) {
+        MyUserPrincipal principal = (MyUserPrincipal) authentication.getPrincipal();
+        return principal.getPeerEvalUser().getStudent();
+        } else {
+        JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) SecurityContextHolder.getContext()
+            .getAuthentication();
+        Jwt jwt = (Jwt) authenticationToken.getCredentials();
+        PeerEvalUser user = this.userRepository.findByUsername(jwt.getSubject())
+            .orElseThrow(() -> new UsernameNotFoundException("username " + jwt.getSubject() + " is not found."));
+        return user.getStudent();
+        }
+    }
 }

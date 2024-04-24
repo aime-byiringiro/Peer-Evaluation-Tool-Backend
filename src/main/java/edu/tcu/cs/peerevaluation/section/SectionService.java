@@ -21,7 +21,7 @@ public class SectionService {
         this.sectionRepository = sectionRepository;
     }
 
-    public Section adminFindsSeniorDesignSectionsBySectionID(Integer sectionID){
+    public Section findBySectionId(Integer sectionID){
         return this.sectionRepository
                 .findById(sectionID)
                 .orElseThrow( () -> new SectionNotFoundException(sectionID));

@@ -148,7 +148,7 @@ public class SectionControllerTest {
             foundSection.setFirstDay("08/21/2023");
             foundSection.setLastDay("05/01/2024");
             foundSection.setRubric(r1);
-            given(this.sectionService.adminFindsSeniorDesignSectionsBySectionID(1)).willReturn(this.section1);
+            given(this.sectionService.findBySectionId(1)).willReturn(this.section1);
             System.out.print(this.section1);
             this.mockMvc.perform(get("/section/1").accept(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.flag").value(true))

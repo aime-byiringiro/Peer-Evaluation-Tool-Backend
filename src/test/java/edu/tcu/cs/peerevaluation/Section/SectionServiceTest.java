@@ -117,7 +117,7 @@ public class SectionServiceTest {
 
         given(this.sectionRepository.findById(1)).willReturn(Optional.of(section1));
         // when
-        Section returnedSection = this.sectionService.adminFindsSeniorDesignSectionsBySectionID(1);
+        Section returnedSection = this.sectionService.findBySectionId(1);
         //Then
 
         assertThat(returnedSection.getSectionName()).isEqualTo(section1.getSectionName());
@@ -220,7 +220,7 @@ public class SectionServiceTest {
         update.setSectionName("section2026-2027");
         update.setAcademicYear("2026");
         update.setFirstDay("09/08/2026");
-        update.setLastDay("06/30/207");
+        update.setLastDay("06/30/2027");
 
 
         List<Criterion> newcriterionList = new ArrayList<>();
