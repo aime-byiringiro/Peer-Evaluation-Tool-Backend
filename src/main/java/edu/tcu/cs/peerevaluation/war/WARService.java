@@ -37,7 +37,7 @@ public class WARService {
     return this.submissionRepository.save(submission);
   }
 
-  public WAR findByWeekAndTeam(Integer teamId, Integer week){
+  public WAR findByWeekAndTeam(Integer teamId, String week){
     return this.warRepository.findByWeekAndTeam(teamId, week);
   }
 
