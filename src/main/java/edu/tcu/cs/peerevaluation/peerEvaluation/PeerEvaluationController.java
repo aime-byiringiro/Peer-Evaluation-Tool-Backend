@@ -17,6 +17,7 @@ import edu.tcu.cs.peerevaluation.rubric.converter.RubricToRubricDtoConverter;
 import edu.tcu.cs.peerevaluation.rubric.dto.RubricDto;
 import edu.tcu.cs.peerevaluation.student.Student;
 import edu.tcu.cs.peerevaluation.student.StudentRepository;
+import edu.tcu.cs.peerevaluation.student.StudentService;
 import edu.tcu.cs.peerevaluation.system.Result;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
 import jakarta.validation.Valid;
@@ -55,11 +56,13 @@ public class PeerEvaluationController {
 
   private final StudentRepository studentRepository;
 
+  private final StudentService studentService;
+
   public PeerEvaluationController(PeerEvaluationService peerEvalService,
       PeerEvaluationToPeerEvaluationDtoConverter peerEvalToDtoConverter,
       PeerEvaluationDtoToPeerEvaluationConverter dtoToPeerEvalConverter,
       EvaluationToEvalutionDtoConverter evalutionDtoConverter, RubricToRubricDtoConverter rubricToRubricDtoConverter,
-      UserRepository userRepository, StudentRepository studentRepository) {
+      UserRepository userRepository, StudentRepository studentRepository, StudentService studentService) {
     this.peerEvalService = peerEvalService;
     this.peerEvalToDtoConverter = peerEvalToDtoConverter;
     this.dtoToPeerEvalConverter = dtoToPeerEvalConverter;
@@ -67,9 +70,10 @@ public class PeerEvaluationController {
     this.rubricToRubricDtoConverter = rubricToRubricDtoConverter;
     this.userRepository = userRepository;
     this.studentRepository = studentRepository;
+    this.studentService = studentService;
   }
 
-    /*
+  /*
    * Returns all peer evaluations
    */
   @GetMapping
@@ -113,7 +117,8 @@ public class PeerEvaluationController {
    */
 
   @GetMapping("/peerEvalReportStudent/{month}/{day}/{year}")
-  public Result generatePeerEvalReportStudent(@PathVariable String month, @PathVariable String day, @PathVariable String year) {
+  public Result generatePeerEvalReportStudent(@PathVariable String month, @PathVariable String day,
+      @PathVariable String year) {
     String week = month + "/" + day + "/" + year;
     // Retrieve the currently logged in user
     Student loggedInStudent = getLoggedInStudent();
@@ -153,11 +158,12 @@ public class PeerEvaluationController {
     return new Result(true, StatusCode.SUCCESS, "generate success", peerEvalDtos);
   }
 
-   /*
+  /*
    * Returns all evaluations for the given week and section
    */
   @GetMapping("/evaluations/{month}/{day}/{year}/{sectionName}")
-  public Result getEvaluationsByWeekAndSection(@PathVariable String month, @PathVariable String day, @PathVariable String year, @PathVariable String sectionName) {
+  public Result getEvaluationsByWeekAndSection(@PathVariable String month, @PathVariable String day,
+      @PathVariable String year, @PathVariable String sectionName) {
     String week = month + "/" + day + "/" + year;
     if (week.trim().isEmpty() || sectionName == null || sectionName.trim().isEmpty()) {
       return new Result(false, StatusCode.INVALID_ARGUMENT, "Week and section name parameters are required.", null);
@@ -166,7 +172,8 @@ public class PeerEvaluationController {
     try {
       List<Evaluation> evals = this.peerEvalService.findByWeekAndSection(week, sectionName);
       if (evals.isEmpty()) {
-        return new Result(false, StatusCode.INVALID_ARGUMENT, "No evaluations found for the given week and section.", null);
+        return new Result(false, StatusCode.INVALID_ARGUMENT, "No evaluations found for the given week and section.",
+            null);
       }
 
       List<EvaluationDto> evalDtos = evals.stream()
@@ -176,6 +183,36 @@ public class PeerEvaluationController {
       return new Result(true, StatusCode.SUCCESS, "Evaluations retrieved successfully.", evalDtos);
     } catch (NumberFormatException e) {
       return new Result(false, StatusCode.INVALID_ARGUMENT, "Week parameter must be a number.", null);
+    }
+  }
+
+  @GetMapping("/peerEvalReportByStudent/{studentId}/{month}/{day}/{year}")
+  public Result generatePeerEvalReportByStudent(@PathVariable Integer studentId, @PathVariable String month,
+      @PathVariable String day, @PathVariable String year) {
+    String week = month + "/" + day + "/" + year;
+    try {
+      // Retrieve the student by ID
+      Student student = studentService.findById(studentId);
+      if (student == null) {
+        return new Result(false, StatusCode.NOT_FOUND, "Student not found");
+      }
+
+      // Retrieve the rubric for that student's section
+      RubricDto rubric = this.rubricToRubricDtoConverter.convert(student.getTeam().getSection().getRubric());
+
+      // Get a list of evaluations for the specified week and student
+      List<Evaluation> evals = this.peerEvalService.findByWeekAndStudentId(week, studentId);
+
+      // Convert Evaluations to EvaluationDtos
+      List<EvaluationDto> evalDtos = evals.stream()
+          .map(this.evalutionDtoConverter::convert)
+          .collect(Collectors.toList());
+
+      // Combine it all into a report object to send to the front end
+      Report report = new Report(evalDtos, rubric);
+      return new Result(true, StatusCode.SUCCESS, "Report generated successfully", report);
+    } catch (Exception e) {
+      return new Result(false, StatusCode.NOT_FOUND, "Error generating report: " + e.getMessage());
     }
   }
 
