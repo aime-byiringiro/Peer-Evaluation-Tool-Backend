@@ -30,7 +30,6 @@ public class InstructorDtoToInstructorConverter implements Converter<InstructorD
         instructor.setMiddleInitial(source.middleInitial());
         instructor.setLastName(source.lastName());
         instructor.setEmail(source.email());
-        instructor.setTeams(source.teams());
 
         return instructor;
 

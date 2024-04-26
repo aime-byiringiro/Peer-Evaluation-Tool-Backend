@@ -221,6 +221,7 @@ public class InstructorControllerTest {
 
         InstructorUserCombined instructorUserCombined = new InstructorUserCombined(instructorDto, user);
         String json = this.objectMapper.writeValueAsString(instructorUserCombined);
+        
 
         Instructor savedInstructor = new Instructor();
         savedInstructor.setId(1);
@@ -228,7 +229,6 @@ public class InstructorControllerTest {
         savedInstructor.setMiddleInitial("M");
         savedInstructor.setLastName("Doe");
         savedInstructor.setEmail("jane.doe@example.com");
-        savedInstructor.setTeams(List.of("Team Alpha", "Team Beta"));
 
         PeerEvalUser savedUser = new PeerEvalUser();
         savedUser.setUsername("janedoe");
