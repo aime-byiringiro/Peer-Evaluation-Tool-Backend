@@ -136,4 +136,13 @@ public class Team implements Serializable {
         wars.add(war);
     }
 
+    public void removeWARFromTeam() {
+        if (this.wars == null) {
+            wars = new ArrayList<WAR>();
+        } else {
+            for (WAR war : wars) {
+                war.setTeam(null);
+            }
+        }
+    }
 }
