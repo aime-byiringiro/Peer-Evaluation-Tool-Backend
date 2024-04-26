@@ -49,6 +49,18 @@ public class InstructorController {
     this.userRepository = userRepository;
   }
 
+  @GetMapping
+public Result findAllInstructors() {
+
+  List<Instructor> allInstructors = instructorService.findAll();
+
+  List<InstructorDto> instructorDtos = allInstructors.stream()
+      .map(instructor -> instructorToInstructorDtoConverter.convert(instructor))
+      .collect(Collectors.toList());
+
+  return new Result(true, StatusCode.SUCCESS, "Find All Success", instructorDtos); 
+}
+
   @GetMapping("/{instructorId}")
   public Result findInstructorById(@PathVariable Integer instructorId) {
     Instructor foundInstructor = this.instructorService.findById(instructorId);
