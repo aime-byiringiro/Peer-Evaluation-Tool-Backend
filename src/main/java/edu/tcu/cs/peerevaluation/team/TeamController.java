@@ -65,8 +65,8 @@ public class TeamController {
     public Result deleteTeam(@PathVariable Integer teamId) {
         Team team = this.teamService.findById(teamId);
         team.removeAllStudentsFromTeam();
-        team.removeInstructorFromTeam();
-        team.removeInstructorFromTeam();
+        team.removeInstructor();
+        team.removeInstructor();
         team.removeWARFromTeam();
 
         this.teamService.delete(teamId);
