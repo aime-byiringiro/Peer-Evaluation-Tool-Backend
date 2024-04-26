@@ -399,7 +399,7 @@ public class DBDataInitializer implements CommandLineRunner {
     WAR war1 = new WAR();
     war1.setSubmissions(submissions);
     war1.setTeam(team1);
-    war1.setWeek(4);
+    war1.setWeek("04/22/2024");
 
     this.warService.saveWar(war1);
 
