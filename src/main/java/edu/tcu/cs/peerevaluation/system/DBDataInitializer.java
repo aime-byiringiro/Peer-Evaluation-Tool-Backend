@@ -284,6 +284,24 @@ public class DBDataInitializer implements CommandLineRunner {
     i2u.setInstructor(i2);
     this.userService.save(i2u);
 
+
+    //-----------------//
+    // Test Admin Data //
+    //-----------------//
+    PeerEvalUser a1 = new PeerEvalUser();
+      a1.setUsername("admin");
+      a1.setPassword("password");
+      a1.setEnabled(true);
+      a1.setRoles("admin");
+      this.userService.save(a1);
+
+    PeerEvalUser ai1 = new PeerEvalUser();
+      ai1.setUsername("Bwei");
+      ai1.setPassword("hogwarts");
+      ai1.setEnabled(true);
+      ai1.setRoles("admin instructor");
+      this.userService.save(ai1);
+
     
 
     // --------------------------//
