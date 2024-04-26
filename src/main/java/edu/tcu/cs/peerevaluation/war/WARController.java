@@ -94,14 +94,13 @@ public class WARController {
   public Result newSubmission(@PathVariable String month,@PathVariable String day,@PathVariable String year, @Valid @RequestBody SubmissionDto submissionDto) {
     String week = month + "/" + day + "/" + year;
     Student loggedInStudent = getLoggedInStudent();
-    System.out.println(submissionDto);
     Submission newSubmission = this.submissionDtoToSubmissionConverter.convert(submissionDto);
 
 
 
     WAR foundWAR = this.warService.findByWeekAndTeam(loggedInStudent.getTeam().getId(), week);
     if(foundWAR != null){
-      newSubmission.setWar(foundWAR);
+      foundWAR.addSubmission(newSubmission);
     } else {
       System.out.println("no war for that week");
       WAR newWAR = new WAR();
@@ -109,9 +108,10 @@ public class WARController {
       newWAR.setWeek(week);
       newWAR.addSubmission(newSubmission);
       this.warService.saveWar(newWAR);
-      
+      foundWAR = newWAR;
     }
     
+    newSubmission.setWar(foundWAR);
 
     newSubmission.setTeamMember(loggedInStudent);
     Submission savedSubmission = this.warService.saveSubmission(newSubmission);
