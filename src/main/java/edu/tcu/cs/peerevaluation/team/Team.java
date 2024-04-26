@@ -116,10 +116,17 @@ public class Team implements Serializable {
         this.section = null;
     }
 
-    public void removeInstructorFromTeam() {
-//        this.instructor.removeTeam()
-        this.instructor = null;
-    }
+    public void assignInstructor(Instructor instructor) {
+        this.instructor = instructor;
+        instructor.assignInstructorToTeam(this);
+      }
+    
+      public void removeInstructor() {
+        if (this.instructor != null) {
+          instructor.removeInstructorFromTeam(this);
+          this.instructor = null;
+        }
+      }
 
     public List<WAR> getWars() {
         return this.wars;

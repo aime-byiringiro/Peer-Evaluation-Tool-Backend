@@ -57,7 +57,7 @@ public class TeamService {
         Team teamToBeDeleted = this.teamRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("team", id));
         teamToBeDeleted.removeAllStudentsFromTeam();
-        teamToBeDeleted.removeInstructorFromTeam();
+        teamToBeDeleted.removeInstructor();
         teamToBeDeleted.removeSectionFromTeam();
         this.teamRepository.deleteById(teamToBeDeleted.getId());
     }
