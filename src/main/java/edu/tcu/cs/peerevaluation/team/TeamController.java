@@ -60,4 +60,16 @@ public class TeamController {
         TeamDto updatedTeamDto = this.teamToTeamDtoConverter.convert(updatedTeam);
         return new Result(true, StatusCode.SUCCESS, "Update Success", updatedTeamDto);
     }
+
+    @DeleteMapping("/{teamId}")
+    public Result deleteTeam(@PathVariable Integer teamId) {
+        Team team = this.teamService.findById(teamId);
+        team.removeAllStudentsFromTeam();
+        team.removeInstructorFromTeam();
+        team.removeInstructorFromTeam();
+        team.removeWARFromTeam();
+
+        this.teamService.delete(teamId);
+        return new Result(true, StatusCode.SUCCESS, "Delete Success");
+    }
 }
