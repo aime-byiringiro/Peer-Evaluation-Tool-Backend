@@ -142,8 +142,6 @@ public class TeamControllerTest {
                 .andExpect(jsonPath("$.data.id").isNotEmpty())
                 .andExpect(jsonPath("$.data.teamName").value(savedTeam.getTeamName()))
                 .andExpect(jsonPath("$.data.section.id").value(savedTeam.getSection().getId()));
-
-
     }
 
 
