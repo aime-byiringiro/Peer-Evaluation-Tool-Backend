@@ -44,6 +44,7 @@ public class TeamDtoToTeamConverter implements Converter<TeamDto, Team> {
         team.setTeamName(source.teamName());
         team.setAcademicYear(source.academicYear());
         team.setSection(this.sectionDtoToSectionConverter.convert(source.section()));
+
         team.setStudents(students);
         team.setInstructor(this.instructorDtoToInstructorConverter.convert(source.instructor()));
         return team;

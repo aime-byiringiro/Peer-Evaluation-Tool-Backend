@@ -2,7 +2,8 @@ package edu.tcu.cs.peerevaluation.section.dto;
 
 import edu.tcu.cs.peerevaluation.rubric.dto.RubricDto;
 import edu.tcu.cs.peerevaluation.team.Team;
-import edu.tcu.cs.peerevaluation.team.dto.TeamDto;
+
+import java.util.List;
 
 public record SectionDtoView (
 
@@ -18,7 +19,7 @@ public record SectionDtoView (
         // @NotEmpty(message = "Rubric is required")
         RubricDto rubricDto,
 
-        TeamDto teamDto
+        List<Team > teams
 
 
 

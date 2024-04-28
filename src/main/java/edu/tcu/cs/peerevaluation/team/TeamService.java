@@ -32,7 +32,7 @@ public class TeamService {
         return this.teamRepository.findAll();
     }
 
-    public Team findById(int id) {
+    public static Team findById(int id) {
         return this.teamRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("team", id));
     }
