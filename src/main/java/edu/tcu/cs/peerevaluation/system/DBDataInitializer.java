@@ -40,7 +40,7 @@ public class DBDataInitializer implements CommandLineRunner {
   private final RubricRepository rubricRepository;
   private final CriterionRepository criterionRepository;
   private final SectionRepository sectionRepository;
-  private final TeamRepository teamRepository;
+  private final TeamRepository  teamRepository;
   private final UserService userService;
   private final WARService warService;
 
@@ -217,13 +217,19 @@ public class DBDataInitializer implements CommandLineRunner {
     // ----------------//
 
     Team team1 = new Team();
-      team1.setTeamName("PeerEvaluation");
+    team1.setTeamName("PeerEvaluation");
+    team1.setAcademicYear("Fall 2022");
     teamRepository.save(team1);
+
     Team team2 = new Team();
-      team2.setTeamName("SuperfrogScheduler");
+    team2.setTeamName("SuperfrogScheduler");
+    team2.setAcademicYear("Spring 2023");
     teamRepository.save(team2);
+    
     Team team3 = new Team();
-      team3.setTeamName("MoningMeteorite");
+    team3.setTeamName("MoningMeteorite");
+    team3.setAcademicYear("Fall 2024");
+    
     teamRepository.save(team3);
 
     // -------------------//
@@ -262,6 +268,41 @@ public class DBDataInitializer implements CommandLineRunner {
     i1.setUser(i1u);
     i1u.setInstructor(i1);
     this.userService.save(i1u);
+
+    Instructor i2 = new Instructor();
+      i2.setFirstName("Mike");
+      i2.setLastName("Scherger");
+      i2.setEmail("ihatehim@tcu.edu");
+
+    PeerEvalUser i2u = new PeerEvalUser();
+      i2u.setUsername("Mscherger");
+      i2u.setPassword("i<32torturestudent");
+      i2u.setEnabled(true);
+      i2u.setRoles("instructor");
+    
+    i2.setUser(i2u);
+    i2u.setInstructor(i2);
+    this.userService.save(i2u);
+
+
+    //-----------------//
+    // Test Admin Data //
+    //-----------------//
+    PeerEvalUser a1 = new PeerEvalUser();
+      a1.setUsername("admin");
+      a1.setPassword("password");
+      a1.setEnabled(true);
+      a1.setRoles("admin");
+      this.userService.save(a1);
+
+    PeerEvalUser ai1 = new PeerEvalUser();
+      ai1.setUsername("Bwei");
+      ai1.setPassword("hogwarts");
+      ai1.setEnabled(true);
+      ai1.setRoles("admin instructor");
+      this.userService.save(ai1);
+
+    
 
     // --------------------------//
     // Test Peer Evaluation Data //
@@ -305,22 +346,28 @@ public class DBDataInitializer implements CommandLineRunner {
     // -----------------------//
     // Foreign Key Assignment //
     // -----------------------//
-
     s1.setTeam(team1);
     s2.setTeam(team1);
     s3.setTeam(team2);
     s4.setTeam(team2);
     s5.setTeam(team3);
+    s6.setTeam(team3);
     team1.setSection(sec1);
     team2.setSection(sec1);
     team3.setSection(sec2);
     team1.setStudents(Arrays.asList(s1, s2));
     team2.setStudents(Arrays.asList(s3, s4));
-    team3.setStudents(Arrays.asList(s5));
+    team3.setStudents(Arrays.asList(s5, s6));
     sec1.setTeams(Arrays.asList(team1, team2));
     sec2.setTeams(Arrays.asList(team3));
+    team1.setInstructor(i1);
+    team2.setInstructor(i1);
+    team3.setInstructor(i1);
+    // TODO: UC19, only team has instructor ID, instructor obj does not link to team
+//    i1.setTeams();
+//    i1.addTeam();
 
-    studentRepository.saveAll(Arrays.asList(s1, s2, s3, s4, s5));
+    studentRepository.saveAll(Arrays.asList(s1, s2, s3, s4, s5, s6));
     teamRepository.saveAll(Arrays.asList(team1, team2, team3));
     sectionRepository.saveAll(Arrays.asList(sec1, sec2));
 
@@ -387,7 +434,7 @@ public class DBDataInitializer implements CommandLineRunner {
     WAR war1 = new WAR();
     war1.setSubmissions(submissions);
     war1.setTeam(team1);
-    war1.setWeek(4);
+    war1.setWeek("04/22/2024");
 
     this.warService.saveWar(war1);
 

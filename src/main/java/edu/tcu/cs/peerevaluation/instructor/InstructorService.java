@@ -19,6 +19,10 @@ public class InstructorService {
     this.instructorRepository = instructorRepository;
   }
 
+  public List<Instructor> findAll() {
+    return this.instructorRepository.findAll();
+  }
+
   public Instructor findById(Integer instructorId) {
     return this.instructorRepository.findById(instructorId)
         .orElseThrow(() -> new ObjectNotFoundException("instructor", instructorId));

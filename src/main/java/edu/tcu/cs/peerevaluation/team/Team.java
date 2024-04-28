@@ -1,5 +1,6 @@
 package edu.tcu.cs.peerevaluation.team;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import edu.tcu.cs.peerevaluation.instructor.Instructor;
 import edu.tcu.cs.peerevaluation.section.Section;
 import edu.tcu.cs.peerevaluation.student.Student;
@@ -10,25 +11,26 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 @Entity
+@JsonIgnoreProperties("team")
 public class Team implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Team_ID", unique = true)
     private Integer id;
 
+    @Column(unique = true)
     private String teamName;
 
+    private String academicYear;
+
     @ManyToOne
-     private Section section;
+    private Section section;
 
-    @JsonIgnoreProperties("team")
-    @OneToMany(mappedBy = "team",fetch = FetchType.EAGER)
+    @OneToMany
     private List<Student> students;
-
+    
+    // JSON ignore this property for now
     @OneToMany(mappedBy = "team")
     private List<WAR> wars;
 
@@ -39,12 +41,28 @@ public class Team implements Serializable {
     public Team() {
     }
 
+    public Instructor getInstructor() {
+        return instructor;
+    }
+
+    public void setInstructor(Instructor instructor) {
+        this.instructor = instructor;
+    }
+
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getAcademicYear() {
+        return academicYear;
+    }
+
+    public void setAcademicYear(String academicYear) {
+        this.academicYear = academicYear;
     }
 
     public Section getSection() {
@@ -73,16 +91,42 @@ public class Team implements Serializable {
 
     public void addStudentToTeam(Student student) {
         if (students == null) {
-        students = new ArrayList<Student>();
-        } 
-        students.add(student);
+            students = new ArrayList<>();
+        }
+        this.students.add(student);
     }
 
     public void removeStudentFromTeam(Student student) {
         if (students != null) {
-            students.remove(student);
+            this.students.remove(student);
         }
     }
+
+    public void removeAllStudentsFromTeam() {
+        if (this.students != null) {
+            for (Student student : students) {
+                student.setTeam(null);
+            }
+            this.students.clear();
+        }
+    }
+
+    public void removeSectionFromTeam() {
+//        this.section.removeTeam()
+        this.section = null;
+    }
+
+    public void assignInstructor(Instructor instructor) {
+        this.instructor = instructor;
+        instructor.assignInstructorToTeam(this);
+      }
+    
+      public void removeInstructor() {
+        if (this.instructor != null) {
+          instructor.removeInstructorFromTeam(this);
+          this.instructor = null;
+        }
+      }
 
     public List<WAR> getWars() {
         return this.wars;
@@ -91,21 +135,21 @@ public class Team implements Serializable {
     public void setWars(List<WAR> wars) {
         this.wars = wars;
     }
-    
+
     public void addWAR(WAR war) {
         if (wars == null) {
-        wars = new ArrayList<WAR>();
-        } 
+            wars = new ArrayList<WAR>();
+        }
         wars.add(war);
     }
 
-    public Instructor getInstructor() {
-        return instructor;
+    public void removeWARFromTeam() {
+        if (this.wars == null) {
+            wars = new ArrayList<WAR>();
+        } else {
+            for (WAR war : wars) {
+                war.setTeam(null);
+            }
+        }
     }
-
-    public void setInstructor(Instructor instructor) {
-        this.instructor = instructor;
-    }
-    
-
 }

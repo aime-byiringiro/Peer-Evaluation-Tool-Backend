@@ -1,7 +1,7 @@
 package edu.tcu.cs.peerevaluation.section;
 
+
 import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -67,7 +67,9 @@ public class SectionService {
                 .orElseThrow(() -> new ObjectNotFoundException("section", sectionID));
     }
 
-
-
+    public Section viewBySectionName(String sectionName){
+        return this.sectionRepository.findBySectionName(sectionName)
+                .orElseThrow(() -> new ObjectNotFoundException("section", sectionName));
+    }
 
 }

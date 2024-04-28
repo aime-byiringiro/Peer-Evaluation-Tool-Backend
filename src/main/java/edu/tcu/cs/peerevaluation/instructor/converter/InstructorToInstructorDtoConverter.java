@@ -23,7 +23,7 @@ public class InstructorToInstructorDtoConverter implements Converter<Instructor,
                 source.getMiddleInitial(),
                 source.getLastName(),
                 source.getEmail(),
-                source.getTeams());
+                source.getTeamNamesList());
         return instructorDto;
     }
 

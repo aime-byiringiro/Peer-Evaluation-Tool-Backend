@@ -8,7 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface SectionRepository extends JpaRepository<Section, Integer>, JpaSpecificationExecutor<Section>{
-
     Optional<Section> findBySectionName (String sectionName);
 
 }
