@@ -1,16 +1,14 @@
 package edu.tcu.cs.peerevaluation.team;
 
 import edu.tcu.cs.peerevaluation.instructor.InstructorRepository;
-import edu.tcu.cs.peerevaluation.peerEvaluation.PeerEvaluation;
-import edu.tcu.cs.peerevaluation.peerEvaluation.evaluation.Evaluation;
 import edu.tcu.cs.peerevaluation.section.SectionRepository;
 import edu.tcu.cs.peerevaluation.student.StudentRepository;
 import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
 import edu.tcu.cs.peerevaluation.war.WAR;
 import edu.tcu.cs.peerevaluation.war.WARRepository;
-import edu.tcu.cs.peerevaluation.war.WARService;
-import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -39,6 +37,34 @@ public class TeamService {
     public List<Team> findAll() {
         return this.teamRepository.findAll();
     }
+
+    public List<Team> searchTeams(String teamName, String sectionName, String academicYear, String instructorFirstName,
+                                  String instructorLastName) {
+        Specification<Team> spec = Specification.where(null);
+
+        if (teamName != null && !teamName.isEmpty()) {
+            spec = spec.and(TeamSpecifications.hasTeamName(teamName));
+        }
+
+        if (sectionName != null && !sectionName.isEmpty()) {
+            spec = spec.and(TeamSpecifications.hasSectionName(sectionName));
+        }
+
+        if (academicYear != null && !academicYear.isEmpty()) {
+            spec = spec.and(TeamSpecifications.hasAcademicYear(academicYear));
+        }
+
+        if (instructorFirstName != null && !instructorFirstName.isEmpty()) {
+            spec = spec.and(TeamSpecifications.hasInstructorFirstName(instructorFirstName));
+        }
+
+        if (instructorLastName != null && !instructorLastName.isEmpty()) {
+            spec = spec.and(TeamSpecifications.hasInstructorLastName(instructorLastName));
+        }
+
+        return teamRepository.findAll(spec);
+    }
+
 
     public Team findById(int id) {
         return this.teamRepository.findById(id)

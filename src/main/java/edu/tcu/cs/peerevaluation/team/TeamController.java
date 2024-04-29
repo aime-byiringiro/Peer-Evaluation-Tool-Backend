@@ -5,11 +5,10 @@ import edu.tcu.cs.peerevaluation.system.StatusCode;
 import edu.tcu.cs.peerevaluation.team.converter.TeamDtoToTeamConverter;
 import edu.tcu.cs.peerevaluation.team.converter.TeamToTeamDtoConverter;
 import edu.tcu.cs.peerevaluation.team.dto.TeamDto;
-import edu.tcu.cs.peerevaluation.war.WAR;
-import edu.tcu.cs.peerevaluation.war.WARService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +37,34 @@ public class TeamController {
                 .collect(Collectors.toList());
 
         return new Result(true, StatusCode.SUCCESS, "Find All Success", teamDtos);
+    }
+
+    @GetMapping("/search")
+    public Result searchTeams(
+            @RequestParam(value = "teamName", required = false) String teamName,
+            @RequestParam(value = "sectionName", required = false) String sectionName,
+            @RequestParam(value = "academicYear", required = false) String academicYear,
+            @RequestParam(value = "instructorFirstName", required = false) String instructorFirstName,
+            @RequestParam(value = "instructorLastName", required = false) String instructorLastName) {
+
+        List<Team> foundTeams = this.teamService.searchTeams(teamName, sectionName, academicYear, instructorFirstName,
+                instructorLastName);
+
+        if (foundTeams.size() > 1) {
+            Comparator<Team> sortByAcademicYear = Comparator.comparing(Team::getAcademicYear,
+                    Comparator.reverseOrder());
+            Comparator<Team> sortByTeamName = Comparator.comparing(Team::getTeamName);
+
+            Comparator<Team> sortByBoth = sortByAcademicYear.thenComparing(sortByTeamName);
+
+            foundTeams.sort(sortByBoth);
+        }
+
+        List<TeamDto> teamDtos = foundTeams.stream()
+                .map(this.teamToTeamDtoConverter::convert)
+                .toList();
+
+        return new Result(true, StatusCode.SUCCESS, "Search Success", teamDtos);
     }
 
     @GetMapping("/{teamId}")
