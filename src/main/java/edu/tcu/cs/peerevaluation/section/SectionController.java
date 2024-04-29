@@ -84,6 +84,9 @@ public class SectionController {
         return new Result(true, StatusCode.SUCCESS, "Edit Success", currentWeek);
     }
 
-
+    @GetMapping("/invite/{sectionId}")
+    public Result inviteSection(@PathVariable Integer sectionId) {
+        return new Result(true, StatusCode.SUCCESS, "Email sent");
+    }
 
 }
