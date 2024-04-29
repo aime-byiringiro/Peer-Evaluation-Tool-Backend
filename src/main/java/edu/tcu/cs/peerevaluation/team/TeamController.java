@@ -5,6 +5,8 @@ import edu.tcu.cs.peerevaluation.system.StatusCode;
 import edu.tcu.cs.peerevaluation.team.converter.TeamDtoToTeamConverter;
 import edu.tcu.cs.peerevaluation.team.converter.TeamToTeamDtoConverter;
 import edu.tcu.cs.peerevaluation.team.dto.TeamDto;
+import edu.tcu.cs.peerevaluation.war.WAR;
+import edu.tcu.cs.peerevaluation.war.WARService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,9 +50,7 @@ public class TeamController {
     @PostMapping
     public Result addTeam(@Valid @RequestBody TeamDto teamDto) {
         Team newTeam = this.teamDtoToTeamConverter.convert(teamDto);
-
         Team savedTeam = this.teamService.save(newTeam);
-
         TeamDto savedTeamDto = this.teamToTeamDtoConverter.convert(savedTeam);
         return new Result(true, StatusCode.SUCCESS, "Add Success", savedTeamDto);
     }
@@ -65,12 +65,6 @@ public class TeamController {
 
     @DeleteMapping("/{teamId}")
     public Result deleteTeam(@PathVariable Integer teamId) {
-        Team team = this.teamService.findById(teamId);
-        team.removeAllStudentsFromTeam();
-        team.removeInstructor();
-        team.removeInstructor();
-        team.removeWARFromTeam();
-
         this.teamService.delete(teamId);
         return new Result(true, StatusCode.SUCCESS, "Delete Success");
     }

@@ -116,4 +116,8 @@ public class Section implements Serializable {
         LocalDate pastMonday = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         return pastMonday.format(formatter);
     }
+
+    public void removeTeam(Team team) {
+        teams.remove(team);
+    }
 }

@@ -71,14 +71,13 @@ public class WAR implements Serializable {
   public void addSubmission(Submission submission) {
     if (submissions == null) {
       submissions = new ArrayList<Submission>();
-      } 
-      submissions.add(submission);
+    }
+    submissions.add(submission);
   }
 
   public void removeSubmission(Submission submission) {
     if (submissions != null) {
       submissions.remove(submission);
+    }
   }
-  }
-
 }

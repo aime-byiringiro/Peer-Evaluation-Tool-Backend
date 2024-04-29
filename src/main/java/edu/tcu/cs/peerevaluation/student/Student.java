@@ -1,12 +1,10 @@
 package edu.tcu.cs.peerevaluation.student;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
 import edu.tcu.cs.peerevaluation.team.Team;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -94,12 +92,12 @@ public class Student implements Serializable {
 
   public void assignTeam(Team team) {
     this.team = team;
-    team.addStudentToTeam(this);
+    team.addStudent(this);
   }
 
   public void unassignTeam() {
     if (this.team != null) {
-      team.removeStudentFromTeam(this);
+      team.removeStudent(this);
       this.team = null;
     }
   }
