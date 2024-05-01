@@ -51,12 +51,14 @@ public class DataGeneration implements CommandLineRunner  {
 
     for (int i = 0; i < 10; i++) {
       Team team = genTeam();
+      this.teamRepository.save(team);
       team.setSection(section);
       for (int j = 0; j < 5; j++) {
         Student student = genStudent();
         students.add(student);
         this.studentRepository.save(student);
-        team.addStudentToTeam(student);
+        team.addStudent(student);
+        this.studentRepository.save(student);
       }
       this.teamRepository.save(team);
     }
