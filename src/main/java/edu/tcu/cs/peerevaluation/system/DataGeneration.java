@@ -9,7 +9,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import edu.tcu.cs.peerevaluation.peerEvaluation.PeerEvaluation;
+import edu.tcu.cs.peerevaluation.peerEvaluation.PeerEvaluationRepostitory;
 import edu.tcu.cs.peerevaluation.peerEvaluation.evaluation.Evaluation;
+import edu.tcu.cs.peerevaluation.peerEvaluation.evaluation.EvaluationRepository;
 import edu.tcu.cs.peerevaluation.rubric.Rubric;
 import edu.tcu.cs.peerevaluation.rubric.RubricRepository;
 import edu.tcu.cs.peerevaluation.rubric.criterion.Criterion;
@@ -21,9 +23,6 @@ import edu.tcu.cs.peerevaluation.team.Team;
 import edu.tcu.cs.peerevaluation.team.TeamRepository;
 import net.datafaker.Faker;
 
-
-
-
 @Component
 @Profile("!test")
 public class DataGeneration implements CommandLineRunner  {
@@ -32,44 +31,49 @@ public class DataGeneration implements CommandLineRunner  {
   private final RubricRepository rubricRepository;
   private final SectionRepository sectionRepository;
   private final TeamRepository teamRepository;
+  private final PeerEvaluationRepostitory peerEvaluationRepostitory;
+  private final EvaluationRepository evaluationRepository;
 
-
-  public DataGeneration(StudentRepository studentRepository, RubricRepository rubricRepository, SectionRepository sectionRepository, TeamRepository teamRepository) {
+  public DataGeneration(StudentRepository studentRepository, RubricRepository rubricRepository, SectionRepository sectionRepository, TeamRepository teamRepository, PeerEvaluationRepostitory peerEvaluationRepostitory, EvaluationRepository evaluationRepository) {
     this.studentRepository = studentRepository;
     this.rubricRepository = rubricRepository;
     this.sectionRepository = sectionRepository;
     this.teamRepository = teamRepository;
+    this.peerEvaluationRepostitory = peerEvaluationRepostitory;
+    this.evaluationRepository = evaluationRepository;
   }
-
 
   @Override
   public void run(String... args) throws Exception {
-    Section section = genSection();
-    this.sectionRepository.save(section);
 
-    List<Student> students = new ArrayList<>();
+    Boolean doGenData = true;
 
-    for (int i = 0; i < 10; i++) {
-      Team team = genTeam();
-      this.teamRepository.save(team);
-      team.setSection(section);
-      for (int j = 0; j < 5; j++) {
-        Student student = genStudent();
-        students.add(student);
-        this.studentRepository.save(student);
-        team.addStudent(student);
-        this.studentRepository.save(student);
+    if(doGenData) {
+
+      Section section = genSection();
+      this.sectionRepository.save(section);
+
+      List<Student> students = new ArrayList<>();
+
+      for (int i = 0; i < 10; i++) {
+        Team team = genTeam();
+        this.teamRepository.save(team);
+        team.setSection(section);
+        team.setAcademicYear(section.getAcademicYear());
+        for (int j = 0; j < 5; j++) {
+          Student student = genStudent();
+          students.add(student);
+          this.studentRepository.save(student);
+          team.addStudent(student);
+          this.studentRepository.save(student);
+        }
+        this.teamRepository.save(team);
       }
-      this.teamRepository.save(team);
+
     }
-
-
-
-
-
   }
 
-  private Student genStudent(){
+  private Student genStudent() {
     Locale.setDefault(Locale.US);
     Faker faker = new Faker();
 
@@ -81,21 +85,6 @@ public class DataGeneration implements CommandLineRunner  {
     return student;
   }
 
-  private Evaluation genEvaluation(){
-    Locale.setDefault(Locale.US);
-    Faker faker = new Faker();
-    Evaluation evaluation = new Evaluation();
-    return evaluation;
-  }
-
-  private PeerEvaluation genPeerEvaluation(){
-    Locale.setDefault(Locale.US);
-    Faker faker = new Faker();
-    PeerEvaluation peerEval = new PeerEvaluation();
-
-    return peerEval;
-  }
-
   private Team genTeam() {
     Locale.setDefault(Locale.US);
     Faker faker = new Faker();
@@ -105,13 +94,12 @@ public class DataGeneration implements CommandLineRunner  {
   }
 
   private Section genSection() {
-    Locale.setDefault(Locale.US);
-    Faker faker = new Faker();
     Section newSection = new Section();
     newSection.setSectionName("Section2024-2025");
     newSection.setAcademicYear("2024");
     newSection.setFirstDay("08/19/2024");
     newSection.setLastDay("05/09/2025");
+    newSection.setRubric(genRubric());
     return newSection;
   }
 
@@ -163,5 +151,39 @@ public class DataGeneration implements CommandLineRunner  {
     return savedRubric;
   }
 
+  // private Evaluation genEvaluation(Student student){
+  //   Locale.setDefault(Locale.US);
+  //   Faker faker = new Faker();
+  //   Evaluation evaluation = new Evaluation();
+  //   evaluation.setEvaluated(student);
+  //   evaluation.setPrivateComments(faker.yoda().quote());
+  //   evaluation.setPublicComments(faker.famousLastWords().lastWords());
+  //   List<Integer> scores = new ArrayList<>();
+  //   for (int i = 0; i < 6; i++) {
+  //     scores.add(faker.number().numberBetween(1,10));
+  //   }
+  //   evaluation.setScores(scores);
+  //   Integer totalScore = scores.stream().reduce(0, (a, b) -> a + b);
+  //   evaluation.setTotalScore(totalScore);
+  //   return evaluation;
+  // }
+
+  // private PeerEvaluation genPeerEvaluation(Student evaluator){
+  //   Locale.setDefault(Locale.US);
+  //   Faker faker = new Faker();
+  //   List<Student> students = evaluator.getTeam().getStudents();
+  //   PeerEvaluation peerEval = new PeerEvaluation();
+  //   peerEval.setEvaluator(evaluator);
+  //   this.peerEvaluationRepostitory.save(peerEval);
+  //   List<Evaluation> evals = new ArrayList<>();
+  //   students.forEach((student) -> {
+  //     Evaluation eval = genEvaluation(student);
+  //     eval.setPeerEvaluation(peerEval);
+  //     evals.add(eval);
+  //   });
+  //   peerEval.setEvaluations(evals);
+
+  //   return peerEval;
+  // }
 }
 
