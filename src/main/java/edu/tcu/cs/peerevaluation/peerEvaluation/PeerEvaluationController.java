@@ -136,6 +136,39 @@ public class PeerEvaluationController {
   }
 
   /*
+   * Returns the rubric and evals of a student based on student ID
+   */
+  @GetMapping("/peerEvalReportForStudent/{studentId}/{month}/{day}/{year}")
+  public Result generatePeerEvalReportForStudent(@PathVariable Integer studentId, @PathVariable String month,
+      @PathVariable String day, @PathVariable String year) {
+    String week = month + "/" + day + "/" + year;
+    try {
+      // Retrieve the student by ID
+      Student student = studentService.findById(studentId);
+      if (student == null) {
+        return new Result(false, StatusCode.NOT_FOUND, "Student not found");
+      }
+
+      // Retrieve the rubric for that student's section
+      RubricDto rubric = this.rubricToRubricDtoConverter.convert(student.getTeam().getSection().getRubric());
+
+      // Get a list of evaluations for the specified week and student
+      List<Evaluation> evals = this.peerEvalService.findByWeekAndStudentId(week, studentId);
+
+      // Convert Evaluations to EvaluationDtos
+      List<EvaluationDto> evalDtos = evals.stream()
+          .map(this.evalutionDtoConverter::convert)
+          .collect(Collectors.toList());
+
+      // Combine it all into a report object to send to the front end
+      Report report = new Report(evalDtos, rubric);
+      return new Result(true, StatusCode.SUCCESS, "Report generated successfully", report);
+    } catch (Exception e) {
+      return new Result(false, StatusCode.NOT_FOUND, "Error generating report: " + e.getMessage());
+    }
+  }
+
+  /*
    * this method return a list of all evaluations of
    * the current logged in user
    */
