@@ -65,7 +65,7 @@ public class DBDataInitializer implements CommandLineRunner {
 
     Student s1 = new Student();
       s1.setFirstName("Aliya");
-      s1.setMiddleInitial("S");
+      s1.setMiddleInitial("K");
       s1.setLastName("Suri");
       s1.setEmail("aliya.suri@tcu.edu");
 
