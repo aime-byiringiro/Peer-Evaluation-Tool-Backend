@@ -19,37 +19,33 @@ public class InstructorService {
     this.instructorRepository = instructorRepository;
   }
 
+  public List<Instructor> findAll() {
+    return this.instructorRepository.findAll();
+  }
+
   public Instructor findById(Integer instructorId) {
     return this.instructorRepository.findById(instructorId)
         .orElseThrow(() -> new ObjectNotFoundException("instructor", instructorId));
   }
 
   public List<Instructor> search(String firstName, String lastName, String academicYear, String teamName) {
-    return instructorRepository.findAll(Specification.where(hasFirstName(firstName))
-        .and(hasLastName(lastName))
-        .and(inAcademicYear(academicYear))
-        .and(inTeam(teamName)));
-  }
+    Specification<Instructor> spec = Specification.where(null);
 
-  private Specification<Instructor> hasFirstName(String firstName) {
-    return (root, query, criteriaBuilder) -> 
-           criteriaBuilder.equal(root.get("firstName"), firstName);
-  }
+    if (firstName != null && !firstName.isEmpty()) {
+        spec = spec.and(InstructorSpecifications.hasFirstName(firstName));
+    }
+    if (lastName != null && !lastName.isEmpty()) {
+        spec = spec.and(InstructorSpecifications.hasLastName(lastName));
+    }
+    if (academicYear != null && !academicYear.isEmpty()) {
+        spec = spec.and(InstructorSpecifications.inAcademicYear(academicYear));
+    }
+    if (teamName != null && !teamName.isEmpty()) {
+        spec = spec.and(InstructorSpecifications.onTeam(teamName));
+    }
 
-  private Specification<Instructor> hasLastName(String lastName) {
-    return (root, query, criteriaBuilder) -> 
-           criteriaBuilder.equal(root.get("lastName"), lastName);
-  }
-
-  private Specification<Instructor> inAcademicYear(String academicYear) {
-    return (root, query, criteriaBuilder) -> 
-           criteriaBuilder.equal(root.join("teams").join("section").get("academicYear"), academicYear);
-  }
-
-  private Specification<Instructor> inTeam(String teamName) {
-    return (root, query, criteriaBuilder) -> 
-           criteriaBuilder.equal(root.join("teams").get("teamName"), teamName);
-  }
+    return instructorRepository.findAll(spec);
+}
 
   public Instructor save(Instructor instructor) {
     return this.instructorRepository.save(instructor);

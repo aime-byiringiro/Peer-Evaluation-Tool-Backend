@@ -62,5 +62,12 @@ public class PeerEvaluationService {
     return evalRepository.findByWeekAndSection(week, sectionName);
 }
 
+public List<Evaluation> findByWeekAndStudentId(String week, Integer studentId) {
+  if (week == null || studentId == null) {
+      throw new IllegalArgumentException("Week and student ID must not be null.");
+  }
+  return this.evalRepository.findByWeekAndEvaluated(studentId, week);
+}
+
 
 }

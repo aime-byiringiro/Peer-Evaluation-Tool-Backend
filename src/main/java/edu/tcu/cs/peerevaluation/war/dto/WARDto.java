@@ -6,6 +6,6 @@ import edu.tcu.cs.peerevaluation.war.submission.dto.SubmissionDto;
 
 public record WARDto(Integer id,
                      Integer teamId,
-                     Integer week,
+                     String week,
                      List<SubmissionDto> submissions) {
 }

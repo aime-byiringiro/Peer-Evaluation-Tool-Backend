@@ -29,7 +29,7 @@ public class Team implements Serializable {
 
     @OneToMany
     private List<Student> students;
-    
+
     // JSON ignore this property for now
     @OneToMany(mappedBy = "team")
     private List<WAR> wars;
@@ -47,6 +47,7 @@ public class Team implements Serializable {
 
     public void setInstructor(Instructor instructor) {
         this.instructor = instructor;
+        instructor.assignInstructorToTeam(this);
     }
 
     public Integer getId() {
@@ -89,20 +90,22 @@ public class Team implements Serializable {
         this.teamName = teamName;
     }
 
-    public void addStudentToTeam(Student student) {
+    public void addStudent(Student student) {
         if (students == null) {
             students = new ArrayList<>();
         }
+        student.setTeam(this);
         this.students.add(student);
     }
 
-    public void removeStudentFromTeam(Student student) {
+    public void removeStudent(Student student) {
         if (students != null) {
+            student.setTeam(null);
             this.students.remove(student);
         }
     }
 
-    public void removeAllStudentsFromTeam() {
+    public void removeAllStudents() {
         if (this.students != null) {
             for (Student student : students) {
                 student.setTeam(null);
@@ -112,13 +115,17 @@ public class Team implements Serializable {
     }
 
     public void removeSectionFromTeam() {
-//        this.section.removeTeam()
-        this.section = null;
+        if (this.section != null) {
+            this.section.removeTeam(this);
+            this.section = null;
+        }
     }
 
-    public void removeInstructorFromTeam() {
-//        this.instructor.removeTeam()
-        this.instructor = null;
+    public void removeInstructor() {
+        if (this.instructor != null) {
+            instructor.removeInstructorFromTeam(this);
+            this.instructor = null;
+        }
     }
 
     public List<WAR> getWars() {
@@ -136,4 +143,12 @@ public class Team implements Serializable {
         wars.add(war);
     }
 
+    public void removeWARs() {
+        if (this.wars != null) {
+            for (WAR war : wars) {
+                war.setTeam(null);
+            }
+        }
+        wars = new ArrayList<WAR>();
+    }
 }

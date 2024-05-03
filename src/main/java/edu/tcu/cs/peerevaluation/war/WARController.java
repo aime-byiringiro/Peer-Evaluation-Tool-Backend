@@ -78,10 +78,11 @@ public class WARController {
   }
   
   //findByActiveWeek
-  @GetMapping("/{activeWeek}")
-  public Result getByActiveWeek(@PathVariable String activeWeek) {
+  @GetMapping("/{month}/{day}/{year}")
+  public Result getByActiveWeek(@PathVariable String month,@PathVariable String day,@PathVariable String year) {
+    String week = month + "/" + day + "/" + year;
     Student loggedInStudent = getLoggedInStudent();
-    List<Submission> foundSubmissions = this.warService.findByWeekAndStudent(loggedInStudent.getId(), activeWeek);
+    List<Submission> foundSubmissions = this.warService.findByWeekAndStudent(loggedInStudent.getId(), week);
     List<SubmissionDto> foundDtos = foundSubmissions.stream()
             .map(foundSubmission -> this.submissionToSubmissionDtoConverter.convert(foundSubmission))
             .collect(Collectors.toList());
@@ -89,12 +90,29 @@ public class WARController {
   }
 
   //addSubmission
-  @PostMapping("/{week}")
-  public Result newSubmission(@PathVariable Integer week, @Valid @RequestBody SubmissionDto submissionDto) {
+  @PostMapping("/{month}/{day}/{year}")
+  public Result newSubmission(@PathVariable String month,@PathVariable String day,@PathVariable String year, @Valid @RequestBody SubmissionDto submissionDto) {
+    String week = month + "/" + day + "/" + year;
     Student loggedInStudent = getLoggedInStudent();
-    System.out.println(submissionDto);
     Submission newSubmission = this.submissionDtoToSubmissionConverter.convert(submissionDto);
-    newSubmission.setWar(this.warService.findByWeekAndTeam(loggedInStudent.getTeam().getId(), week));
+
+
+
+    WAR foundWAR = this.warService.findByWeekAndTeam(loggedInStudent.getTeam().getId(), week);
+    if(foundWAR != null){
+      foundWAR.addSubmission(newSubmission);
+    } else {
+      System.out.println("no war for that week");
+      WAR newWAR = new WAR();
+      newWAR.setTeam(loggedInStudent.getTeam());
+      newWAR.setWeek(week);
+      newWAR.addSubmission(newSubmission);
+      this.warService.saveWar(newWAR);
+      foundWAR = newWAR;
+    }
+    
+    newSubmission.setWar(foundWAR);
+
     newSubmission.setTeamMember(loggedInStudent);
     Submission savedSubmission = this.warService.saveSubmission(newSubmission);
     SubmissionDto savedDto = this.submissionToSubmissionDtoConverter.convert(savedSubmission);

@@ -11,6 +11,9 @@ import edu.tcu.cs.peerevaluation.peerEvalUser.converter.UserToUserDtoConverter;
 import edu.tcu.cs.peerevaluation.peerEvalUser.dto.UserDto;
 import edu.tcu.cs.peerevaluation.system.Result;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/users")
@@ -96,5 +99,11 @@ public class UserController {
     this.userService.activate(instructorId);
     return new Result(true, StatusCode.SUCCESS, "Activate Success");
   }
+
+  @GetMapping("/invite/instructor/{instructorId}")
+  public Result inviteInstructor(@PathVariable Integer instructorId) {
+      return new Result(true, StatusCode.SUCCESS, "Email sent");
+  }
+  
 
 }

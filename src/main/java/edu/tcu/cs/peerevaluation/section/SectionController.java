@@ -69,18 +69,24 @@ public class SectionController {
     }
 
     //current week method
-    @GetMapping("/week/{sectionID}")
-    public Result getCurrentWeekById(@PathVariable Integer sectionID){
-        Section foundSection = this.sectionService.adminFindsSeniorDesignSectionsBySectionID(sectionID);
+    @GetMapping("/week/{sectionName}")
+    public Result getCurrentWeekById(@PathVariable String sectionName){
+        Section foundSection = this.sectionService.viewBySectionName(sectionName);
         String currentWeek = foundSection.getCurrentWeek();
         /*
          * TODO
-         * if say 5 weeks and 4 days have passed, this will return
-         * a 5, so im adding 1 to get the current week
+         * once Aime implents active weeks,
+         * rather than return just a week
+         * return 2 things:
+         * 1 - a String, the current week
+         * 2 - a boolean, is it an active week
          */
         return new Result(true, StatusCode.SUCCESS, "Edit Success", currentWeek);
     }
 
-
+    @GetMapping("/invite/{sectionId}")
+    public Result inviteSection(@PathVariable Integer sectionId) {
+        return new Result(true, StatusCode.SUCCESS, "Email sent");
+    }
 
 }
