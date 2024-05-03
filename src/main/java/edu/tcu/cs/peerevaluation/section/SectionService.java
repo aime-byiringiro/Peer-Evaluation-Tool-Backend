@@ -1,10 +1,4 @@
 package edu.tcu.cs.peerevaluation.section;
-
-<<<<<<< HEAD
-=======
-
-import edu.tcu.cs.peerevaluation.section.utils.IdWorker;
->>>>>>> db4a80a56292e6ba6481619f0d7200e6a19fa1ed
 import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
@@ -34,8 +28,7 @@ public class SectionService {
 
     public Section save(Section newSection){
         return this.sectionRepository.save(newSection);
-<<<<<<< HEAD
-=======
+
     }
 
     public Section viewBySectionName(String sectionName){
@@ -45,8 +38,6 @@ public class SectionService {
 
 
     public void adminCreatesSeniorDesignSections(){
->>>>>>> db4a80a56292e6ba6481619f0d7200e6a19fa1ed
-
     }
 
     public Page<Section> findAll(Pageable pageable){
