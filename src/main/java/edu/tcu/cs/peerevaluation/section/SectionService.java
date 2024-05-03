@@ -1,6 +1,5 @@
 package edu.tcu.cs.peerevaluation.section;
 
-
 import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -8,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
 import java.util.Map;
 
 @Service
@@ -49,7 +47,6 @@ public class SectionService {
         }
         return this.sectionRepository.findAll(spec, pageable); //
     }
-
     /*
     Tne Admin wants to change the details of an existing senior design section, so that the
     section information is correct and up-to-date
@@ -66,7 +63,6 @@ public class SectionService {
                 })
                 .orElseThrow(() -> new ObjectNotFoundException("section", sectionID));
     }
-
     public Section viewBySectionName(String sectionName){
         return this.sectionRepository.findBySectionName(sectionName)
                 .orElseThrow(() -> new ObjectNotFoundException("section", sectionName));
