@@ -1,5 +1,6 @@
 package edu.tcu.cs.peerevaluation.peerEvalUser;
 
+import edu.tcu.cs.peerevaluation.student.StudentService;
 import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,9 +19,12 @@ public class UserService implements UserDetailsService {
 
   private final PasswordEncoder passwordEncoder;
 
-  public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+  private final StudentService studentService;
+
+  public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, StudentService studentService) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
+    this.studentService = studentService;
   }
 
   public List<PeerEvalUser> findAll() {
@@ -48,8 +52,11 @@ public class UserService implements UserDetailsService {
   }
 
   public void delete(Integer userId) {
-    this.userRepository.findById(userId)
-        .orElseThrow(() -> new ObjectNotFoundException("user", userId));
+    PeerEvalUser user = this.userRepository.findById(userId)
+          .orElseThrow(() -> new ObjectNotFoundException("user", userId));
+    if (user.getStudent() != null) {
+      studentService.delete(user.getStudent().getId());
+    }
     this.userRepository.deleteById(userId);
   }
 
@@ -79,4 +86,5 @@ public class UserService implements UserDetailsService {
         .orElseThrow(() -> new ObjectNotFoundException("instructor", instructorId));
     foundInstructor.setEnabled(true);
   }
+
 }
