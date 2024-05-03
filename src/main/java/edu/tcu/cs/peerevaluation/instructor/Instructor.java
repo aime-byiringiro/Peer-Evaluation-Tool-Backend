@@ -1,7 +1,9 @@
 package edu.tcu.cs.peerevaluation.instructor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import edu.tcu.cs.peerevaluation.peerEvalUser.PeerEvalUser;
 import edu.tcu.cs.peerevaluation.team.Team;
@@ -40,7 +42,7 @@ public class Instructor implements Serializable {
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "instructor_teams") // Specifies the table that stores the team names
     @Column(name = "team_name") // Specifies the column that will store the team names
-    private List<String> teams;
+    private List<Team> teams;
 
     @OneToOne(mappedBy = "instructor", fetch = FetchType.EAGER)
     private PeerEvalUser user;
@@ -96,11 +98,11 @@ public class Instructor implements Serializable {
         this.password = password;
     }
 
-    public List<String> getTeams() {
+    public List<Team> getTeams() {
         return teams;
     }
 
-    public void setTeams(List<String> list) {
+    public void setTeams(List<Team> list) {
         this.teams = list;
     }
 
@@ -112,6 +114,28 @@ public class Instructor implements Serializable {
         this.user = user;
     }
 
-    
+    public void assignInstructorToTeam(Team team) {
+        if (teams == null) {
+            teams = new ArrayList<>();
+        }
+        this.teams.add(team);
+    }
+
+    public void removeInstructorFromTeam(Team team) {
+        if (teams != null) {
+            this.teams.remove(team);
+        }
+    }
+
+    public List<String> getTeamNamesList() {
+        List<String> teamNames = new ArrayList<>();
+        if(this.teams != null) {
+            teamNames = teams.stream()
+                .map(foundteam -> foundteam.getTeamName())
+                .collect(Collectors.toList());
+        }
+        return teamNames;
+
+    }
 
 }

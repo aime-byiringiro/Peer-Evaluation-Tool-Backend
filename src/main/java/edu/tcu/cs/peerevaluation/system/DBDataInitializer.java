@@ -65,7 +65,7 @@ public class DBDataInitializer implements CommandLineRunner {
 
     Student s1 = new Student();
       s1.setFirstName("Aliya");
-      s1.setMiddleInitial("S");
+      s1.setMiddleInitial("K");
       s1.setLastName("Suri");
       s1.setEmail("aliya.suri@tcu.edu");
 
@@ -269,6 +269,41 @@ public class DBDataInitializer implements CommandLineRunner {
     i1u.setInstructor(i1);
     this.userService.save(i1u);
 
+    Instructor i2 = new Instructor();
+      i2.setFirstName("Mike");
+      i2.setLastName("Scherger");
+      i2.setEmail("ihatehim@tcu.edu");
+
+    PeerEvalUser i2u = new PeerEvalUser();
+      i2u.setUsername("Mscherger");
+      i2u.setPassword("i<32torturestudent");
+      i2u.setEnabled(true);
+      i2u.setRoles("instructor");
+    
+    i2.setUser(i2u);
+    i2u.setInstructor(i2);
+    this.userService.save(i2u);
+
+
+    //-----------------//
+    // Test Admin Data //
+    //-----------------//
+    PeerEvalUser a1 = new PeerEvalUser();
+      a1.setUsername("admin");
+      a1.setPassword("password");
+      a1.setEnabled(true);
+      a1.setRoles("admin");
+      this.userService.save(a1);
+
+    PeerEvalUser ai1 = new PeerEvalUser();
+      ai1.setUsername("Bwei");
+      ai1.setPassword("hogwarts");
+      ai1.setEnabled(true);
+      ai1.setRoles("admin instructor");
+      this.userService.save(ai1);
+
+    
+
     // --------------------------//
     // Test Peer Evaluation Data //
     // --------------------------//
@@ -399,7 +434,7 @@ public class DBDataInitializer implements CommandLineRunner {
     WAR war1 = new WAR();
     war1.setSubmissions(submissions);
     war1.setTeam(team1);
-    war1.setWeek(4);
+    war1.setWeek("04/22/2024");
 
     this.warService.saveWar(war1);
 

@@ -1,11 +1,13 @@
 package edu.tcu.cs.peerevaluation.section;
 
+import ch.qos.logback.core.model.INamedModel;
 import edu.tcu.cs.peerevaluation.system.Result;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
 import edu.tcu.cs.peerevaluation.section.converter.SectionDtoToSectionConverter;
 import edu.tcu.cs.peerevaluation.section.converter.SectionToSectionDtoConverter;
 import edu.tcu.cs.peerevaluation.section.dto.SectionDto;
 
+import edu.tcu.cs.peerevaluation.team.dto.TeamDto;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.sql.Statement;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -34,22 +37,38 @@ public class SectionController {
         this.sectionToSectionDtoConverter = sectionToSectionDtoConverter;
     }
 
-    @PostMapping("/section_search")
-    public Result findSectionByCriteria(@RequestBody Map <String, String> searchCriteria , Pageable pageable) {
-        Page<Section> sectionPage = this.sectionService.findByCriteria(searchCriteria, pageable);
-        Page<SectionDto> sectionDtoPage = sectionPage.map(this.sectionToSectionDtoConverter::convert);
-        if (sectionPage.getContent().isEmpty()) {
-            return new Result(true, StatusCode.SUCCESS, " Couldn't find this section");
-        } else {
-            return new Result(true, StatusCode.SUCCESS, "Search Success", sectionDtoPage.getContent());
+    @GetMapping("/section_search")
+    public Result sectionSearch(
+            @RequestParam(value = "sectionName", required = false) String sectionName,
+            @RequestParam(value = "academicYear", required = false) String academicYear
+    ) {
+        List<Section> foundSections = this.sectionService.searchSections(sectionName, academicYear);
+        if(foundSections.size() >1) {
+            Comparator<Section> sortByAcademicYear = Comparator.comparing(Section::getAcademicYear,
+                    Comparator.reverseOrder());
+
+            Comparator<Section> sortBySectionName = Comparator.comparing(Section::getSectionName);
+
+            Comparator<Section> sortByBoth = sortByAcademicYear.thenComparing(sortBySectionName);
+            foundSections.sort(sortByBoth);
         }
 
+        List<SectionDto> sectionDtos = foundSections.stream()
+                .map(this.sectionToSectionDtoConverter::convert)
+                .toList();
+
+
+        return new Result(true, StatusCode.SUCCESS, "Search Success", sectionDtos);
     }
-    @GetMapping("/{sectionName}")
-    public Result viewSectionById(@PathVariable String sectionName){
-        Section foundSection = this.sectionService.viewBySectionName(sectionName);
+
+
+
+    @GetMapping("/{sectionID}")
+    public Result getBySectionID(@PathVariable Integer sectionID){
+        Section foundSection = this.sectionService.findBySectionId(sectionID);
         SectionDto sectionDto = this.sectionToSectionDtoConverter.convert(foundSection);
         return new Result(true, StatusCode.SUCCESS, "View One Success", sectionDto);
+
     }
 
     @PostMapping
@@ -67,19 +86,31 @@ public class SectionController {
         SectionDto editSectionDto = this.sectionToSectionDtoConverter.convert(editedSection);
         return new Result(true, StatusCode.SUCCESS, "Edit Success", editSectionDto);
     }
-
     //current week method
-    @GetMapping("/week/{sectionID}")
-    public Result getCurrentWeekById(@PathVariable Integer sectionID){
-        Section foundSection = this.sectionService.adminFindsSeniorDesignSectionsBySectionID(sectionID);
+    @GetMapping("/week/{sectionName}")
+    public Result getCurrentWeekById(@PathVariable String sectionID){
+        Section foundSection = this.sectionService.viewBySectionName(sectionID);
         String currentWeek = foundSection.getCurrentWeek();
         /*
          * TODO
-         * if say 5 weeks and 4 days have passed, this will return
-         * a 5, so im adding 1 to get the current week
+         * once Aime implents active weeks,
+         * rather than return just a week
+         * return 2 things:
+         * 1 - a String, the current week
+         * 2 - a boolean, is it an active week
          */
         return new Result(true, StatusCode.SUCCESS, "Edit Success", currentWeek);
     }
+
+    @GetMapping("/invite/{sectionId}")
+    public Result inviteSection(@PathVariable Integer sectionId) {
+        return new Result(true, StatusCode.SUCCESS, "Email sent");
+    }
+
+
+
+
+
 
 
 

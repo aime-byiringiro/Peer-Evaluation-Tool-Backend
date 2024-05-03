@@ -43,9 +43,16 @@ public class TeamToTeamDtoConverter implements Converter<Team, TeamDto> {
                 source.getId(),
                 source.getTeamName(),
                 source.getAcademicYear(),
-                this.sectionToSectionDtoConverter.convert(source.getSection()),
+                source.getSection() != null
+                            ? this.sectionToSectionDtoConverter.convert(source.getSection())
+                            : null,
                 studentIds,
-                this.instructorToInstructorDtoConverter.convert(source.getInstructor()));
+                source.getInstructor() != null
+                            ? this.instructorToInstructorDtoConverter.convert(source.getInstructor())
+                            : null
+                );
         return teamDto;
+
+                            
     }
 }

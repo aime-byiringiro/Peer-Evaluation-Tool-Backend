@@ -15,4 +15,10 @@ public record SectionDto(Integer id,
                         // @NotEmpty(message = "Rubric is required")
                          RubricDto rubricDto)
                          {
+
 }
+
+
+
+
+

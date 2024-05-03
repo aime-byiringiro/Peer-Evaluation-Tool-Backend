@@ -24,6 +24,7 @@ public class SectionDtoToSectionConverter implements Converter<SectionDto, Secti
         section.setFirstDay(source.firstDay());
         section.setLastDay(source.lastDay());
         section.setRubric(this.rubricDtoToRubricConverter.convert(source.rubricDto()));
+
         return section;
     }
 }

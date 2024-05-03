@@ -27,7 +27,7 @@ public class WAR implements Serializable {
   @JoinColumn(name = "Team")
   private Team team;
 
-  private Integer week;
+  private String week;
 
   @OneToMany(mappedBy = "war", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private List<Submission> submissions;
@@ -52,11 +52,11 @@ public class WAR implements Serializable {
     this.team = team;
   }
 
-  public Integer getWeek() {
+  public String getWeek() {
     return this.week;
   }
 
-  public void setWeek(Integer week) {
+  public void setWeek(String week) {
     this.week = week;
   }
 
@@ -71,14 +71,13 @@ public class WAR implements Serializable {
   public void addSubmission(Submission submission) {
     if (submissions == null) {
       submissions = new ArrayList<Submission>();
-      } 
-      submissions.add(submission);
+    }
+    submissions.add(submission);
   }
 
   public void removeSubmission(Submission submission) {
     if (submissions != null) {
       submissions.remove(submission);
+    }
   }
-  }
-
 }
