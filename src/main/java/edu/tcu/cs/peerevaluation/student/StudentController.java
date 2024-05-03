@@ -135,7 +135,8 @@ public class StudentController {
    */
   @DeleteMapping("/{studentId}")
   public Result deleteStudent(@PathVariable Integer studentId) {
-    this.studentService.delete(studentId);
+    Student foundStudent = this.studentService.findById(studentId);
+    this.userService.delete(foundStudent.getUser().getId());
     return new Result(true, StatusCode.SUCCESS, "Delete Success");
   }
 
