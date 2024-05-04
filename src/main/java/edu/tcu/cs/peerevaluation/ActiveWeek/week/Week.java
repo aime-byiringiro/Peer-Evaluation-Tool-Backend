@@ -1,9 +1,7 @@
 package edu.tcu.cs.peerevaluation.ActiveWeek.week;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import edu.tcu.cs.peerevaluation.ActiveWeek.ActiveWeek;import edu.tcu.cs.peerevaluation.rubric.Rubric;
+import jakarta.persistence.*;
 
 @Entity
 public class Week {
@@ -16,6 +14,9 @@ public class Week {
 
     private String startDate;
 
+
+    @ManyToOne
+    private ActiveWeek activeWeekId;
 
     public Integer getId() {
         return id;
@@ -39,5 +40,14 @@ public class Week {
 
     public void setStartDate(String startDate) {
         this.startDate = startDate;
+    }
+
+
+    public ActiveWeek getActiveWeekId() {
+        return activeWeekId;
+    }
+
+    public void setActiveWeekId(ActiveWeek activeWeekId) {
+        this.activeWeekId = activeWeekId;
     }
 }

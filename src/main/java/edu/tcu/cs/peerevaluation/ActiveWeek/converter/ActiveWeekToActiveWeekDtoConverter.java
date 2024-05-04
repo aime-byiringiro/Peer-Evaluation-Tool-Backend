@@ -25,6 +25,7 @@ public class ActiveWeekToActiveWeekDtoConverter implements Converter<ActiveWeek,
     public ActiveWeekDto convert(ActiveWeek source) {
         ActiveWeekDto activeWeekDto = new ActiveWeekDto(source.getId(),
                 source.getActiveWeekName(),
+                source.getSectionName().getSectionName(),
                 weekToWeekDtoConverter(source.getWeeksList()));
         return activeWeekDto;
     }

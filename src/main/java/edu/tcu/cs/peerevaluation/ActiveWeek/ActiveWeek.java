@@ -6,6 +6,7 @@ import edu.tcu.cs.peerevaluation.section.Section;
 import jakarta.persistence.*;
 import java.util.List;
 
+@Entity
 public class ActiveWeek {
 
 

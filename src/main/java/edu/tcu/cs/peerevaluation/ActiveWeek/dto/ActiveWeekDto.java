@@ -7,5 +7,8 @@ import java.util.List;
 
 public record ActiveWeekDto(Integer id,
                             String ActiveWeekName,
+
+                            String SectionName,
+
                             List<WeekDto> weekDtoList) {
 }
