@@ -1,14 +1,16 @@
 package edu.tcu.cs.peerevaluation.section;
 
-
 import edu.tcu.cs.peerevaluation.system.exception.ObjectNotFoundException;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -21,35 +23,32 @@ public class SectionService {
         this.sectionRepository = sectionRepository;
     }
 
-    public Section adminFindsSeniorDesignSectionsBySectionID(Integer sectionID){
-        return this.sectionRepository
-                .findById(sectionID)
-                .orElseThrow( () -> new SectionNotFoundException(sectionID));
-    }
 
     public Section save(Section newSection){
         return this.sectionRepository.save(newSection);
 
     }
-
     public Page<Section> findAll(Pageable pageable){
         return this.sectionRepository.findAll(pageable);
     }
 
-    public Page<Section> findByCriteria(Map<String, String> searchCriteria, Pageable pageable) {
+    public List<Section> searchSections(String sectionName, String academicYear) {
 
         Specification<Section> spec = Specification.where(null);
 
-        if(StringUtils.hasLength(searchCriteria.get("sectionName"))){
-            spec = spec.and(SectionSpecs.hasSectionName(searchCriteria.get("sectionName")));
+
+        if(sectionName != null && !sectionName.isEmpty()) {
+            spec = spec.and(SectionSpecs.hasSectionName(sectionName));
         }
 
-        if (StringUtils.hasLength(searchCriteria.get("academicYear"))){
-            spec    = spec.and(SectionSpecs.hasAcademicYear(searchCriteria.get("academicYear")));
+        if(academicYear !=null && !academicYear.isEmpty()) {
+            spec = spec.and(SectionSpecs.hasAcademicYear(academicYear));
         }
-        return this.sectionRepository.findAll(spec, pageable); //
+
+        return sectionRepository.findAll(spec);
+
+
     }
-
     /*
     Tne Admin wants to change the details of an existing senior design section, so that the
     section information is correct and up-to-date
@@ -66,10 +65,15 @@ public class SectionService {
                 })
                 .orElseThrow(() -> new ObjectNotFoundException("section", sectionID));
     }
-
     public Section viewBySectionName(String sectionName){
         return this.sectionRepository.findBySectionName(sectionName)
                 .orElseThrow(() -> new ObjectNotFoundException("section", sectionName));
     }
 
+    public Section findBySectionId(Integer sectionID) {
+        return this.sectionRepository.findById(sectionID)
+                .orElseThrow(() -> new SectionNotFoundException(sectionID));
+
+
+    }
 }

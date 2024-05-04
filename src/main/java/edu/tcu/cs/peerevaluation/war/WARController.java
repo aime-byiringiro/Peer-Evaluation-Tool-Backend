@@ -11,6 +11,7 @@ import edu.tcu.cs.peerevaluation.system.Result;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
 import edu.tcu.cs.peerevaluation.war.converter.WARDtoToWARConverter;
 import edu.tcu.cs.peerevaluation.war.converter.WARToWARDtoConverter;
+import edu.tcu.cs.peerevaluation.war.dto.WARDto;
 import edu.tcu.cs.peerevaluation.war.submission.Submission;
 import edu.tcu.cs.peerevaluation.war.submission.converter.SubmissionDtoToSubmissionConverter;
 import edu.tcu.cs.peerevaluation.war.submission.converter.SubmissionToSubmissionDtoConverter;
@@ -33,8 +34,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
-
 @RestController
 @RequestMapping("/war")
 public class WARController {
@@ -51,7 +50,9 @@ public class WARController {
 
   private final SubmissionToSubmissionDtoConverter submissionToSubmissionDtoConverter;
 
-  public WARController(UserRepository userRepository, WARService warService, WARDtoToWARConverter warDtoToWARConverter, WARToWARDtoConverter warToWARDtoConverter, SubmissionDtoToSubmissionConverter submissionDtoToSubmissionConverter, SubmissionToSubmissionDtoConverter submissionToSubmissionDtoConverter) {
+  public WARController(UserRepository userRepository, WARService warService, WARDtoToWARConverter warDtoToWARConverter,
+                       WARToWARDtoConverter warToWARDtoConverter, SubmissionDtoToSubmissionConverter submissionDtoToSubmissionConverter,
+                       SubmissionToSubmissionDtoConverter submissionToSubmissionDtoConverter) {
     this.userRepository = userRepository;
     this.warService = warService;
     this.warDtoToWARConverter = warDtoToWARConverter;
@@ -60,26 +61,26 @@ public class WARController {
     this.submissionToSubmissionDtoConverter = submissionToSubmissionDtoConverter;
   }
 
-  //find submission by ID
+  // find submission by ID
   @GetMapping("/id/{submissionId}")
-  public Result findSubmissionById(@PathVariable Integer submissionId){
+  public Result findSubmissionById(@PathVariable Integer submissionId) {
     Submission foundSubmission = this.warService.findById(submissionId);
     SubmissionDto foundDto = this.submissionToSubmissionDtoConverter.convert(foundSubmission);
-    return new Result(true,StatusCode.SUCCESS,"Find By ID Success", foundDto);
+    return new Result(true, StatusCode.SUCCESS, "Find By ID Success", foundDto);
   }
 
   @GetMapping
   public Result findAllSubmissions() {
     List<Submission> foundSubmissions = this.warService.findAll();
     List<SubmissionDto> submissionDtos = foundSubmissions.stream()
-        .map(foundSubmission -> this.submissionToSubmissionDtoConverter.convert(foundSubmission))
-        .collect(Collectors.toList());
-    return new Result(true,StatusCode.SUCCESS,"Find All Success", submissionDtos);
+            .map(foundSubmission -> this.submissionToSubmissionDtoConverter.convert(foundSubmission))
+            .collect(Collectors.toList());
+    return new Result(true, StatusCode.SUCCESS, "Find All Success", submissionDtos);
   }
-  
-  //findByActiveWeek
+
+  // findByActiveWeek
   @GetMapping("/{month}/{day}/{year}")
-  public Result getByActiveWeek(@PathVariable String month,@PathVariable String day,@PathVariable String year) {
+  public Result getByActiveWeek(@PathVariable String month, @PathVariable String day, @PathVariable String year) {
     String week = month + "/" + day + "/" + year;
     Student loggedInStudent = getLoggedInStudent();
     List<Submission> foundSubmissions = this.warService.findByWeekAndStudent(loggedInStudent.getId(), week);
@@ -89,17 +90,27 @@ public class WARController {
     return new Result(true, StatusCode.SUCCESS, "Find By Week Success", foundDtos);
   }
 
-  //addSubmission
+  // find by team name and week
+  @GetMapping("/{teamName}/{month}/{day}/{year}")
+  public Result getWARsByTeamAndWeek(@PathVariable String teamName, @PathVariable String month, @PathVariable String day, @PathVariable String year) {
+    String week = month + "/" + day + "/" + year;
+    List<WAR> wars = warService.findWARsByWeekAndTeamName(teamName, week);
+    List<WARDto> warDtos = wars.stream()
+            .map(war -> warToWARDtoConverter.convert(war))
+            .collect(Collectors.toList());
+    return new Result(true, StatusCode.SUCCESS, "Retrieved WARs successfully", warDtos);
+  }
+
+  // addSubmission
   @PostMapping("/{month}/{day}/{year}")
-  public Result newSubmission(@PathVariable String month,@PathVariable String day,@PathVariable String year, @Valid @RequestBody SubmissionDto submissionDto) {
+  public Result newSubmission(@PathVariable String month, @PathVariable String day, @PathVariable String year,
+                              @Valid @RequestBody SubmissionDto submissionDto) {
     String week = month + "/" + day + "/" + year;
     Student loggedInStudent = getLoggedInStudent();
     Submission newSubmission = this.submissionDtoToSubmissionConverter.convert(submissionDto);
 
-
-
     WAR foundWAR = this.warService.findByWeekAndTeam(loggedInStudent.getTeam().getId(), week);
-    if(foundWAR != null){
+    if (foundWAR != null) {
       foundWAR.addSubmission(newSubmission);
     } else {
       System.out.println("no war for that week");
@@ -110,48 +121,49 @@ public class WARController {
       this.warService.saveWar(newWAR);
       foundWAR = newWAR;
     }
-    
+
     newSubmission.setWar(foundWAR);
 
     newSubmission.setTeamMember(loggedInStudent);
     Submission savedSubmission = this.warService.saveSubmission(newSubmission);
     SubmissionDto savedDto = this.submissionToSubmissionDtoConverter.convert(savedSubmission);
-    return new Result(true,StatusCode.SUCCESS,"Add Success", savedDto);
+    return new Result(true, StatusCode.SUCCESS, "Add Success", savedDto);
   }
 
-  //editSubmission
+  // editSubmission
   @PutMapping
-  public Result updateSubmission(@Valid @RequestBody SubmissionDto submissionDto){
+  public Result updateSubmission(@Valid @RequestBody SubmissionDto submissionDto) {
     Submission update = this.submissionDtoToSubmissionConverter.convert(submissionDto);
-    Submission updatedSubmission = this.warService.update(submissionDto.id(),update);
+    Submission updatedSubmission = this.warService.update(submissionDto.id(), update);
     SubmissionDto updatedDto = this.submissionToSubmissionDtoConverter.convert(updatedSubmission);
-    return new Result(true,StatusCode.SUCCESS,"Update Success", updatedDto);
+    return new Result(true, StatusCode.SUCCESS, "Update Success", updatedDto);
   }
 
-  //deleteSubmission
+  // deleteSubmission
   @DeleteMapping("/{submissionId}")
-  public Result deleteSubmission(@PathVariable Integer submissionId){
+  public Result deleteSubmission(@PathVariable Integer submissionId) {
     this.warService.deleteSubmission(submissionId);
-    return new Result(true,StatusCode.SUCCESS,"Delete Success");
+    return new Result(true, StatusCode.SUCCESS, "Delete Success");
   }
 
   /*
-   * Method that retrives the current logged in student 
+   * Method that retrives the current logged in student
    * object regardless of the authentication method
    * used.
    */
-  private Student getLoggedInStudent() throws UsernameNotFoundException{
+  private Student getLoggedInStudent() throws UsernameNotFoundException {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication instanceof UsernamePasswordAuthenticationToken) {
       MyUserPrincipal principal = (MyUserPrincipal) authentication.getPrincipal();
       return principal.getPeerEvalUser().getStudent();
     } else {
-      JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+      JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) SecurityContextHolder.getContext()
+              .getAuthentication();
       Jwt jwt = (Jwt) authenticationToken.getCredentials();
-      PeerEvalUser user =this.userRepository.findByUsername(jwt.getSubject())
-            .orElseThrow(() -> new UsernameNotFoundException("username " + jwt.getSubject() + " is not found."));
+      PeerEvalUser user = this.userRepository.findByUsername(jwt.getSubject())
+              .orElseThrow(() -> new UsernameNotFoundException("username " + jwt.getSubject() + " is not found."));
       return user.getStudent();
-    } 
+    }
   }
 
 }

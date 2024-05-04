@@ -1,5 +1,6 @@
 package edu.tcu.cs.peerevaluation.rubric;
 
+import edu.tcu.cs.peerevaluation.student.dto.StudentDto;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +24,9 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/rubric")
@@ -54,6 +58,17 @@ public class RubricController {
     return new Result(true, StatusCode.SUCCESS, "rubric success", rubricDto);
   }
 
+
+  @GetMapping("/allRubrics")
+  public Result findAllRubrics() {
+    List<Rubric> foundRubrics = this.rubricService.findAll();
+    List<RubricDto> rubricDtos = foundRubrics.stream()
+            .map(this.rubricToRubricDtoConverter::convert)
+            .collect(Collectors.toList());
+    return new Result(true, StatusCode.SUCCESS, "Find All Success", rubricDtos);
+
+  }
+
   private Student getLoggedInStudent() throws UsernameNotFoundException {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication instanceof UsernamePasswordAuthenticationToken) {
@@ -80,6 +95,11 @@ public class RubricController {
     RubricDto savedDto = this.rubricToRubricDtoConverter.convert(savedRubric);
     return new Result(true, StatusCode.SUCCESS, "add success", savedDto);
   }
+
+
+
+
+
 
 }
 

@@ -3,6 +3,7 @@ package edu.tcu.cs.peerevaluation.instructor;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,7 @@ import edu.tcu.cs.peerevaluation.system.Result;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
 import edu.tcu.cs.peerevaluation.team.Team;
 import edu.tcu.cs.peerevaluation.team.TeamService;
+import io.micrometer.common.util.StringUtils;
 import jakarta.validation.Valid;
 
 @RestController
@@ -42,7 +44,10 @@ public class InstructorController {
 
   private final TeamService teamService;
 
-  public InstructorController(InstructorService instructorService, InstructorToInstructorDtoConverter instructorToInstructorDtoConverter, InstructorDtoToInstructorConverter instructorDtoToInstructorConverter, UserService userService, UserRepository userRepository, TeamService teamService) {
+  public InstructorController(InstructorService instructorService,
+      InstructorToInstructorDtoConverter instructorToInstructorDtoConverter,
+      InstructorDtoToInstructorConverter instructorDtoToInstructorConverter, UserService userService,
+      UserRepository userRepository, TeamService teamService) {
     this.instructorService = instructorService;
     this.instructorToInstructorDtoConverter = instructorToInstructorDtoConverter;
     this.instructorDtoToInstructorConverter = instructorDtoToInstructorConverter;
@@ -50,19 +55,18 @@ public class InstructorController {
     this.userRepository = userRepository;
     this.teamService = teamService;
   }
-  
 
   @GetMapping
-public Result findAllInstructors() {
+  public Result findAllInstructors() {
 
-  List<Instructor> allInstructors = instructorService.findAll();
+    List<Instructor> allInstructors = instructorService.findAll();
 
-  List<InstructorDto> instructorDtos = allInstructors.stream()
-      .map(instructor -> instructorToInstructorDtoConverter.convert(instructor))
-      .collect(Collectors.toList());
+    List<InstructorDto> instructorDtos = allInstructors.stream()
+        .map(instructor -> instructorToInstructorDtoConverter.convert(instructor))
+        .collect(Collectors.toList());
 
-  return new Result(true, StatusCode.SUCCESS, "Find All Success", instructorDtos); 
-}
+    return new Result(true, StatusCode.SUCCESS, "Find All Success", instructorDtos);
+  }
 
   @GetMapping("/{instructorId}")
   public Result findInstructorById(@PathVariable Integer instructorId) {
@@ -72,25 +76,37 @@ public Result findAllInstructors() {
   }
 
   @GetMapping("/search")
-  public Result searchInstructors(@RequestParam(required = false) String firstName,
+  public Result searchInstructors(
+      @RequestParam(required = false) String firstName,
       @RequestParam(required = false) String lastName,
       @RequestParam(required = false) String academicYear,
       @RequestParam(required = false) String teamName) {
+
+    if (Stream.of(firstName, lastName, academicYear, teamName).allMatch(StringUtils::isEmpty)) {
+      return new Result(false, StatusCode.NOT_FOUND, "At least one search parameter must be provided");
+    }
+
     List<Instructor> instructors = instructorService.search(firstName, lastName, academicYear, teamName);
-    List<InstructorDto> instructorDtos = instructors.stream().map(instructorToInstructorDtoConverter::convert)
+    if (instructors.isEmpty()) {
+      return new Result(false, StatusCode.NOT_FOUND, "No instructors found matching the search criteria");
+    }
+
+    List<InstructorDto> instructorDtos = instructors.stream()
+        .map(instructorToInstructorDtoConverter::convert)
         .collect(Collectors.toList());
     return new Result(true, StatusCode.SUCCESS, "Search Success", instructorDtos);
   }
 
   @PostMapping
   public Result addInstructor(@Valid @RequestBody InstructorUserCombined instructorUserCombined) {
-    Instructor newInstructor = this.instructorDtoToInstructorConverter.convert(instructorUserCombined.getInstructorDto());
+    Instructor newInstructor = this.instructorDtoToInstructorConverter
+        .convert(instructorUserCombined.getInstructorDto());
     Instructor savedInstructor = this.instructorService.save(newInstructor);
     PeerEvalUser savedUser = this.userService.save(instructorUserCombined.getUser());
     savedUser.setInstructor(savedInstructor);
     savedInstructor.setUser(savedUser);
     savedInstructor = this.instructorService.save(savedInstructor);
-    savedUser = this.userService.update(savedUser.getId(),savedUser);
+    savedUser = this.userService.update(savedUser.getId(), savedUser);
     InstructorDto savedInstructorDto = this.instructorToInstructorDtoConverter.convert(savedInstructor);
     return new Result(true, StatusCode.SUCCESS, "Add Success", savedInstructorDto);
   }
@@ -99,25 +115,25 @@ public Result findAllInstructors() {
   public Result assignInstructor(@PathVariable Integer instructorId, @PathVariable Integer teamId) {
     Instructor foundInstructor = this.instructorService.findById(instructorId);
     Team foundTeam = this.teamService.findById(teamId);
-    if(foundTeam.getInstructor() != null) {
+    if (foundTeam.getInstructor() != null) {
       return new Result(false, StatusCode.FORBIDDEN, "Instructor already assigned");
     }
     foundInstructor.assignInstructorToTeam(foundTeam);
     this.instructorService.save(foundInstructor);
     InstructorDto instructorDto = this.instructorToInstructorDtoConverter.convert(foundInstructor);
     return new Result(true, StatusCode.SUCCESS, "Instructor assigned to team successfully", instructorDto);
-}
+  }
 
-@PutMapping("/remove/{instructorId}/{teamId}")
-public Result removeInstructorFromTeam(@PathVariable Integer teamId) {
+  @PutMapping("/remove/{instructorId}/{teamId}")
+  public Result removeInstructorFromTeam(@PathVariable Integer teamId) {
     Team foundTeam = this.teamService.findById(teamId);
     System.out.println(foundTeam.getInstructor());
-    if(foundTeam.getInstructor() == null) {
+    if (foundTeam.getInstructor() == null) {
       return new Result(true, StatusCode.SUCCESS, "no intructor to remove");
     } else {
       foundTeam.removeInstructor();
       this.teamService.save(foundTeam);
       return new Result(true, StatusCode.SUCCESS, "Instructor removed from team successfully");
     }
-}
+  }
 }
