@@ -77,73 +77,94 @@ public class TeamControllerTest {
     }
 
 
-//    @Test
-//    void  testCreateNewTeam() throws Exception {
-//
-//
-//        List<CriterionDto> newCriterionDtolist = new ArrayList<>();
-//        CriterionDto criterionDto1 = new CriterionDto(10,
-//                "hello hello",
-//                "criterionName",
-//                10);
-//        newCriterionDtolist.add(criterionDto1);
-//
-//        RubricDto newRubriDto = new RubricDto(10,
-//                "rubricName",
-//                newCriterionDtolist);
-//
-//        SectionDto newSectionDto = new SectionDto(10,
-//                "sectionName",
-//                "2025",
-//                "01/06/2023",
-//                "01/06/2024",
-//                newRubriDto);
-//
-//        TeamDto teamDto = new TeamDto(10,
-//                "teamName",
-//                null);
-//
-//        String json = this.objectMapper.writeValueAsString(teamDto);
-//
-//        List<Criterion> newCriterionlist = new ArrayList<>();
-//        Criterion criterion1 = new Criterion();
-//        criterion1.setId(10);
-//        criterion1.setCriterionName("criterionName");
-//        criterion1.setMaxScore(10);
-//        newCriterionlist.add(criterion1);
-//
-//        Rubric newRubric = new Rubric();
-//        newRubric.setId(10);
-//        newRubric.setRubricName("rubricName");
-//        newRubric.setCriterionList(newCriterionlist);
-//
-//        Section newSection = new Section();
-//        newSection.setId(10);
-//        newSection.setSectionName("sectionName");
-//        newSection.setAcademicYear("2025");
-//        newSection.setFirstDay("01/06/2023");
-//        newSection.setLastDay("01/06/2024");
-//        newSection.setRubric(newRubric);
-//
-//        Team savedTeam = new Team();
-//        savedTeam.setId(10);
-//        savedTeam.setTeamName("teamName");
-//        savedTeam.setSection(newSection);
-//
-//
-//        given(this.teamService.save(Mockito.any(Team.class))).willReturn(savedTeam);
-//
-//        System.out.println(json);
-//        this.mockMvc.perform(post("/team").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("$.flag").value(true))
-//                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-//                .andExpect(jsonPath("$.message").value("Add Success"))
-//                .andExpect(jsonPath("$.data.id").isNotEmpty())
-//                .andExpect(jsonPath("$.data.teamName").value(savedTeam.getTeamName()))
-//                .andExpect(jsonPath("$.data.section.id").value(savedTeam.getSection().getId()));
-//
-//
-//    }
+
+    @Test
+    void  testCreateNewTeam() throws Exception {
+
+        List<CriterionDto> criteriaList = new ArrayList<>();
+
+        criteriaList.add(new CriterionDto(1,
+                "How do you rate the quality",
+                "Quality of work",
+                10));
+        criteriaList.add(new CriterionDto(2,
+                "How productive is this teammate?",
+                "Productivity", 10));
+
+        RubricDto rubricDto = new RubricDto(1,
+                "2024 Rubric",
+                criteriaList);
+
+        SectionDto sectionDto = new SectionDto(10,
+                "Section2025-2026",
+                "2025",
+                "01/06/2025",
+                "02/06/2026",
+                rubricDto);
+
+        TeamDto teamDto = new TeamDto(10,
+                "TeamName",
+                "2025",
+                sectionDto,
+                null,
+                null);
+
+        String json = this.objectMapper.writeValueAsString(teamDto);
+
+        List<Criterion> newCriterionList = new ArrayList<>();
+        Criterion c1 = new Criterion();
+        c1.setId(1); c1.setDescription("How do you rate the quality"); c1.setMaxScore(10);
+        Criterion c2 = new Criterion();
+        c2.setId(2); c2.setDescription("How productive is this teammate?"); c2.setMaxScore(10);
+        newCriterionList.add(c1);
+        newCriterionList.add(c2);
+
+        // Create Rubric object
+        Rubric newRubric = new Rubric();
+        newRubric.setRubricName("2024 Rubric");
+        newRubric.setId(1);
+        newRubric.setCriterionList(newCriterionList);
+
+        // Create Section object
+        Section savedSection = new Section();
+        savedSection.setId(10);
+
+        savedSection.setAcademicYear("2025");
+        savedSection.setFirstDay("01/06/2025");
+        savedSection.setLastDay("01/06/2026");
+        savedSection.setRubric(newRubric);
+
+        /////////////////////////////////////////
+
+        Team savedTeam = new Team();
+        savedTeam.setId(10);
+        savedTeam.setTeamName("teamName");
+        savedTeam.setAcademicYear("2025");
+        savedTeam.setSection(savedSection);
+
+        /*
+        There is a problem here
+         */
+//        savedTeam.setStudents(null);
+//        savedTeam.setInstructor(null);
+
+
+        given(this.teamService.save(Mockito.any(Team.class))).willReturn(savedTeam);
+
+        System.out.println(json);
+
+        this.mockMvc.perform(post("/team").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Add Success"))
+                .andExpect(jsonPath("$.data.id").isNotEmpty())
+                .andExpect(jsonPath("$.data.teamName").value(savedTeam.getTeamName()))
+                .andExpect(jsonPath("$.data.academicYear").value(savedTeam.getAcademicYear()))
+                .andExpect(jsonPath("$.data.section").value(savedTeam.getSection()))
+                .andExpect(jsonPath("$.data.students").value(savedTeam.getStudents()))
+                .andExpect(jsonPath("$.data.instructor").value(savedTeam.getInstructor()))
+        ;
+    }
 
 
 
