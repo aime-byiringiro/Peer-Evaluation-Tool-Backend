@@ -21,10 +21,6 @@ public class ActiveWeek {
    @ManyToOne
     private Section section;
 
-
-
-
-
     public String getActiveWeekName() {
         return ActiveWeekName;
     }
