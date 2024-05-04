@@ -1,14 +1,13 @@
 package edu.tcu.cs.peerevaluation.section.ActiveWeek;
 
-import edu.tcu.cs.peerevaluation.section.ActiveWeek.week.Week;
 import edu.tcu.cs.peerevaluation.section.Section;
 import jakarta.persistence.*;
+
+import java.util.Date;
 import java.util.List;
 
 @Entity
 public class ActiveWeek {
-
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,13 +15,12 @@ public class ActiveWeek {
 
     private String ActiveWeekName;
 
+    @ElementCollection
+    private List<Date> activeWeekList;
 
    @ManyToOne
     private Section section;
 
-
-    @OneToMany(mappedBy ="activeWeekId", fetch = FetchType.EAGER)
-    private List<Week> weeksList;
 
 
 
@@ -51,11 +49,11 @@ public class ActiveWeek {
         this.section = section;
     }
 
-   public List<Week> getWeeksList() {
-       return weeksList;
+    public List<Date> getActiveWeekList() {
+        return activeWeekList;
     }
 
-   public void setWeeksList(List<Week> weeksList) {
-       this.weeksList = weeksList;
-   }
+    public void setActiveWeekList(List<Date> activeWeekList) {
+        this.activeWeekList = activeWeekList;
+    }
 }

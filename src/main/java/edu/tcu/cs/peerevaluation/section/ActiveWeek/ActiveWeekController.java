@@ -17,10 +17,11 @@ public class ActiveWeekController {
 
     private  final ActiveWeekDtoToActiveWeekConverter activeWeekDtoToActiveWeekConverter;
     private final ActiveWeekToActiveWeekDtoConverter activeWeekToActiveWeekDtoConverter;
+
     private final ActiveWeekService activeWeekService;
 
 
-    public ActiveWeekController(ActiveWeekDtoToActiveWeekConverter activeWeekDtoToActiveWeekConverter, ActiveWeekToActiveWeekDtoConverter activeWeekToActiveWeekDtoConverter, ActiveWeekService activeWeekService) {
+    public ActiveWeekController(ActiveWeekDtoToActiveWeekConverter activeWeekDtoToActiveWeekConverter, ActiveWeekToActiveWeekDtoConverter activeWeekToActiveWeekDtoConverter, WeekToWeekDtoConverter weekToWeekDtoConverter, WeekDtoToWeekConverter weekDtoToWeekConverter, WeekService weekService, ActiveWeekService activeWeekService) {
         this.activeWeekDtoToActiveWeekConverter = activeWeekDtoToActiveWeekConverter;
         this.activeWeekToActiveWeekDtoConverter = activeWeekToActiveWeekDtoConverter;
         this.activeWeekService = activeWeekService;
@@ -30,12 +31,6 @@ public class ActiveWeekController {
     public Result newActiveWeek(@Valid @RequestBody ActiveWeekDto activeWeekDto){
         ActiveWeek newActiveWeek = this.activeWeekDtoToActiveWeekConverter.convert(activeWeekDto);
         ActiveWeek savedActiveWeek = this.activeWeekService.save(newActiveWeek);
-
-//        savedActiveWeek.getWeeksList().forEach(week -> {
-//            week.setActiveWeekId(newActiveWeek);
-//        }
-//        );
-        //savedActiveWeek = this.activeWeekService.save(newActiveWeek);
         ActiveWeekDto savedDto = this.activeWeekToActiveWeekDtoConverter.convert(savedActiveWeek);
         return  new Result(true, StatusCode.SUCCESS, "add success", savedDto);
 

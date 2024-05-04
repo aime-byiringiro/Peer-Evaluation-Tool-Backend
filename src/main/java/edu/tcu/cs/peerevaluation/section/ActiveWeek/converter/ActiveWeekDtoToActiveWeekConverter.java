@@ -2,9 +2,6 @@ package edu.tcu.cs.peerevaluation.section.ActiveWeek.converter;
 
 import edu.tcu.cs.peerevaluation.section.ActiveWeek.ActiveWeek;
 import edu.tcu.cs.peerevaluation.section.ActiveWeek.dto.ActiveWeekDto;
-import edu.tcu.cs.peerevaluation.section.ActiveWeek.week.Week;
-import edu.tcu.cs.peerevaluation.section.ActiveWeek.week.converter.WeekDtoToWeekConverter;
-import edu.tcu.cs.peerevaluation.section.ActiveWeek.week.dto.WeekDto;
 import edu.tcu.cs.peerevaluation.section.converter.SectionDtoToSectionConverter;
 import org.springframework.stereotype.Component;
 
@@ -16,13 +13,13 @@ import org.springframework.core.convert.converter.Converter;
 @Component
 public class ActiveWeekDtoToActiveWeekConverter implements Converter<ActiveWeekDto, ActiveWeek>{
 
-    private final WeekDtoToWeekConverter weekDtoToWeekConverter;
+
 
 
     private final SectionDtoToSectionConverter sectionDtoToSectionConverter;
 
-    public ActiveWeekDtoToActiveWeekConverter(WeekDtoToWeekConverter weekDtoToWeekConverter, SectionDtoToSectionConverter sectionDtoToSectionConverter) {
-        this.weekDtoToWeekConverter = weekDtoToWeekConverter;
+    public ActiveWeekDtoToActiveWeekConverter(SectionDtoToSectionConverter sectionDtoToSectionConverter) {
+
         this.sectionDtoToSectionConverter = sectionDtoToSectionConverter;
     }
     @Override
@@ -32,12 +29,8 @@ public class ActiveWeekDtoToActiveWeekConverter implements Converter<ActiveWeekD
         activeWeek.setId(source.id());
         activeWeek.setActiveWeekName(source.activeWeekName());
         activeWeek.setSection(this.sectionDtoToSectionConverter.convert(source.sectionDto()));
-       // activeWeek.setWeeksList(weekConverter(source.weekDtoList()));
+        activeWeek.setActiveWeekList(source.activeWeekList());
         return activeWeek;
     }
-    private List<Week> weekConverter(List<WeekDto> weekDtos) {
-        return weekDtos.stream()
-                .map(this.weekDtoToWeekConverter::convert)
-                .collect(Collectors.toList());
-    }
+
 }

@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Random;
 
 import edu.tcu.cs.peerevaluation.section.ActiveWeek.ActiveWeekRepository;
-import edu.tcu.cs.peerevaluation.section.ActiveWeek.week.Week;
-import edu.tcu.cs.peerevaluation.section.ActiveWeek.week.WeekRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -46,7 +44,6 @@ public class DBDataInitializer implements CommandLineRunner {
   private final TeamRepository  teamRepository;
   private final UserService userService;
   private final WARService warService;
-  private final WeekRepository weekRepository;
 
   private final ActiveWeekRepository activeWeekRepository;
 
@@ -62,7 +59,6 @@ public class DBDataInitializer implements CommandLineRunner {
     this.teamRepository = teamRepository;
     this.userService = userService;
     this.warService = warService;
-      this.weekRepository = weekRepository;
       this.activeWeekRepository = activeWeekRepository;
   }
 
@@ -311,13 +307,6 @@ public class DBDataInitializer implements CommandLineRunner {
       ai1.setEnabled(true);
       ai1.setRoles("admin instructor");
       this.userService.save(ai1);
-
-
-      Week week1 = new Week();
-      week1.setWeekName("Project Set Up");
-      week1.setStartDate("01/02");
-      weekRepository.save(week1);
-
 
     // --------------------------//
     // Test Peer Evaluation Data //
