@@ -17,11 +17,11 @@ public class ActiveWeekController {
 
     private  final ActiveWeekDtoToActiveWeekConverter activeWeekDtoToActiveWeekConverter;
     private final ActiveWeekToActiveWeekDtoConverter activeWeekToActiveWeekDtoConverter;
-
     private final ActiveWeekService activeWeekService;
 
-
-    public ActiveWeekController(ActiveWeekDtoToActiveWeekConverter activeWeekDtoToActiveWeekConverter, ActiveWeekToActiveWeekDtoConverter activeWeekToActiveWeekDtoConverter, WeekToWeekDtoConverter weekToWeekDtoConverter, WeekDtoToWeekConverter weekDtoToWeekConverter, WeekService weekService, ActiveWeekService activeWeekService) {
+    public ActiveWeekController(ActiveWeekDtoToActiveWeekConverter activeWeekDtoToActiveWeekConverter,
+                                ActiveWeekToActiveWeekDtoConverter activeWeekToActiveWeekDtoConverter,
+                                ActiveWeekService activeWeekService) {
         this.activeWeekDtoToActiveWeekConverter = activeWeekDtoToActiveWeekConverter;
         this.activeWeekToActiveWeekDtoConverter = activeWeekToActiveWeekDtoConverter;
         this.activeWeekService = activeWeekService;
