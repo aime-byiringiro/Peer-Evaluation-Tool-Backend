@@ -51,8 +51,8 @@ public class WARController {
   private final SubmissionToSubmissionDtoConverter submissionToSubmissionDtoConverter;
 
   public WARController(UserRepository userRepository, WARService warService, WARDtoToWARConverter warDtoToWARConverter,
-      WARToWARDtoConverter warToWARDtoConverter, SubmissionDtoToSubmissionConverter submissionDtoToSubmissionConverter,
-      SubmissionToSubmissionDtoConverter submissionToSubmissionDtoConverter) {
+                       WARToWARDtoConverter warToWARDtoConverter, SubmissionDtoToSubmissionConverter submissionDtoToSubmissionConverter,
+                       SubmissionToSubmissionDtoConverter submissionToSubmissionDtoConverter) {
     this.userRepository = userRepository;
     this.warService = warService;
     this.warDtoToWARConverter = warDtoToWARConverter;
@@ -73,8 +73,8 @@ public class WARController {
   public Result findAllSubmissions() {
     List<Submission> foundSubmissions = this.warService.findAll();
     List<SubmissionDto> submissionDtos = foundSubmissions.stream()
-        .map(foundSubmission -> this.submissionToSubmissionDtoConverter.convert(foundSubmission))
-        .collect(Collectors.toList());
+            .map(foundSubmission -> this.submissionToSubmissionDtoConverter.convert(foundSubmission))
+            .collect(Collectors.toList());
     return new Result(true, StatusCode.SUCCESS, "Find All Success", submissionDtos);
   }
 
@@ -85,8 +85,8 @@ public class WARController {
     Student loggedInStudent = getLoggedInStudent();
     List<Submission> foundSubmissions = this.warService.findByWeekAndStudent(loggedInStudent.getId(), week);
     List<SubmissionDto> foundDtos = foundSubmissions.stream()
-        .map(foundSubmission -> this.submissionToSubmissionDtoConverter.convert(foundSubmission))
-        .collect(Collectors.toList());
+            .map(foundSubmission -> this.submissionToSubmissionDtoConverter.convert(foundSubmission))
+            .collect(Collectors.toList());
     return new Result(true, StatusCode.SUCCESS, "Find By Week Success", foundDtos);
   }
 
@@ -96,15 +96,15 @@ public class WARController {
     String week = month + "/" + day + "/" + year;
     List<WAR> wars = warService.findWARsByWeekAndTeamName(teamName, week);
     List<WARDto> warDtos = wars.stream()
-        .map(war -> warToWARDtoConverter.convert(war))
-        .collect(Collectors.toList());
+            .map(war -> warToWARDtoConverter.convert(war))
+            .collect(Collectors.toList());
     return new Result(true, StatusCode.SUCCESS, "Retrieved WARs successfully", warDtos);
   }
 
   // addSubmission
   @PostMapping("/{month}/{day}/{year}")
   public Result newSubmission(@PathVariable String month, @PathVariable String day, @PathVariable String year,
-      @Valid @RequestBody SubmissionDto submissionDto) {
+                              @Valid @RequestBody SubmissionDto submissionDto) {
     String week = month + "/" + day + "/" + year;
     Student loggedInStudent = getLoggedInStudent();
     Submission newSubmission = this.submissionDtoToSubmissionConverter.convert(submissionDto);
@@ -158,10 +158,10 @@ public class WARController {
       return principal.getPeerEvalUser().getStudent();
     } else {
       JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) SecurityContextHolder.getContext()
-          .getAuthentication();
+              .getAuthentication();
       Jwt jwt = (Jwt) authenticationToken.getCredentials();
       PeerEvalUser user = this.userRepository.findByUsername(jwt.getSubject())
-          .orElseThrow(() -> new UsernameNotFoundException("username " + jwt.getSubject() + " is not found."));
+              .orElseThrow(() -> new UsernameNotFoundException("username " + jwt.getSubject() + " is not found."));
       return user.getStudent();
     }
   }

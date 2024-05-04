@@ -47,28 +47,28 @@ public class WARService {
 
   public Submission update(Integer id, Submission update) {
     return this.submissionRepository.findById(id)
-        .map(oldSubmission -> {
-          oldSubmission.setTaskCategory(update.getTaskCategory());
-          oldSubmission.setPlannedTask(update.getPlannedTask());
-          oldSubmission.setDescription(update.getDescription());
-          oldSubmission.setPlannedHours(update.getPlannedHours());
-          oldSubmission.setActualHours(update.getActualHours());
-          oldSubmission.setStatus(update.getStatus());
-          return this.submissionRepository.save(oldSubmission);
-        })
-        .orElseThrow(() -> new ObjectNotFoundException("submission", id));
+            .map(oldSubmission -> {
+              oldSubmission.setTaskCategory(update.getTaskCategory());
+              oldSubmission.setPlannedTask(update.getPlannedTask());
+              oldSubmission.setDescription(update.getDescription());
+              oldSubmission.setPlannedHours(update.getPlannedHours());
+              oldSubmission.setActualHours(update.getActualHours());
+              oldSubmission.setStatus(update.getStatus());
+              return this.submissionRepository.save(oldSubmission);
+            })
+            .orElseThrow(() -> new ObjectNotFoundException("submission", id));
   }
 
   public void deleteSubmission(Integer submissionId) {
     Submission submissionToBeDeleted = this.submissionRepository.findById(submissionId)
-        .orElseThrow(() -> new ObjectNotFoundException("submission", submissionId));
+            .orElseThrow(() -> new ObjectNotFoundException("submission", submissionId));
     submissionToBeDeleted.removeFromWAR();
     this.submissionRepository.deleteById(submissionId);
   }
 
   public Submission findById(Integer submissionId) {
     return this.submissionRepository.findById(submissionId)
-        .orElseThrow(() -> new ObjectNotFoundException("submission", submissionId));
+            .orElseThrow(() -> new ObjectNotFoundException("submission", submissionId));
   }
 
   public List<Submission> findAll() {
