@@ -1,8 +1,8 @@
-package edu.tcu.cs.peerevaluation.ActiveWeek;
+package edu.tcu.cs.peerevaluation.section.ActiveWeek;
 
-import edu.tcu.cs.peerevaluation.ActiveWeek.converter.ActiveWeekDtoToActiveWeekConverter;
-import edu.tcu.cs.peerevaluation.ActiveWeek.converter.ActiveWeekToActiveWeekDtoConverter;
-import edu.tcu.cs.peerevaluation.ActiveWeek.dto.ActiveWeekDto;
+import edu.tcu.cs.peerevaluation.section.ActiveWeek.converter.ActiveWeekDtoToActiveWeekConverter;
+import edu.tcu.cs.peerevaluation.section.ActiveWeek.converter.ActiveWeekToActiveWeekDtoConverter;
+import edu.tcu.cs.peerevaluation.section.ActiveWeek.dto.ActiveWeekDto;
 import edu.tcu.cs.peerevaluation.system.Result;
 import edu.tcu.cs.peerevaluation.system.StatusCode;
 import jakarta.validation.Valid;

@@ -1,6 +1,6 @@
-package edu.tcu.cs.peerevaluation.ActiveWeek.week;
+package edu.tcu.cs.peerevaluation.section.ActiveWeek.week;
 
-import edu.tcu.cs.peerevaluation.ActiveWeek.ActiveWeek;import edu.tcu.cs.peerevaluation.rubric.Rubric;
+import edu.tcu.cs.peerevaluation.section.ActiveWeek.ActiveWeek;
 import jakarta.persistence.*;
 
 @Entity

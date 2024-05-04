@@ -1,4 +1,4 @@
-package edu.tcu.cs.peerevaluation.ActiveWeek;
+package edu.tcu.cs.peerevaluation.section.ActiveWeek;
 
 
 import jakarta.transaction.Transactional;

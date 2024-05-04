@@ -1,7 +1,7 @@
-package edu.tcu.cs.peerevaluation.ActiveWeek.week.converter;
+package edu.tcu.cs.peerevaluation.section.ActiveWeek.week.converter;
 
-import edu.tcu.cs.peerevaluation.ActiveWeek.week.Week;
-import edu.tcu.cs.peerevaluation.ActiveWeek.week.dto.WeekDto;
+import edu.tcu.cs.peerevaluation.section.ActiveWeek.week.Week;
+import edu.tcu.cs.peerevaluation.section.ActiveWeek.week.dto.WeekDto;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 

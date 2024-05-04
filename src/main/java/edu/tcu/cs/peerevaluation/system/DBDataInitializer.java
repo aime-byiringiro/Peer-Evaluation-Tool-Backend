@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import edu.tcu.cs.peerevaluation.ActiveWeek.ActiveWeekRepository;
-import edu.tcu.cs.peerevaluation.ActiveWeek.week.Week;
-import edu.tcu.cs.peerevaluation.ActiveWeek.week.WeekRepository;
+import edu.tcu.cs.peerevaluation.section.ActiveWeek.ActiveWeekRepository;
+import edu.tcu.cs.peerevaluation.section.ActiveWeek.week.Week;
+import edu.tcu.cs.peerevaluation.section.ActiveWeek.week.WeekRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;

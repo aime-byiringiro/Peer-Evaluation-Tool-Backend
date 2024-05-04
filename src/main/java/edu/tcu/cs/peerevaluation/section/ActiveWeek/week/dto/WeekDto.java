@@ -1,4 +1,4 @@
-package edu.tcu.cs.peerevaluation.ActiveWeek.week.dto;
+package edu.tcu.cs.peerevaluation.section.ActiveWeek.week.dto;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 

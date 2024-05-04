@@ -1,7 +1,6 @@
-package edu.tcu.cs.peerevaluation.ActiveWeek;
+package edu.tcu.cs.peerevaluation.section.ActiveWeek;
 
-import ch.qos.logback.core.model.INamedModel;
-import edu.tcu.cs.peerevaluation.ActiveWeek.week.Week;
+import edu.tcu.cs.peerevaluation.section.ActiveWeek.week.Week;
 import edu.tcu.cs.peerevaluation.section.Section;
 import jakarta.persistence.*;
 import java.util.List;
