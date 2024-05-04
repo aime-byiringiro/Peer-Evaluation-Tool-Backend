@@ -18,20 +18,14 @@ public class ActiveWeek {
     private String ActiveWeekName;
 
 
-    @OneToOne
-    private Section sectionName;
+   @ManyToOne
+    private Section section;
 
 
     @OneToMany(mappedBy ="activeWeekId", fetch = FetchType.EAGER)
     private List<Week> weeksList;
 
-    public Section getSectionName() {
-        return sectionName;
-    }
 
-    public void setSectionName(Section sectionName) {
-        this.sectionName = sectionName;
-    }
 
 
     public String getActiveWeekName() {
@@ -50,11 +44,19 @@ public class ActiveWeek {
         this.id = id;
     }
 
-    public List<Week> getWeeksList() {
-        return weeksList;
+    public Section getSection() {
+        return section;
     }
 
-    public void setWeeksList(List<Week> weeksList) {
-        this.weeksList = weeksList;
+    public void setSection(Section section) {
+        this.section = section;
     }
+
+   public List<Week> getWeeksList() {
+       return weeksList;
+    }
+
+   public void setWeeksList(List<Week> weeksList) {
+       this.weeksList = weeksList;
+   }
 }

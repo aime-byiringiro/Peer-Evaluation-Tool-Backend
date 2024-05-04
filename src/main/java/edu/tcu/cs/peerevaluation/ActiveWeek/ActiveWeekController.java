@@ -30,10 +30,12 @@ public class ActiveWeekController {
     public Result newActiveWeek(@Valid @RequestBody ActiveWeekDto activeWeekDto){
         ActiveWeek newActiveWeek = this.activeWeekDtoToActiveWeekConverter.convert(activeWeekDto);
         ActiveWeek savedActiveWeek = this.activeWeekService.save(newActiveWeek);
-        savedActiveWeek.getWeeksList().forEach(week -> {
-            week.setActiveWeekId(newActiveWeek);
-        });
-        savedActiveWeek = this.activeWeekService.save(newActiveWeek);
+
+//        savedActiveWeek.getWeeksList().forEach(week -> {
+//            week.setActiveWeekId(newActiveWeek);
+//        }
+//        );
+        //savedActiveWeek = this.activeWeekService.save(newActiveWeek);
         ActiveWeekDto savedDto = this.activeWeekToActiveWeekDtoConverter.convert(savedActiveWeek);
         return  new Result(true, StatusCode.SUCCESS, "add success", savedDto);
 

@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import edu.tcu.cs.peerevaluation.ActiveWeek.ActiveWeekRepository;
+import edu.tcu.cs.peerevaluation.ActiveWeek.week.Week;
+import edu.tcu.cs.peerevaluation.ActiveWeek.week.WeekRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -43,10 +46,13 @@ public class DBDataInitializer implements CommandLineRunner {
   private final TeamRepository  teamRepository;
   private final UserService userService;
   private final WARService warService;
+  private final WeekRepository weekRepository;
+
+  private final ActiveWeekRepository activeWeekRepository;
 
 
 
-  public DBDataInitializer(StudentRepository studentRepository, PeerEvaluationRepostitory peerEvalRepository, InstructorRepository instructorRepository, RubricRepository rubricRepository, CriterionRepository criterionRepository, SectionRepository sectionRepository, TeamRepository teamRepository, UserService userService, WARService warService) {
+  public DBDataInitializer(StudentRepository studentRepository, PeerEvaluationRepostitory peerEvalRepository, InstructorRepository instructorRepository, RubricRepository rubricRepository, CriterionRepository criterionRepository, SectionRepository sectionRepository, TeamRepository teamRepository, UserService userService, WARService warService, WeekRepository weekRepository, ActiveWeekRepository activeWeekRepository) {
     this.studentRepository = studentRepository;
     this.peerEvalRepository = peerEvalRepository;
     this.instructorRepository = instructorRepository;
@@ -56,6 +62,8 @@ public class DBDataInitializer implements CommandLineRunner {
     this.teamRepository = teamRepository;
     this.userService = userService;
     this.warService = warService;
+      this.weekRepository = weekRepository;
+      this.activeWeekRepository = activeWeekRepository;
   }
 
   @Override
@@ -304,7 +312,12 @@ public class DBDataInitializer implements CommandLineRunner {
       ai1.setRoles("admin instructor");
       this.userService.save(ai1);
 
-    
+
+      Week week1 = new Week();
+      week1.setWeekName("Project Set Up");
+      week1.setStartDate("01/02");
+      weekRepository.save(week1);
+
 
     // --------------------------//
     // Test Peer Evaluation Data //
@@ -344,6 +357,9 @@ public class DBDataInitializer implements CommandLineRunner {
     peerEval5.setEvaluations(generateEvals(s2, s3, s4, s1, peerEval5));
     peerEval5.setWeek("04/22/2024");
     peerEvalRepository.save(peerEval5);
+
+
+
 
 
     //----------------------///

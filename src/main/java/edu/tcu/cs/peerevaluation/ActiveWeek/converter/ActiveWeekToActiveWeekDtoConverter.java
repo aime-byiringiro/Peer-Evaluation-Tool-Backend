@@ -5,6 +5,7 @@ import edu.tcu.cs.peerevaluation.ActiveWeek.dto.ActiveWeekDto;
 import edu.tcu.cs.peerevaluation.ActiveWeek.week.Week;
 import edu.tcu.cs.peerevaluation.ActiveWeek.week.converter.WeekToWeekDtoConverter;
 import edu.tcu.cs.peerevaluation.ActiveWeek.week.dto.WeekDto;
+import edu.tcu.cs.peerevaluation.section.converter.SectionToSectionDtoConverter;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 import java.util.List;
@@ -15,9 +16,11 @@ import java.util.stream.Collectors;
 public class ActiveWeekToActiveWeekDtoConverter implements Converter<ActiveWeek, ActiveWeekDto> {
 
     private final WeekToWeekDtoConverter weekToWeekDtoConverter;
+    private final SectionToSectionDtoConverter sectionToSectionDtoConverter;
 
-    public ActiveWeekToActiveWeekDtoConverter(WeekToWeekDtoConverter weekToWeekDtoConverter) {
+    public ActiveWeekToActiveWeekDtoConverter(WeekToWeekDtoConverter weekToWeekDtoConverter, SectionToSectionDtoConverter sectionToSectionDtoConverter) {
         this.weekToWeekDtoConverter = weekToWeekDtoConverter;
+        this.sectionToSectionDtoConverter = sectionToSectionDtoConverter;
     }
 
 
@@ -25,8 +28,8 @@ public class ActiveWeekToActiveWeekDtoConverter implements Converter<ActiveWeek,
     public ActiveWeekDto convert(ActiveWeek source) {
         ActiveWeekDto activeWeekDto = new ActiveWeekDto(source.getId(),
                 source.getActiveWeekName(),
-                source.getSectionName().getSectionName(),
-                weekToWeekDtoConverter(source.getWeeksList()));
+                this.sectionToSectionDtoConverter.convert(source.getSection()));
+                //weekToWeekDtoConverter(source.getWeeksList()));
         return activeWeekDto;
     }
 
