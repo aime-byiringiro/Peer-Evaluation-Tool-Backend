@@ -22,7 +22,9 @@ public class SectionToSectionDtoConverter implements Converter<Section, SectionD
                                                source.getAcademicYear(),
                                                source.getFirstDay(),
                                                source.getLastDay(),
-                                               this.rubricToRubricDtoConverter.convert(source.getRubric())
+                                               source.getRubric() != null
+                                                       ? this.rubricToRubricDtoConverter.convert(source.getRubric())
+                                                       :null
                                                );
 
         return sectionDto;
