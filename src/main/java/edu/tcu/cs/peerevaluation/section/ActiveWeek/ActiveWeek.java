@@ -13,21 +13,11 @@ public class ActiveWeek {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String ActiveWeekName;
-
     @ElementCollection
     private List<Date> activeWeekList;
 
    @ManyToOne
     private Section section;
-
-    public String getActiveWeekName() {
-        return ActiveWeekName;
-    }
-
-    public void setActiveWeekName(String activeWeekName) {
-        ActiveWeekName = activeWeekName;
-    }
 
     public Integer getId() {
         return id;

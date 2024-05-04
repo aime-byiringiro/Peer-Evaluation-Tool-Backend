@@ -27,7 +27,6 @@ public class ActiveWeekDtoToActiveWeekConverter implements Converter<ActiveWeekD
 
         ActiveWeek activeWeek = new ActiveWeek();
         activeWeek.setId(source.id());
-        activeWeek.setActiveWeekName(source.activeWeekName());
         activeWeek.setSection(this.sectionDtoToSectionConverter.convert(source.sectionDto()));
         activeWeek.setActiveWeekList(source.activeWeekList());
         return activeWeek;

@@ -23,8 +23,9 @@ public class SectionDtoToSectionConverter implements Converter<SectionDto, Secti
         section.setAcademicYear(source.academicYear());
         section.setFirstDay(source.firstDay());
         section.setLastDay(source.lastDay());
-        section.setRubric(this.rubricDtoToRubricConverter.convert(source.rubricDto()));
-
+        section.setRubric(source.rubricDto() != null
+                ? this.rubricDtoToRubricConverter.convert(source.rubricDto())
+                :null);
         return section;
     }
 }
