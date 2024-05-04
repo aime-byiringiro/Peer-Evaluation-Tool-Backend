@@ -1,2 +1,4 @@
-package edu.tcu.cs.peerevaluation.ActiveWeek;public class ActiveWeekService {
+package edu.tcu.cs.peerevaluation.ActiveWeek;
+
+public class ActiveWeekService {
 }

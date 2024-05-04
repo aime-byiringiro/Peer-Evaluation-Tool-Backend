@@ -44,6 +44,8 @@ public class DBDataInitializer implements CommandLineRunner {
   private final UserService userService;
   private final WARService warService;
 
+
+
   public DBDataInitializer(StudentRepository studentRepository, PeerEvaluationRepostitory peerEvalRepository, InstructorRepository instructorRepository, RubricRepository rubricRepository, CriterionRepository criterionRepository, SectionRepository sectionRepository, TeamRepository teamRepository, UserService userService, WARService warService) {
     this.studentRepository = studentRepository;
     this.peerEvalRepository = peerEvalRepository;
@@ -261,7 +263,7 @@ public class DBDataInitializer implements CommandLineRunner {
 
     PeerEvalUser i1u = new PeerEvalUser();
       i1u.setUsername("Lma");
-      i1u.setPassword("bagel");
+      i1u.setPassword("bageFl");
       i1u.setEnabled(true);
       i1u.setRoles("instructor");
     
@@ -342,6 +344,13 @@ public class DBDataInitializer implements CommandLineRunner {
     peerEval5.setEvaluations(generateEvals(s2, s3, s4, s1, peerEval5));
     peerEval5.setWeek("04/22/2024");
     peerEvalRepository.save(peerEval5);
+
+
+    //----------------------///
+    // Active WeeK Data ///
+    //-------------------//
+
+
 
     // -----------------------//
     // Foreign Key Assignment //
