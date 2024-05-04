@@ -272,9 +272,6 @@ public class DBDataInitializer implements CommandLineRunner {
     sectionRepository.save(sec4);
 
 
-
-
-
     // ---------------------//
     // Test Instructor Data //
     // ---------------------//
