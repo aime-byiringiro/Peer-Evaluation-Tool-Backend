@@ -75,9 +75,9 @@ public class UserService implements UserDetailsService {
     return this.userRepository.save(currentUser);
   }
 
-  public void deactivate(Integer instructorId) {
-    PeerEvalUser foundInstructor = this.userRepository.findById(instructorId)
-        .orElseThrow(() -> new ObjectNotFoundException("instructor", instructorId));
+  public void deactivate(Integer userId) {
+    PeerEvalUser foundInstructor = this.userRepository.findById(userId)
+        .orElseThrow(() -> new ObjectNotFoundException("instructor", userId));
     foundInstructor.setEnabled(false);
   }
 

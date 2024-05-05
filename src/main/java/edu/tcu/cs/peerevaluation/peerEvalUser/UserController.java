@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import edu.tcu.cs.peerevaluation.instructor.Instructor;
+import edu.tcu.cs.peerevaluation.instructor.InstructorService;
 import edu.tcu.cs.peerevaluation.peerEvalUser.converter.UserDtoToUserConverter;
 import edu.tcu.cs.peerevaluation.peerEvalUser.converter.UserToUserDtoConverter;
 import edu.tcu.cs.peerevaluation.peerEvalUser.dto.UserDto;
@@ -25,11 +27,13 @@ public class UserController {
 
   private final UserToUserDtoConverter userToUserDtoConverter;
 
-  public UserController(UserService userService, UserDtoToUserConverter userDtoToUserConverter,
-      UserToUserDtoConverter userToUserDtoConverter) {
+  private final InstructorService instructorService;
+
+  public UserController(UserService userService, UserDtoToUserConverter userDtoToUserConverter, UserToUserDtoConverter userToUserDtoConverter, InstructorService instructorService) {
     this.userService = userService;
     this.userDtoToUserConverter = userDtoToUserConverter;
     this.userToUserDtoConverter = userToUserDtoConverter;
+    this.instructorService = instructorService;
   }
 
   /*
@@ -90,13 +94,15 @@ public class UserController {
 
   @PutMapping("/deactivate/{instructorId}")
   public Result deactivateUser(@PathVariable Integer instructorId) {
-    this.userService.deactivate(instructorId);
+    Instructor foundInstructor = this.instructorService.findById(instructorId);
+    this.userService.deactivate(foundInstructor.getUser().getId());
     return new Result(true, StatusCode.SUCCESS, "Deactivate Success");
   }
 
   @PutMapping("/activate/{instructorId}")
   public Result activateUser(@PathVariable Integer instructorId) {
-    this.userService.activate(instructorId);
+    Instructor foundInstructor = this.instructorService.findById(instructorId);
+    this.userService.activate(foundInstructor.getUser().getId());
     return new Result(true, StatusCode.SUCCESS, "Activate Success");
   }
 

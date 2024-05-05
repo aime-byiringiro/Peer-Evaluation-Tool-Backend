@@ -90,7 +90,7 @@ public class InstructorController {
     if (instructors.isEmpty()) {
       return new Result(false, StatusCode.NOT_FOUND, "No instructors found matching the search criteria");
     }
-
+    
     List<InstructorDto> instructorDtos = instructors.stream()
         .map(instructorToInstructorDtoConverter::convert)
         .collect(Collectors.toList());
@@ -115,11 +115,15 @@ public class InstructorController {
   public Result assignInstructor(@PathVariable Integer instructorId, @PathVariable Integer teamId) {
     Instructor foundInstructor = this.instructorService.findById(instructorId);
     Team foundTeam = this.teamService.findById(teamId);
+    if(foundInstructor == null || foundTeam == null ) {
+      return new Result(true,StatusCode.SUCCESS,"team or instructor not found");
+    }
     if (foundTeam.getInstructor() != null) {
       return new Result(false, StatusCode.FORBIDDEN, "Instructor already assigned");
     }
-    foundInstructor.assignInstructorToTeam(foundTeam);
+    foundTeam.setInstructor(foundInstructor);
     this.instructorService.save(foundInstructor);
+    this.teamService.save(foundTeam);
     InstructorDto instructorDto = this.instructorToInstructorDtoConverter.convert(foundInstructor);
     return new Result(true, StatusCode.SUCCESS, "Instructor assigned to team successfully", instructorDto);
   }
