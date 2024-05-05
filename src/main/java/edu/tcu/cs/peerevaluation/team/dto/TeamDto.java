@@ -11,7 +11,9 @@ public record TeamDto(Integer id,
                       //@NotEmpty(message = "Team Name is required.")
                       String teamName,
                       String academicYear,
-                      SectionDto section,
-                      List<Integer> studentIds,
-                      InstructorDto instructor) {
+                       SectionDto section,
+                       List<Integer> studentIds,
+                        InstructorDto instructor
+
+                       ) {
 }

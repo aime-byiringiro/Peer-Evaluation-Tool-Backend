@@ -33,11 +33,11 @@ public class TeamDtoToTeamConverter implements Converter<TeamDto, Team> {
         // convert ids to Students
         List<Student> students = new ArrayList<>();
 
-        if (source.studentIds() != null) {
-            for (Integer id : source.studentIds()) {
-                students.add(studentService.findById(id));
-            }
-        }
+//        if (source.studentIds() != null) {
+//            for (Integer id : source.studentIds()) {
+//                students.add(studentService.findById(id));
+//            }
+//        }
 
         Team team = new Team();
         team.setId(source.id());
@@ -48,12 +48,13 @@ public class TeamDtoToTeamConverter implements Converter<TeamDto, Team> {
                                     ? this.sectionDtoToSectionConverter.convert(source.section())
                                     : null);
 
-        team.setSection(this.sectionDtoToSectionConverter.convert(source.section()));
-
-        team.setStudents(students);
-        team.setInstructor(source.section() != null
+      //  team.setSection(this.sectionDtoToSectionConverter.convert(source.section()));
+//
+         team.setStudents(students);
+         team.setInstructor(source.instructor() != null
                                     ? this.instructorDtoToInstructorConverter.convert(source.instructor())
                                     : null);
+
         return team;
     }
 }

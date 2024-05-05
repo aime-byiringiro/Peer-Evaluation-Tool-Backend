@@ -46,8 +46,10 @@ public class Team implements Serializable {
     }
 
     public void setInstructor(Instructor instructor) {
+        if (instructor != null) {
+            instructor.assignInstructorToTeam(this);
+        }
         this.instructor = instructor;
-        instructor.assignInstructorToTeam(this);
     }
 
     public Integer getId() {
